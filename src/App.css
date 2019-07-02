@@ -1,0 +1,34 @@
+.container{
+
+  margin: auto;
+}
+
+
+.Product-Title{
+
+  margin-top: 50px;
+  margin-bottom: 50px;
+
+}
+.myFormular{
+}
+
+.mybtn{
+
+  margin: 10px;
+}
+
+.myCard{
+
+  width: 500px;
+  height: 250px;
+
+}
+
+.container .btn{
+
+  display: flex;
+  margin: auto;
+  margin-top: 50px;
+  width: 500px;
+}
