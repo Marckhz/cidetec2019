@@ -1,5 +1,9 @@
 import React from 'react';
 
+import axios from 'axios';
+
+
+
 import Button from '@material-ui/core/Button';
 import Input from '@material-ui/core/Input';
 import Card from '@material-ui/core/Card';
@@ -19,10 +23,11 @@ export default class Formular extends React.Component{
 			value:'',
 			item:[]
 		}
-		this.handleChange = this.handleChange.bind(this);
-    	this.handleSubmit = this.handleSubmit.bind(this);	
-    	this.generateSurvey = this.generateSurvey.bind(this);	
-	}
+  		this.handleChange = this.handleChange.bind(this);
+      this.handleSubmit = this.handleSubmit.bind(this);	
+      this.generateSurvey = this.generateSurvey.bind(this);
+      this.testPostRequest = this.testPostRequest.bind(this)	
+  	}
 
 	clearData(){
 		this.setState({
@@ -64,6 +69,33 @@ export default class Formular extends React.Component{
 		})
 	}
 
+  testGetRequest(){
+    axios.get(`http://127.0.0.1:8000/attributes/`)
+    .then(res =>{
+      console.log(res)
+    })
+  }
+
+  testPostRequest(event){
+    //event.preventDefault();
+    //let myvar = this.state.value
+    axios.post(`http://127.0.0.1:8000/attributes/`,{
+      //product_name:1,
+      //attribute:myvar
+    })
+    .then(res=>{
+      console.log(res)
+    })
+  }
+
+  testDeletetRequest(eve){
+    axios.delete(`http://127.0.0.1:8000/attributes/${eve}`,{
+    })
+    .then(res=>{
+      console.log(res);
+    })
+  }
+
 	render(){
 		const {item} = this.state;
 
@@ -73,9 +105,9 @@ export default class Formular extends React.Component{
 			
 				<div className="row">
 					<div className="col Product-Title">
-						<InputLabel focused="true" children="Agregue el Servicio/Producto aqui"/>
+						<InputLabel focused={true} children="Agregue el Servicio/Producto aqui"/>
 						<Input
-						fullWidth="true"
+						fullWidth={true}
 						placeholder="Nombre del producto"
 						value={this.state.product}
 						/>
@@ -84,8 +116,8 @@ export default class Formular extends React.Component{
 				<form onSubmit={this.handleSubmit}>
 					<div className="row align-items-center">
 						<div className="col myFormular">
-								<Card className="myCard" raised="true" >
-									<CardHeader title="Atributos" style={{"text-align":"center"}}/>
+								<Card className="myCard" raised={true} >
+									<CardHeader title="Atributos" style={{"textAlign":"center"}}/>
 										<CardContent>
 											<div className="row">
 												<div className="col">
@@ -101,15 +133,15 @@ export default class Formular extends React.Component{
 													fullWidth={true} 
 													color="primary" 
 													variant="contained"
-													onClick={this.handleSubmit}>Agregar 
+													onClick={this.handleSubmit}>Agregar Atributo
 												</Button>
 											</div>
 										</CardContent>
 								</Card>
 						</div>
 						<div className="col Attributes-Holder">
-							<Card className="myCard" raised="true" style={{"overflow":"auto"}}>
-								<CardHeader title="Lista Atributos" style={{"text-align":"center"}} />
+							<Card className="myCard" raised={true} style={{"overflow":"auto"}}>
+								<CardHeader title="Lista Atributos" style={{"textAlign":"center"}} />
 									<CardContent>
 										<div className="row">
 											<List >
@@ -139,7 +171,7 @@ export default class Formular extends React.Component{
 				<div className="container">
 					<div className="row align-items-center btn">
 						<div className="col">
-							<Button onClick={this.generateSurvey} 
+							<Button  
 								size="large" variant="contained"  
 								style={{"backgroundColor":green['A700'],"color":"white" }} 
 								fullWidth={true} >Generar Encuesta
