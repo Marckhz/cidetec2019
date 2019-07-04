@@ -24,7 +24,8 @@ from productCreator import views
 router = routers.DefaultRouter()
 router.register(r'products', views.ProductViewSet)
 router.register(r'attributes', views.AttributesViewSet)
-
+router.register(r'questions', views.QuestionViewSet)
+router.register(r'survey', views.ChoiceViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

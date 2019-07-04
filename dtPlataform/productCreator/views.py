@@ -4,23 +4,33 @@ from rest_framework import viewsets
 
 from .serializers import ProductSerializer
 from .serializers import AttributesSerializer
+from .serializers import QuestionSerializer
+from .serializers import ChoiceSerializer
 
 
-from .models import Products
-from .models import Attributes
+from .models import Productss
+from .models import Attributess
+from .models import Questions
+from .models import Choices
 
-# Create your views here.
 
 
 class ProductViewSet(viewsets.ModelViewSet):
 
-	queryset = Products.objects.all()
+	queryset = Productss.objects.all()
 	serializer_class = ProductSerializer
-
-
 
 class AttributesViewSet(viewsets.ModelViewSet):
 
-	queryset = Attributes.objects.all()
+	queryset = Attributess.objects.all()
 	serializer_class = AttributesSerializer
 
+class QuestionViewSet(viewsets.ModelViewSet):
+
+	queryset = Questions.objects.all()
+	serializer_class = QuestionSerializer
+
+class ChoiceViewSet(viewsets.ModelViewSet):
+
+	queryset = Choices.objects.all()
+	serializer_class = ChoiceSerializer

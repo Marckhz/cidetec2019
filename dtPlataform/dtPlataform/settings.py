@@ -90,7 +90,7 @@ WSGI_APPLICATION = 'dtPlataform.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'kanomodel',
+        'NAME': 'kmodel',
         'USER': 'marck',
         'PASSWORD': 'metallica1',
         'HOST':'localhost',
