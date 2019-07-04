@@ -8,12 +8,14 @@
 
   margin-top: 50px;
   margin-bottom: 50px;
-
+  display: flex;
+  align-content: center;
 }
+
 .myFormular{
 }
 
-.mybtn{
+.myCard .mybtn{
 
   margin: 10px;
 }
@@ -21,7 +23,8 @@
 .myCard{
 
   width: 500px;
-  height: 250px;
+  height: 500px;
+  margin: auto;
 
 }
 

@@ -21,25 +21,37 @@ export default class Formular extends React.Component{
 		this.state = {
 			product:'',
 			value:'',
-			item:[]
+			item:[],
+			id_holder:'',
+			item_id_holder:[]
 		}
-  		this.handleChange = this.handleChange.bind(this);
+  	  this.handleChange = this.handleChange.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);	
       this.generateSurvey = this.generateSurvey.bind(this);
-      this.testPostRequest = this.testPostRequest.bind(this)	
+      this.postProducto = this.postProducto.bind(this);
+      this.deleteValue = this.deleteValue.bind(this);
+      this.addAtrribute= this.addAtrribute.bind(this);
+      this.handleProductTitleChange = this.handleProductTitleChange.bind(this);
+      this.testDeletetRequest = this.testDeletetRequest.bind(this);
   	}
 
 	clearData(){
 		this.setState({
-			value:''
+			value:'',
+      		//product:''
 		})
 	}
 	handleChange(event){
 		this.setState({
-			value: event.target.value
+			value: event.target.value,
 		})
 
 	}
+  handleProductTitleChange(event){
+    this.setState({
+      product: event.target.value,
+    })
+  }
 
 	handleSubmit(event){
 		event.preventDefault();
@@ -59,7 +71,49 @@ export default class Formular extends React.Component{
 			console.log(this.state.product)
 		}
 	}
-	deleteValue(Item){
+	  
+	  postProducto(event){
+	    event.preventDefault();
+	    let productName = this.state.product
+	    axios.post(`http://127.0.0.1:8000/products/`,{
+	      product:productName
+	    })
+	    .then(res=>{
+	     	this.state.id_holder = res.data['id']
+	      	console.log(this.state.id_holder, res.data['product'])
+	    })
+	  }
+	  addAtrribute(event){
+	    event.preventDefault();
+	    //console.log(this.state.id_holder)
+	    let new_attribute = this.state.value
+	    axios.post(`http://127.0.0.1:8000/attributes/`,{
+	    	product_name:this.state.id_holder,
+	    	attribute: new_attribute
+	    })
+	    .then(res=>{
+	    	console.log(res.data)
+	    	this.state.item.push(new_attribute);
+	    	this.state.item_id_holder.push(res.data['id'])
+	    	console.log(this.state.item)
+	    	//console.log(this.state.item_id_holder)
+	    	this.clearData();
+	    	})
+		}
+
+	  testDeletetRequest(Item){
+	  }
+
+
+
+	  testGetRequest(){
+	    axios.get(`http://127.0.0.1:8000/attributes/`)
+	    .then(res =>{
+	      console.log(res)
+	    })
+	  }
+
+	  deleteValue(Item){
 		const newItems = this.state.item.filter(item=>{
 			return item !== Item;
 		})
@@ -69,48 +123,21 @@ export default class Formular extends React.Component{
 		})
 	}
 
-  testGetRequest(){
-    axios.get(`http://127.0.0.1:8000/attributes/`)
-    .then(res =>{
-      console.log(res)
-    })
-  }
-
-  testPostRequest(event){
-    //event.preventDefault();
-    //let myvar = this.state.value
-    axios.post(`http://127.0.0.1:8000/attributes/`,{
-      //product_name:1,
-      //attribute:myvar
-    })
-    .then(res=>{
-      console.log(res)
-    })
-  }
-
-  testDeletetRequest(eve){
-    axios.delete(`http://127.0.0.1:8000/attributes/${eve}`,{
-    })
-    .then(res=>{
-      console.log(res);
-    })
-  }
-
 	render(){
 		const {item} = this.state;
 
 		return(
 
-			<div className="container">
-			
+			<div className="container">		
 				<div className="row">
 					<div className="col Product-Title">
-						<InputLabel focused={true} children="Agregue el Servicio/Producto aqui"/>
-						<Input
-						fullWidth={true}
-						placeholder="Nombre del producto"
-						value={this.state.product}
-						/>
+						<InputLabel children="Agregue el Servicio/Producto aqui"/>
+              <Input onChange={this.handleProductTitleChange} 
+              value={this.state.product} 
+              />
+					</div>
+					<div className="col Product-Title">
+            			<Button onClick={this.postProducto} variant="contained" color="primary"> Agrega Nombre producto</Button>	
 					</div>
 				</div>
 				<form onSubmit={this.handleSubmit}>
@@ -118,7 +145,7 @@ export default class Formular extends React.Component{
 						<div className="col myFormular">
 								<Card className="myCard" raised={true} >
 									<CardHeader title="Atributos" style={{"textAlign":"center"}}/>
-										<CardContent>
+										<CardContent className="Card-Body">
 											<div className="row">
 												<div className="col">
 													<Input
@@ -129,11 +156,11 @@ export default class Formular extends React.Component{
 												</div>
 											</div>
 											<div className="row mybtn">
-												<Button size="large" 
-													fullWidth={true} 
+												<Button  style={{"margin":"auto"}} size="large" 
+													
 													color="primary" 
 													variant="contained"
-													onClick={this.handleSubmit}>Agregar Atributo
+													onClick={this.addAtrribute}>Agregar Atributo
 												</Button>
 											</div>
 										</CardContent>
@@ -153,9 +180,9 @@ export default class Formular extends React.Component{
 															
 																<List key={index} >
 																	
-																	<Button onClick={(e)=> this.deleteValue(newItem)} >
+																	 
 																		{newItem}
-																	</Button>
+																	
 																</List>
 															)
 													})

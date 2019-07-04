@@ -7,6 +7,9 @@ from .serializers import AttributesSerializer
 from .serializers import QuestionSerializer
 from .serializers import ChoiceSerializer
 
+from rest_framework import generics
+from rest_framework.decorators import action
+
 
 from .models import Productss
 from .models import Attributess
@@ -34,3 +37,4 @@ class ChoiceViewSet(viewsets.ModelViewSet):
 
 	queryset = Choices.objects.all()
 	serializer_class = ChoiceSerializer
+

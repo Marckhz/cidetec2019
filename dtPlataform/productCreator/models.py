@@ -41,12 +41,12 @@ class Attributess(models.Model):
 	#	super(Attributess,self).save(*args, **kwargs)
 
 	def __str__(self):
-		return '{}{}'.format(self.product_name, self.attribute)
+		return '{}'.format(self.attribute)
 
 
 class Questions(models.Model):
 
-	question_ref_id = models.OneToOneField(Attributess, related_name = 'question_ref_id', on_delete = models.CASCADE)
+	attributes_ref_id = models.ForeignKey(Attributess, related_name = 'attributes', on_delete = models.CASCADE)
 	product_ref_id = models.ForeignKey(Productss, related_name = 'product_ref_id', on_delete = models.CASCADE)
 	question_text = models.CharField(max_length = 200)
 
@@ -59,7 +59,7 @@ class Questions(models.Model):
 		super(Questions, self).save(*args, **kwargs)
 
 	def __str__(self):
-		return '{}{}{}'.format(self.question_text, self.product_ref_id, self.question_ref_id)
+		return '{}'.format(self.question_text)
 
 class Choices(models.Model):
 
@@ -78,11 +78,12 @@ class Choices(models.Model):
 		(dont_like_it, 'NO me gusta')
 	]
 
-	product_id = models.OneToOneField(Productss, related_name = 'product_id', on_delete = models.CASCADE)
-	question_id = models.OneToOneField(Questions, related_name = 'question_id', on_delete = models.CASCADE)
+	product_id = models.ForeignKey(Productss, related_name = 'product_id', on_delete = models.CASCADE)
+	question_id = models.ForeignKey(Questions, related_name = 'question_id', on_delete = models.CASCADE)
+	attribute_id = models.ForeignKey(Attributess, related_name  = 'attribute_ref_id', on_delete = models.CASCADE)
 	
 	choice = models.CharField(max_length=2, choices = KANO_MODEL_CHOICES)
 
 	def __str__(self):
 
-		return '{}{}{}'.format(self.product_id, self.question_id, self.choice)
+		return '{}{}{}{}'.format(self.product_id, self.question_id, self.choice, self.attribute_id)
