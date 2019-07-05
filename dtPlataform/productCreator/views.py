@@ -6,17 +6,20 @@ from .serializers import ProductSerializer
 from .serializers import AttributesSerializer
 from .serializers import QuestionSerializer
 from .serializers import ChoiceSerializer
+from .serializers import UserSerializer
 
-from rest_framework import generics
-from rest_framework.decorators import action
-
-
+from django.contrib.auth.models import User
 from .models import Productss
 from .models import Attributess
 from .models import Questions
 from .models import Choices
 
 
+
+class UserRegisterFormViewSet(viewsets.ModelViewSet):
+
+	queryset = User.objects.all()
+	serializer_class = UserSerializer
 
 class ProductViewSet(viewsets.ModelViewSet):
 

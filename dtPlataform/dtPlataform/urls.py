@@ -22,6 +22,7 @@ from productCreator import views
 
 
 router = routers.DefaultRouter()
+router.register(r'user/sign_up', views.UserRegisterFormViewSet )
 router.register(r'products', views.ProductViewSet)
 router.register(r'attributes', views.AttributesViewSet)
 router.register(r'questions', views.QuestionViewSet)
