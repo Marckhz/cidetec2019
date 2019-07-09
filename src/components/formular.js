@@ -70,8 +70,7 @@ export default class Formular extends React.Component{
 			console.log(this.state.item)
 			console.log(this.state.product)
 		}
-	}
-	  
+	} 
 	  postProducto(event){
 	    event.preventDefault();
 	    let productName = this.state.product
@@ -100,11 +99,7 @@ export default class Formular extends React.Component{
 	    	this.clearData();
 	    	})
 		}
-
-	  testDeletetRequest(Item){
-	  }
-
-
+ 
 
 	  testGetRequest(){
 	    axios.get(`http://127.0.0.1:8000/attributes/`)

@@ -1,6 +1,11 @@
 from django.shortcuts import render
 
 from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny
+
+
+
 
 from .serializers import ProductSerializer
 from .serializers import AttributesSerializer
@@ -17,6 +22,8 @@ from .models import Choices
 
 
 class UserRegisterFormViewSet(viewsets.ModelViewSet):
+
+	permission_classes = (AllowAny,)
 
 	queryset = User.objects.all()
 	serializer_class = UserSerializer
@@ -40,4 +47,3 @@ class ChoiceViewSet(viewsets.ModelViewSet):
 
 	queryset = Choices.objects.all()
 	serializer_class = ChoiceSerializer
-

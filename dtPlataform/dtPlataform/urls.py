@@ -18,17 +18,24 @@ from django.urls import path, include
 
 
 from rest_framework import routers
-from productCreator import views 
+from productCreator import views
+
+from rest_framework_simplejwt.views import ( TokenObtainPairView, TokenRefreshView)
+
 
 
 router = routers.DefaultRouter()
-router.register(r'user/sign_up', views.UserRegisterFormViewSet )
+router.register(r'register', views.UserRegisterFormViewSet )
 router.register(r'products', views.ProductViewSet)
 router.register(r'attributes', views.AttributesViewSet)
 router.register(r'questions', views.QuestionViewSet)
 router.register(r'survey', views.ChoiceViewSet)
+#router.register(r'api/token/$',TokenObtainPairView, basename="token_obtain_pair" )
+#router.register(r'api/token/refresh/$', TokenRefreshView, basename="token_refresh")
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path(r'api/token/',TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path(r'api/token/refresh/', TokenRefreshView.as_view(), name="token_refresh"),
     path('', include(router.urls))
 ]
