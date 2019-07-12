@@ -12,7 +12,6 @@ function login(credentials){
 	})
 }
 
-
 function register(data){
 	return fetch(`http://0.0.0.0:5000/register`,{
 		method:'POST',

@@ -108,53 +108,31 @@ def create_product():
   element = mongo.db.product.insert_one({
     "username": request.json.get("username"),
     "product": request.json.get("product"),
-    "attributes":request.json.get("attributes") 
+    "attributes":request.json.get("attributes")
     })
 
   return "200"
 
-@page.route('/survey', methods = ['GET','POST'])
-@token_required
-def survey(current_user):
-
-  answer = mongo.db.product.find_one_and_update({"producto":"bocina"},
-    {"$push":{"opinion":{"$each":request.json.get("opinion") } }}
-    )
-
-  return dumps(answer)
-
-@page.route('/kano', methods=['POST'])
-def kano():
-
-  opinion = {
-
-    "name":"pedro",
-    "product":"bocina",
-    "attribute":"negra",
-    "opinion":"me gusta",
-    "product_owner":"marquito"
-
-  }
-
-  to_json = dumps(opinion)
-
-  answer = mongo.db.kano_model.insert_one({
-
-    "opinion":opinion
-
-    })
-
-  return "ok"
-
-@page.route('/look_k', methods=['GET'])
-def kano_l():
+@page.route('/dashboard', methods=['GET'])
+def my_surveys():
 
   documents = mongo.db.product.find({
-    "producto":"bocina",
-    "username":"marco"
-    }, limit=0)
+    "username":request.json.get("username"),
+    #"product":request.json.get("product")
+    })
 
-  #for document in documents:
-  #  print(document)
+  return dumps(documents)
+
+@page.route('/answer_survey', methods=['GET','POST'])
+def kano_l():
+
+  update_here = request.json.get("caracteristica")
+  
+  documents = mongo.db.product.find_one_and_update({
+    "username":"marco",
+    "product":"celular",
+    "attributes.{0}".format(update_here):'hola mundo'},
+    {"$set":{"attributes.$.%s"%(update_here):request.json.get("actualizar")} },
+    return_document = ReturnDocument.AFTER)
 
   return dumps(documents)

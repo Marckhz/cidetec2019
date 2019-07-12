@@ -25,7 +25,6 @@ import { login } from '../requests/auth';
 
 import AppBar from '@material-ui/core/AppBar';
 
-
 export  class Login extends React.Component {
 
 
@@ -67,13 +66,11 @@ export  class Login extends React.Component {
 			username: this.state.user,
 			password: this.state.password
 		}
-		//console.log(credentials)
-
 		login(credentials).then(data =>{
 			console.log(data.jwt)
 			this.props.dispatch(actions.login(data.jwt));
 			this.props.dispatch(actions.loadUser(data.user))
-			this.props.dispatch(push('/'))
+			this.props.dispatch(push('/dashboard'))
 		})
 	}
 
@@ -99,14 +96,12 @@ export  class Login extends React.Component {
 									 	onChange ={this.handlePasswordChange}
 									 	
 									 />
-									 <Link to="/create">
 										<Button variant="contained" 
 											color="primary" 
 											style={{"margin":"10px"}} 
 											onClick={this.requestAuth}
 											 >Iniciar Sesion
 										</Button>
-									</Link>	
 								</CardContent>
 							</Card>
 						</div>

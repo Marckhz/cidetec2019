@@ -6,6 +6,7 @@ import Formular from './components/formular';
 import Login from './components/login';
 import Register from './components/register';
 import Survey from './components/survey';
+import Dashboard from './components/dashboard';
 
 
 import { connect } from 'react-redux';
@@ -26,14 +27,13 @@ class Router extends React.Component{
 	signInRoutes(){
 		if(this.props.user.jwt){
 			return(
-					<Route path="/create"> </Route>
+					<Route path="/dashboard"> </Route>
 				);
 		}
 	}
 
 	home(){
 		if(this.props.user.jwt) return Login;
-
 		return Login;
 	}
 
@@ -46,6 +46,7 @@ class Router extends React.Component{
 			  			<Route exact path="/create" component={Formular}/>
 			  			<Route exact path="/register" component = {Register}/>
 			  			<Route exact path="/survey" component ={Survey} />
+			  			<Route exact path="/dashboard" component ={Dashboard}/>
 			  			{this.signInRoutes()}
 					</App>
 				</Switch>

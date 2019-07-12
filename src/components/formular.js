@@ -23,16 +23,18 @@ class Formular extends React.Component{
 			user: props.user,
 			product:'',
 			value:'',
-			item:[],
-			my_item:''
+			attributes:[],
+			dict:{},
+			item:[]
+			//x = {}
 		}
 	//console.log(props.user)
   	  this.handleChange = this.handleChange.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);	
      
       this.handleProductChange = this.handleProductChange.bind(this);
-
-      this.postCreateProduct = this.postCreateProduct.bind(this);
+      this.createProduct = this.createProduct.bind(this);
+      //this.postCreateProduct = this.postCreateProduct.bind(this);
 
   	}
 
@@ -58,22 +60,22 @@ class Formular extends React.Component{
 			alert("imposible agregar campo vacio")
 		}
 		else{
-			this.state.item.push(this.state.value)
+			var x = this.state.value;
+			this.state.dict = {[x]:""}
+			this.state.attributes.push(this.state.dict)
+			this.state.item.push(x)
 			this.clearData()	
-			console.log(this.state.item)
+			console.log(this.state.attributes)
 		}
 	}
 
-	postCreateProduct(event){
-
-		axios.post(`http://0.0.0.0:5000/create`,{
-			"username":this.state.user.username,
-			"product":this.state.product,
-			"attributes":this.state.my_item,
-
-		})
+	createProduct(){
+		const product_data = {
+			username: this.props.user,
+			product:this.state.product,
+			attributes:this.state.attributes
+		}
 	}
-
 	render(){
 		const {item} = this.state;
 
@@ -103,13 +105,14 @@ class Formular extends React.Component{
 														onChange={this.handleChange}
 													/>
 												</div>
+
 											</div>
 											<div className="row mybtn">
 												<Button  style={{"margin":"auto"}} size="large" 
 													
 													color="primary" 
 													variant="contained"
-													onClick={this.postCreateProduct}>Agregar Atributo
+													onClick={this.handleSubmit}>Agregar Atributo
 												</Button>
 											</div>
 										</CardContent>
@@ -121,7 +124,7 @@ class Formular extends React.Component{
 									<CardContent>
 										<div className="row">
 											<List >
-												<ul>										
+												<ul>
 												{
 													item.map((newItem,index)=>{
 														return(
@@ -130,7 +133,7 @@ class Formular extends React.Component{
 																</List>
 															)
 													})
-												}
+												}										
 												</ul>
 											</List>
 										</div>
