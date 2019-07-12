@@ -5,7 +5,6 @@ import bcrypt
 
 from .models import Productss
 from .models import Attributess
-from .models import Questions
 from .models import Choices
 
 from rest_framework import  serializers
@@ -27,6 +26,9 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
+
+	created_by = serializers.SlugRelatedField(queryset = User.objects.all(), slug_field ='username')
+
 	class Meta:
 		model = Productss
 		fields = '__all__'
@@ -34,27 +36,23 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class AttributesSerializer(serializers.ModelSerializer):
+
+	created_by =  serializers.SlugRelatedField(queryset = User.objects.all(), slug_field = 'username')
+	product_name  = serializers.SlugRelatedField(queryset = Productss.objects.all(), slug_field ='product')
+
 	class Meta:
 		model = Attributess
 		fields = '__all__'
 
-
-
-class QuestionSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = Questions
-		fields = '__all__'
-
-
 class ChoiceSerializer(serializers.ModelSerializer):
-	
 
-
-	#attribute_id = serializers.SlugRelatedField(queryset = Attributess.objects.all(), slug_field = 'attribute')
+	created_by = serializers.SlugRelatedField(queryset = User.objects.all(), slug_field = 'username')
+	#attribute_id = serializers.SlugRelatedField(queryset = Attributess.objects.all(), slug_field = 'attribute_id')
 	product_id = serializers.SlugRelatedField(queryset = Productss.objects.all(), slug_field = 'product')
-	question_id = serializers.SlugRelatedField(queryset= Questions.objects.all(), slug_field = 'question_text')
+	#question_id = serializers.SlugRelatedField(queryset= Questions.objects.all(), slug_field = 'question_text')
+	#attribute_= serializers.ReadOnlyField(source ='attribute_id.attribute_id')
 
 	class Meta:
 		model = Choices
-		fields = '__all__'
+		fields = ('created_by', 'product_id', 'attribute_id','choice')
 

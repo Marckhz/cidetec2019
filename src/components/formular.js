@@ -13,32 +13,32 @@ import InputLabel from '@material-ui/core/InputLabel';
 import List from '@material-ui/core/List';
 import { green } from '@material-ui/core/colors';
 
+import { connect } from 'react-redux';
 
-export default class Formular extends React.Component{
+class Formular extends React.Component{
 	
 	constructor(props){
 		super(props);
 		this.state = {
+			user: props.user,
 			product:'',
 			value:'',
 			item:[],
-			id_holder:'',
-			item_id_holder:[]
+			my_item:''
 		}
+	//console.log(props.user)
   	  this.handleChange = this.handleChange.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);	
-      this.generateSurvey = this.generateSurvey.bind(this);
-      this.postProducto = this.postProducto.bind(this);
-      this.deleteValue = this.deleteValue.bind(this);
-      this.addAtrribute= this.addAtrribute.bind(this);
-      this.handleProductTitleChange = this.handleProductTitleChange.bind(this);
-      this.testDeletetRequest = this.testDeletetRequest.bind(this);
+     
+      this.handleProductChange = this.handleProductChange.bind(this);
+
+      this.postCreateProduct = this.postCreateProduct.bind(this);
+
   	}
 
 	clearData(){
 		this.setState({
 			value:'',
-      		//product:''
 		})
 	}
 	handleChange(event){
@@ -47,12 +47,11 @@ export default class Formular extends React.Component{
 		})
 
 	}
-  handleProductTitleChange(event){
-    this.setState({
-      product: event.target.value,
-    })
-  }
-
+  	handleProductChange(event){
+    	this.setState({
+     	 product: event.target.value,
+    	})
+  	}
 	handleSubmit(event){
 		event.preventDefault();
 		if(this.state.value === ''){
@@ -61,60 +60,17 @@ export default class Formular extends React.Component{
 		else{
 			this.state.item.push(this.state.value)
 			this.clearData()	
+			console.log(this.state.item)
 		}
 	}
-	generateSurvey(event){
-		if(this.state.product ==='' || this.state.item.length === 0  ){
-			alert("imposible generar encuesta")
-		}else{
-			console.log(this.state.item)
-			console.log(this.state.product)
-		}
-	} 
-	  postProducto(event){
-	    event.preventDefault();
-	    let productName = this.state.product
-	    axios.post(`http://127.0.0.1:8000/products/`,{
-	      product:productName
-	    })
-	    .then(res=>{
-	     	this.state.id_holder = res.data['id']
-	      	console.log(this.state.id_holder, res.data['product'])
-	    })
-	  }
-	  addAtrribute(event){
-	    event.preventDefault();
-	    //console.log(this.state.id_holder)
-	    let new_attribute = this.state.value
-	    axios.post(`http://127.0.0.1:8000/attributes/`,{
-	    	product_name:this.state.id_holder,
-	    	attribute: new_attribute
-	    })
-	    .then(res=>{
-	    	console.log(res.data)
-	    	this.state.item.push(new_attribute);
-	    	this.state.item_id_holder.push(res.data['id'])
-	    	console.log(this.state.item)
-	    	//console.log(this.state.item_id_holder)
-	    	this.clearData();
-	    	})
-		}
- 
 
-	  testGetRequest(){
-	    axios.get(`http://127.0.0.1:8000/attributes/`)
-	    .then(res =>{
-	      console.log(res)
-	    })
-	  }
+	postCreateProduct(event){
 
-	  deleteValue(Item){
-		const newItems = this.state.item.filter(item=>{
-			return item !== Item;
-		})
+		axios.post(`http://0.0.0.0:5000/create`,{
+			"username":this.state.user.username,
+			"product":this.state.product,
+			"attributes":this.state.my_item,
 
-		this.setState({
-			item:[...newItems]
 		})
 	}
 
@@ -123,16 +79,14 @@ export default class Formular extends React.Component{
 
 		return(
 
-			<div className="container">		
+			<div className="container">
+				<h1></h1>		
 				<div className="row">
 					<div className="col Product-Title">
 						<InputLabel children="Agregue el Servicio/Producto aqui"/>
-              <Input onChange={this.handleProductTitleChange} 
-              value={this.state.product} 
-              />
-					</div>
-					<div className="col Product-Title">
-            			<Button onClick={this.postProducto} variant="contained" color="primary"> Agrega Nombre producto</Button>	
+             			 <Input onChange={this.handleProductChange} 
+              				value={this.state.product} 
+              				/>
 					</div>
 				</div>
 				<form onSubmit={this.handleSubmit}>
@@ -155,7 +109,7 @@ export default class Formular extends React.Component{
 													
 													color="primary" 
 													variant="contained"
-													onClick={this.addAtrribute}>Agregar Atributo
+													onClick={this.postCreateProduct}>Agregar Atributo
 												</Button>
 											</div>
 										</CardContent>
@@ -167,17 +121,12 @@ export default class Formular extends React.Component{
 									<CardContent>
 										<div className="row">
 											<List >
-												<ul>
-												
+												<ul>										
 												{
 													item.map((newItem,index)=>{
 														return(
-															
-																<List key={index} >
-																	
-																	 
-																		{newItem}
-																	
+																<List key={index} >																															 
+																	{newItem}												
 																</List>
 															)
 													})
@@ -196,7 +145,10 @@ export default class Formular extends React.Component{
 							<Button  
 								size="large" variant="contained"  
 								style={{"backgroundColor":green['A700'],"color":"white" }} 
-								fullWidth={true} >Generar Encuesta
+								fullWidth={true} 
+								
+								>Generar Encuesta
+
 							</Button>
 						</div>									
 					</div>
@@ -207,3 +159,11 @@ export default class Formular extends React.Component{
 			)
 	}
 }
+
+
+function mapStateToProps(state, ownProps){
+	return {
+		user: state.user
+	}
+}
+export default connect(mapStateToProps)(Formular);

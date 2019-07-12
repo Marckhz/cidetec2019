@@ -14,6 +14,7 @@ from django.core.exceptions import ValidationError
 class Productss(models.Model):
 
 	product = models.TextField(max_length = 200)
+	created_by = models.ForeignKey(User, related_name = 'usernames', on_delete = models.CASCADE)
 
 	def validate_unique(self, exclude=None):
 		if Productss.objects.filter(product= self.product).exists():
@@ -30,7 +31,8 @@ class Productss(models.Model):
 class Attributess(models.Model):
 
 	product_name = models.ForeignKey(Productss, related_name='Productss', on_delete = models.CASCADE)
-	attribute = models.TextField(max_length= 100)
+	created_by = models.ForeignKey(User, related_name = 'users', on_delete = models.CASCADE)
+	attribute_id = models.TextField(max_length= 100)
 
 	#def validate_unique(self, exclude = None):
 	#	if Attributess.objects.filter(attribute = self.attribute).exists():
@@ -41,9 +43,9 @@ class Attributess(models.Model):
 	#	super(Attributess,self).save(*args, **kwargs)
 
 	def __str__(self):
-		return '{}'.format(self.attribute)
+		return '{}'.format(self.attribute_id)
 
-
+"""
 class Questions(models.Model):
 
 	attributes_ref_id = models.ForeignKey(Attributess, related_name = 'attributes', on_delete = models.CASCADE)
@@ -60,14 +62,15 @@ class Questions(models.Model):
 
 	def __str__(self):
 		return '{}'.format(self.question_text)
+"""
 
 class Choices(models.Model):
 
-	i_like_it = '5'
-	it_shouldbe_present = '4'
-	im_neutral = '3'
-	could_live_with_it = '2'
-	dont_like_it = '1'
+	i_like_it = 'Me gusta'
+	it_shouldbe_present = 'Deberia estar presente'
+	im_neutral = 'Soy Neutral'
+	could_live_with_it = 'Podria vivir con ello'
+	dont_like_it = 'No me gusta'
 
 	KANO_MODEL_CHOICES = [
 
@@ -79,11 +82,10 @@ class Choices(models.Model):
 	]
 
 	product_id = models.ForeignKey(Productss, related_name = 'product_id', on_delete = models.CASCADE)
-	question_id = models.ForeignKey(Questions, related_name = 'question_id', on_delete = models.CASCADE)
-	attribute_id = models.ForeignKey(Attributess, related_name  = 'attribute_ref_id', on_delete = models.CASCADE)
-	
-	choice = models.CharField(max_length=2, choices = KANO_MODEL_CHOICES)
+	created_by = models.ForeignKey(User, related_name='created_by', on_delete= models.CASCADE)
+	attribute_id = models.ForeignKey(Attributess, related_name  = 'attribute_ref_id', on_delete = models.CASCADE)	
+	choice = models.CharField(max_length=40, choices = KANO_MODEL_CHOICES)
 
 	def __str__(self):
 
-		return '{}{}{}{}'.format(self.product_id, self.question_id, self.choice, self.attribute_id)
+		return '{}{}{}{}'.format(self.product_id, self.choice, self.attribute_id, self.created_by)

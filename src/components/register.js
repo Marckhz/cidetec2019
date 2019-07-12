@@ -1,10 +1,5 @@
 import React from 'react';
-
-
-
 import axios from 'axios';
-
-
 
 import Button from '@material-ui/core/Button';
 import Input from '@material-ui/core/Input';
@@ -16,6 +11,8 @@ import List from '@material-ui/core/List';
 import { green } from '@material-ui/core/colors';
 
 //import TextField from '@material-ui/core/TextField';
+
+import { register } from '../requests/auth'; 
 
 
 
@@ -37,10 +34,7 @@ export default class Register extends React.Component{
 		this.handleChangeLastName = this.handleChangeLastName.bind(this);
 		this.handleChangeEmail = this.handleChangeEmail.bind(this);
 
-		this.postRegister = this.postRegister.bind(this);
-
-
-
+		this.requestSignUp = this.requestSignUp.bind(this);
 	}
 
 	handleChangeUsername(event){
@@ -70,33 +64,21 @@ export default class Register extends React.Component{
 		})
 	}
 
-	postRegister(event){
+	requestSignUp(){
+		const  data = {
+			username:this.state.username,
+			password:this.state.password,
+			email:this.state.email,
+			first_name:this.state.first_name,
+			last_name:this.state.last_name
+		}
 
-		let myusername = this.state.username
-		let mypwd = this.state.password
-		let my_name = this.state.first_name
-		let my_last_name = this.state.last_name
-		let myemail = this.state.email
+		register(data).then()
 
-		axios.post(`http://127.0.0.1:8000/register/`,{
-			username:myusername,
-			password:mypwd,
-			first_name:my_name,
-			last_name:my_last_name,
-			email:myemail
-		})
-		.then(res=>{
-			console.log(res)
-		})
-		console.log(myusername)
-		console.log(mypwd)
-		console.log(my_name)
-		console.log(my_last_name)
-		console.log(myemail)
 	}
+
 	render(){
 		return(
-
 			<div className="container">
 				<div className="row">
 					<div className="col">
@@ -122,7 +104,7 @@ export default class Register extends React.Component{
 									<Input onChange={this.handleChangeEmail} type="email"placeholder="email" fullWidth={true}/>
 								</div>
 								<div>
-									<Button variant="contained" color="primary" onClick={this.postRegister}> Registrarse </Button>
+									<Button variant="contained" color="primary" onClick={this.requestSignUp}> Registrarse </Button>
 								</div>
 							</CardContent>
 						</Card>
