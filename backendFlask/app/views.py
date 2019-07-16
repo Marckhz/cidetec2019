@@ -5,7 +5,7 @@ from flask import request, jsonify
 from functools import wraps
 
 
-
+import pprint
 from . import mongo
 from . import bcrypt
 from datetime import datetime
@@ -14,6 +14,7 @@ from datetime import datetime
 from bson.json_util import loads, dumps
 
 
+from pymongo import ReturnDocument
 from flask_jwt import JWT, jwt_required, current_identity
 from werkzeug.security import safe_str_cmp
 
@@ -32,6 +33,9 @@ from .model import User
 
 import base64
 
+import bson
+from bson.objectid import ObjectId
+
 
 
 page = Blueprint('page', __name__)
@@ -49,6 +53,9 @@ Improve login
 @page.route('/login', methods=['GET', 'POST'])
 def login():
 
+
+  auth_user = {}
+
   user = mongo.db.users.find_one({
     "username":request.json.get('username'),
     })
@@ -63,10 +70,11 @@ def login():
 
   if bcrypt.check_password_hash(password, request.json.get('password')):
     token = jwt.encode({'username':user_to_auth}, key)
+    print(token)
     return dumps({ "user":user, 'jwt':token.decode('UTF-8') })
   else:
     return "False"
-  return "200"
+  return dumps({"user":user_to_auth})
 
 def token_required(f):
   @wraps(f)
@@ -78,10 +86,10 @@ def token_required(f):
 
     if not token:
       return jsonify({'message':"no token"})
-
     try:
       data = jwt.decode(token, key)
       current_user = mongo.db.users.find_one({"username":data['username']})
+      print(current_user)
     except:
       return jsonify({"message":"token invalid"}, 401)
 
@@ -102,37 +110,52 @@ def register():
 
   return "200"
 
-@page.route('/create', methods= ['POST'])
+@page.route('/create', methods= ['GET', 'POST'])
 def create_product():
 
-  element = mongo.db.product.insert_one({
-    "username": request.json.get("username"),
-    "product": request.json.get("product"),
-    "attributes":request.json.get("attributes")
+  document = mongo.db.product.insert_one({
+      "username":request.json.get("username"),
+      "product":request.json.get("product",""),
+      "attributes":request.json.get("attributes","")
+    })
+  return dumps(document.inserted_id)
+
+@page.route('/dashboard', methods=['GET','POST'])
+def dashboard():
+  docs = []
+  documents = mongo.db.product.find({})
+  for item in documents:
+    docs.append(item)
+  print(docs)
+  return dumps({"docs":docs})
+
+
+
+@page.route('/dashboard/my-surveys/<usernames>/', methods=['GET'])
+def profile_dashboard(usernames):
+
+  docs = []
+  documents = mongo.db.product.find({"usernames":usernames})
+
+  for item in documents:
+    docs.append(item)
+
+  return dumps({"docs":docs})
+
+
+@page.route('/survey/answer-survey/<ObjectId:_id>/', methods=['GET', 'POST'])
+def survey_single_element(_id):
+  document = mongo.db.product.find_one_or_404({"_id":_id})
+
+  update_document = mongo.db.answers.insert_one({
+    "guest_name":request.json.get("guest_name"),
+    "profile":request.json.get("profile"),
+    "work_location":request.json.get("work_location")
+    "kano_anwers":request.json.get("kano_anwers"),
+    "product":document['product'],
+    "survey_owner":document['usernames']
     })
 
-  return "200"
+  return dumps({"docs":document})
 
-@page.route('/dashboard', methods=['GET'])
-def my_surveys():
 
-  documents = mongo.db.product.find({
-    "username":request.json.get("username"),
-    #"product":request.json.get("product")
-    })
-
-  return dumps(documents)
-
-@page.route('/answer_survey', methods=['GET','POST'])
-def kano_l():
-
-  update_here = request.json.get("caracteristica")
-  
-  documents = mongo.db.product.find_one_and_update({
-    "username":"marco",
-    "product":"celular",
-    "attributes.{0}".format(update_here):'hola mundo'},
-    {"$set":{"attributes.$.%s"%(update_here):request.json.get("actualizar")} },
-    return_document = ReturnDocument.AFTER)
-
-  return dumps(documents)

@@ -1,6 +1,6 @@
-import productReducer from './productReducer';
+import products from './productReducer';
 import user from './userReducer';
 
-export default {productReducer, user};
+export default {products, user};
 
 

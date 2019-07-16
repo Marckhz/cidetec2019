@@ -15,5 +15,5 @@ app = create_app(config_class)
 if __name__ == '__main__':
 	manager = Manager(app)
 	#manager.add_command("createsuperuser", createsuperuser)
-	manager.add_command("runserver", Server('0.0.0.0') )
+	manager.add_command("runserver", Server('127.0.0.1') )
 	manager.run()

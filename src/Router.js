@@ -45,7 +45,7 @@ class Router extends React.Component{
 						<Route exact path="/" component={ Login }/>
 			  			<Route exact path="/create" component={Formular}/>
 			  			<Route exact path="/register" component = {Register}/>
-			  			<Route exact path="/survey" component ={Survey} />
+			  			<Route exact path="/survey/:slug" component ={Survey} />
 			  			<Route exact path="/dashboard" component ={Dashboard}/>
 			  			{this.signInRoutes()}
 					</App>

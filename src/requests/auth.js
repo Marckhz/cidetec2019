@@ -1,6 +1,6 @@
 
 function login(credentials){
-	return fetch(`http://0.0.0.0:5000/login`,{
+	return fetch(`http://127.0.0.1:5000/login`,{
 		method:'POST',
 		body: JSON.stringify(credentials),
 		headers:{
@@ -13,7 +13,7 @@ function login(credentials){
 }
 
 function register(data){
-	return fetch(`http://0.0.0.0:5000/register`,{
+	return fetch(`http://127.0.0.1:5000/register`,{
 		method:'POST',
 		body: JSON.stringify(data),
 		headers:{
