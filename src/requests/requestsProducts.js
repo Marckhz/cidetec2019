@@ -26,14 +26,7 @@ function createProduct(product_data){
 
 
 function getSingleProduct(slug){
-	return fetch("http://localhost:3000/survey/"+slug,{
-		method:'GET',
-		body:JSON.stringify(slug),
-		headers:{
-			'Content-Type':'application/json',
-			'Accept':'application/json'
-		}
-	}).then(response=>{
+	return fetch(`http://127.0.0.1:5000/survey/answer-survey/`+slug).then(response=>{
 		return response.json();
 	})
 }

@@ -14,8 +14,6 @@ import { green } from '@material-ui/core/colors';
 
 import { register } from '../requests/auth'; 
 
-
-
 export default class Register extends React.Component{
 	
 	constructor(props){

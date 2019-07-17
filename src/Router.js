@@ -7,6 +7,7 @@ import Login from './components/login';
 import Register from './components/register';
 import Survey from './components/survey';
 import Dashboard from './components/dashboard';
+import GuestForm from './components/guestForm';
 
 
 import { connect } from 'react-redux';
@@ -14,7 +15,7 @@ import { connect } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
 
 
-import histro from './index.js'
+import history from './index.js'
 
 import App from './App';
 
@@ -22,7 +23,6 @@ import App from './App';
 const userSignedIn = false;
 
 class Router extends React.Component{
-
 
 	signInRoutes(){
 		if(this.props.user.jwt){
@@ -45,7 +45,7 @@ class Router extends React.Component{
 						<Route exact path="/" component={ Login }/>
 			  			<Route exact path="/create" component={Formular}/>
 			  			<Route exact path="/register" component = {Register}/>
-			  			<Route exact path="/survey/:slug" component ={Survey} />
+			  			<Route exact path="/survey/answer-survey/:slug" component ={Survey} />
 			  			<Route exact path="/dashboard" component ={Dashboard}/>
 			  			{this.signInRoutes()}
 					</App>

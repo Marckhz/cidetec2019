@@ -5,6 +5,8 @@ from flask import request, jsonify
 from functools import wraps
 
 
+import requests as req
+
 import pprint
 from . import mongo
 from . import bcrypt
@@ -83,6 +85,8 @@ def token_required(f):
 
     if 'x-access-token' in request.headers:
       token = request.headers['x-access-token']
+      #Necesito agregar esta parte a las cabezaras
+      #Si no, Flask nunca obtendra mi token.
 
     if not token:
       return jsonify({'message':"no token"})
@@ -108,7 +112,9 @@ def register():
     "last_name": request.json.get("last_name")
     })
 
-  return "200"
+  doc = user.inserted_id
+
+  return dumps({"doc":doc})
 
 @page.route('/create', methods= ['GET', 'POST'])
 def create_product():
@@ -129,8 +135,6 @@ def dashboard():
   print(docs)
   return dumps({"docs":docs})
 
-
-
 @page.route('/dashboard/my-surveys/<usernames>/', methods=['GET'])
 def profile_dashboard(usernames):
 
@@ -142,20 +146,26 @@ def profile_dashboard(usernames):
 
   return dumps({"docs":docs})
 
-
 @page.route('/survey/answer-survey/<ObjectId:_id>/', methods=['GET', 'POST'])
 def survey_single_element(_id):
-  document = mongo.db.product.find_one_or_404({"_id":_id})
 
-  update_document = mongo.db.answers.insert_one({
-    "guest_name":request.json.get("guest_name"),
-    "profile":request.json.get("profile"),
-    "work_location":request.json.get("work_location")
-    "kano_anwers":request.json.get("kano_anwers"),
-    "product":document['product'],
-    "survey_owner":document['usernames']
-    })
+  document = mongo.db.product.find_one_or_404({"_id":_id}) 
+  
+  if document and request.method == 'POST':
+    update_document = mongo.db.encuestas.insert_one({
+      "first_name":request.json.get("first_name"),
+      "last_name": request.json.get("last_name"),
+      "address":request.json.get("address"),
+      "email":request.json.get("email"),
+      "gender":request.json.get("gender"),
+      "age":request.json.get("age"),
+      "occupation":request.json.get("occupation"),
+      "work_place":request.json.get("work_place"),
+      "producto":document['product'],
+      "results":request.json.get("results")
+      })
+    
 
-  return dumps({"docs":document})
+  return dumps({"docs":document}), 200
 
-
+#@page.route()

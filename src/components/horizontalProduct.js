@@ -13,11 +13,10 @@ export default class ProductHorizontal extends React.Component{
 
 	render(){
 		return (
-  
 				<div className="container">
           <div className="row">
   					<Card className="col-xs-12 col-md-8" style={{'marginTop':'1em', 'overflow':'hidden','width':'50%'}}>
-  						<CardHeader title={"Nombre del producto: "+ this.props.products.product}/>
+  						<CardHeader title={"Nombre del producot"+this.props.products.product}/>
   							<CardContent>
                   <div className="row Card-Username">
                     <h6>Propietario: {this.props.products.usernames}</h6>

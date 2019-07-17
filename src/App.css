@@ -35,3 +35,29 @@
   margin-top: 50px;
   width: 500px;
 }
+
+.guess-field {
+
+  margin-top: 1em;
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+}
+
+.guess-btn{
+  display: flex;
+  margin-top: 1em;
+  flex-direction: row;
+  width: 100%;
+}
+
+.card-guess-content{
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin: auto;
+}
+
+.guess-input-col{
+  margin: auto;
+}
