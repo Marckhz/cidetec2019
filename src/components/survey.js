@@ -34,10 +34,30 @@ constructor(props){
 	
 
 	this.loadSingleProduct(slug);
-	this.handleChange = this.handleChange.bind(this);
+
+	this.handleChangeRadioButtonsSurvey = this.handleChangeRadioButtonsSurvey.bind(this);
 	this.handleChangesShowSurvey = this.handleChangesShowSurvey.bind(this);
+	this.handleChangeName = this.handleChangeName.bind(this);
+	this.handleChangeLastName = this.handleChangeLastName.bind(this);
+	this.handleChangeStreet = this.handleChangeStreet.bind(this);
+	this.handleChangeLocation = this.handleChangeLocation.bind(this);
+	this.handleChangePostalCode = this.handleChangePostalCode.bind(this);
+	this.handleChangeCity = this.handleChangeCity.bind(this);
+	this.handleChangeCountry = this.handleChangeCountry.bind(this);
+	this.handleChangeEmail = this.handleChangeEmail.bind(this);
+	this.handleChangeGender = this.handleChangeGender.bind(this);
+	this.handleChangeAge = this.handleChangeAge.bind(this);
+	this.handleChangeOccupation = this.handleChangeOccupation.bind(this);
+	this.handleChangeWorkPlace = this.handleChangeWorkPlace.bind(this);
+
+	this.requestsInfo = this.requestsInfo.bind(this);
+	this.handleSubmit = this.handleSubmit.bind(this);
+
+
 
 	this.state={
+
+		disableSubmit:true,
 		showUserForm:true,
 		showSurvey:false,
 		product:{},
@@ -47,7 +67,7 @@ constructor(props){
 		firstName:'',
 		lastName:'',
 		street:'',
-		colony:'',
+		location:'',
 		postalCode:'',
 		city:'',
 		country:'',
@@ -70,9 +90,8 @@ loadSingleProduct(slug){
 		console.log(this.state.product)
 	})
 }
-handleChange(event, index){
-	
-	
+
+handleChangeRadioButtonsSurvey(event, index){
 	if(event.target.id.includes("No")){
 		this.state.negative[event.target.id.slice(2,)] = index
 	}else{
@@ -89,11 +108,124 @@ handleChangesShowSurvey(event){
 	})
 }
 
+handleChangeName(event){
+	this.setState({
+		firstName:event.target.value
+	})
+}
+handleChangeLastName(event){
+	this.setState({
+		lastName:event.target.value
+	})
+}
+handleChangeStreet(event){
+	this.setState({
+		street:event.target.value
+	})
+}
+handleChangeLocation(event){
+	this.setState({
+		location:event.target.value
+	})
+}
+
+handleChangePostalCode(event){
+	this.setState({
+		postalCode:event.target.value
+	})
+}
+
+handleChangeCity(event){
+	this.setState({
+		city:event.target.value
+	})
+}
+handleChangeCountry(event){
+	this.setState({
+		country:event.target.value
+	})
+}
+
+handleChangeEmail(event){
+	this.setState({
+		email:event.target.value
+	})
+}
+
+handleChangeGender(event){
+	this.setState({
+		gender:event.target.value
+	})
+}
+
+handleChangeAge(event){
+	this.setState({
+		age:event.target.value
+	})
+}
+
+handleChangeOccupation(event){
+	this.setState({
+		occupation: event.target.value
+	})
+}
+
+handleChangeWorkPlace(event){
+	this.setState({
+		workplace:event.target.value
+	})
+}
 
 
+requestsInfo(event){
+	const user_data = {
+
+		first_name: this.state.firstName,
+		last_name : this.state.lastName,
+		address:[{
+								street:this.state.street,
+								location:this.state.location,
+								postalCode:this.state.postalCode,
+								city:this.state.postalCode,
+								country:this.state.country,
+					  }],
+		email:this.state.email,
+		gender:this.state.gender,
+		age:this.state.age,
+		occupation:this.state.occupation,
+		work_place:this.state.workplace,
+		//product: this.state.product.product,
+		//results:[{			
+		//					postives:[this.state.postive],
+		//					negative:[this.state.negative],
+		//				}]
+	}
+	return user_data
+//	onsole.log(user_data)
+}
+
+handleSubmit(event){
+
+	const user_data = this.requestsInfo()
+	let aux_arr =  []
+
+	for(let data in user_data){
+		if(user_data[data] === ''){
+			break;
+		}else{
+			aux_arr.push(user_data)
+		}
+	}
+	if(Object.keys(user_data).length == aux_arr.length){
+		return true
+	}else{
+		return false
+	}
+
+}
 
 render(){
-	const {attr, showSurvey, showUserForm} = this.state
+	const {attr, showSurvey, showUserForm, disableSubmit} = this.state
 	return (
 			<div className="container">
 					 { showUserForm ? <Card>
@@ -101,62 +233,66 @@ render(){
 							<CardContent className="card-guess-content">
 								<div className="row guess-field">
 									<div className="col-xs-12 col-md-8 guess-input-col">
-										<Input fullWidth={true} placeholder="Nombre"/>
+										<Input required={true} type="text" onChange={this.handleChangeName} fullWidth={true} placeholder="Nombre"/>
 									</div>
 								</div>
 								<div className="row guess-field" >
 									<div className="col-xs-12 col-md-8 guess-input-col">
-										<Input fullWidth={true} placeholder ="Apellidos"/>
-									</div>
+										<Input required={true} type="text" onChange={this.handleChangeLastName} fullWidth={true} placeholder ="Apellidos"/>
+									</div> 
 								</div>
 							<div className="row guess-field">
 								<div className="col-xs-12 col-md-8 guess-input-col">
-									<Input  fullWidth={true}placeholder="Calle"/>
-								</div>
-							</div>
-							<div className="row guess-field">
-								<div className="col-xs-12 col-md-8 guess-input-col">
-									<Input fullWidth={true} placeholder="Colonia" />
+									<Input required={true} type="text" onChange= {this.handleChangeStreet} fullWidth={true}placeholder="Calle"/>
 								</div>
 							</div>
 							<div className="row guess-field">
 								<div className="col-xs-12 col-md-8 guess-input-col">
-									<Input  fullWidth={true} placeholder="codigo postal"/>
+									<Input required={true} type="text" onChange={this.handleChangeLocation} fullWidth={true} placeholder="Colonia" />
 								</div>
 							</div>
 							<div className="row guess-field">
 								<div className="col-xs-12 col-md-8 guess-input-col">
-									<Input  fullWidth={true} placeholder="Municipio"/>
+									<Input required={true} type="number" onChange={this.handleChangePostalCode}  fullWidth={true} placeholder="codigo postal"/>
 								</div>
 							</div>
 							<div className="row guess-field">
 								<div className="col-xs-12 col-md-8 guess-input-col">
-									<Input  fullWidth={true} placeholder="Pais"/>
+									<Input required={true} type="text" onChange={this.handleChangeCity} fullWidth={true} placeholder="Municipio"/>
 								</div>
 							</div>
 							<div className="row guess-field">
 								<div className="col-xs-12 col-md-8 guess-input-col">
-									<Input fullWidth={true} placeholder="Correo"/>
+									<Input required={true} type="text" onChange={this.handleChangeCountry} fullWidth={true} placeholder="Pais"/>
 								</div>
 							</div>
 							<div className="row guess-field">
 								<div className="col-xs-12 col-md-8 guess-input-col">
-									<Input fullWidth={true} placeholder="Sexo"/>
+									<Input required={true} type="email" onChange={this.handleChangeEmail} fullWidth={true} placeholder="Correo"/>
 								</div>
 							</div>
 							<div className="row guess-field">
 								<div className="col-xs-12 col-md-8 guess-input-col">
-									<Input fullWidth={true} placeholder ="Edad"/>
+								<FormLabel component="fieldset">Sexo </FormLabel>
+								<RadioGroup  style={{"display":"flex", "flexDirection":"row"}} onChange={this.handleChangeGender}>
+									<FormControlLabel  control={<Radio color="primary" value="Hombre"/>} label="Hombre"/>
+									<FormControlLabel  control= {<Radio color="primary" value="Mujer"/>} label="Mujer"/>
+								</RadioGroup>
 								</div>
 							</div>
 							<div className="row guess-field">
 								<div className="col-xs-12 col-md-8 guess-input-col">
-									<Input  fullWidth={true} placeholder="Ocupacion"/>
+									<Input onChange={this.handleChangeAge} fullWidth={true} placeholder ="Edad"/>
 								</div>
 							</div>
 							<div className="row guess-field">
 								<div className="col-xs-12 col-md-8 guess-input-col">
-									<Input fullWidth={true} placeholder="Lugar de Trabajo"/>
+									<Input onChange={this.handleChangeOccupation}  fullWidth={true} placeholder="Ocupacion"/>
+								</div>
+							</div>
+							<div className="row guess-field">
+								<div className="col-xs-12 col-md-8 guess-input-col">
+									<Input onChange={this.handleChangeWorkPlace} fullWidth={true} placeholder="Lugar de Trabajo"/>
 								</div>
 							</div>
 							<div className="row guess-btn">
@@ -164,7 +300,7 @@ render(){
 						<Button className="guess-btn"
 									variant="contained" 
 									color="primary"
-									onClick={this.handleChangesShowSurvey}
+									onClick ={this.handleSubmit} 
 									>Siguiente</Button>
 								</div>
 							</div>
@@ -207,7 +343,7 @@ render(){
 																})
 															}
 											</ul>
-											<Button variant="contained" color="primary"> Aceptar </Button>
+											<Button variant="contained" color="primary"> Aceptar </Button> 
 									</FormControl>
 
 									</div>
@@ -222,6 +358,7 @@ render(){
 			</div>
 			
 		)
+	}
 }
-}
+
 export default withRouter(Survey)
