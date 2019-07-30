@@ -17,6 +17,7 @@ html body .login-forms{
 
 }
 
+
 .border-here{
   border-right: 2px solid;
   padding-right: 100px;
@@ -117,10 +118,16 @@ html body .stuff{
   margin: auto;
 }
 
+.row-menu{
+  text-align: center;
+}
+
+
 @media (max-width:375px) {
  
 .menu-container{
   display: none;
+
   } 
 }
 
@@ -160,4 +167,11 @@ html body .stuff{
 }
 .table{
   margin-top: 10px;
+}
+
+
+.interview-head{
+  margin-left:50px;
+  margin-top: 25PX;
+  margin-bottom: 25PX;
 }

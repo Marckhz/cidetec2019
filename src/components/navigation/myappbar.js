@@ -37,48 +37,48 @@ class MyAppBar extends React.Component{
 	return(
 
 			<AppBar style={{"backgroundColor":"black"}} position="static">
-				<Toolbar style={{}}>
+				<Toolbar >
 					<img src={IconMenu} style={{"height":"100px"}}/>
-				<div className="container-fluid menu-container">
-					<div className="row justify-content-around">
-						<div className="col-12 col-md-4 border-here">
-						<Link className="links-navbar">
+				<div className="container menu-container">
+					<div className="row justify-content-around row-menu">
+						<div className="border-here">
+							<Link className="links-navbar">
 								<div className="link-btn" color="inherit">
-									<h3>Emphatize</h3>
+									<h3 style={{"textAlign":"center"}}>Emphatize</h3>
 								</div>
 							</Link>	
 						</div>
 						<div className="border-here">				
 							<Link className="links-navbar">
 								<div className="link-btn" color="inherit">
-									<h3>Define</h3>
+									<h3 style={{"textAlign":"center"}}>Define</h3>
 								</div>
 							</Link>
 						</div>
 						<div className="border-here">
 							<Link className="links-navbar">
 								<div className="link-btn" color="inherit">
-									<h3>Ideate</h3>
+									<h3 style={{"textAlign":"center"}}>Ideate</h3>
 								</div>
 							</Link>
 						</div>
 						<div className="border-here">
 							<Link className="links-navbar">
 								<div className="link-btn" variant="h6" color="inherit">
-									<h3>Prototype</h3>
+									<h3 style={{"textAlign":"center"}}>Prototype</h3>
 								</div>
 							</Link>
 						</div>
 						<div className="border-here">
 							<Link className="links-navbar">
 								<div className="link-btn" variant="h6" color="inherit">
-									<h3>Test</h3>
+									<h3 style={{"textAlign":"center"}}>Test</h3>
 								</div>
 							</Link>
 						</div>
 					</div>
 				</div>
-					{this.props.user.jwt ?<Button style={{"marginLeft":"auto","fontFamily":"Righteous"}} onClick={this.props.logout} color="inherit"> Log Out </Button> : <Link style={{"marginLeft":"auto", "color":"white", "fontFamily":"Righteous"}} ><Button variant="outlined" color="inherit" style={{"fontFamily":"Righteous", "fontSize":"24px"}}>Sign Up </Button> </Link>}
+					{this.props.user.jwt ?<Button style={{"marginLeft":"auto","fontFamily":"Righteous"}} onClick={this.props.logout} color="inherit"> Log Out </Button> : <Link style={{"marginLeft":"auto", "color":"white", "fontFamily":"Righteous"}} ><Button fullWidth={true }variant="outlined" color="inherit" style={{"fontFamily":"Righteous", "fontSize":"16px"}}>Sign Up </Button> </Link>}
 				</Toolbar>
 			</AppBar>
 		);

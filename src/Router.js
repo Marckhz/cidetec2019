@@ -2,7 +2,6 @@ import React from 'react';
 import { BrowserRouter as ReactRouter, Route, Link, Switch } from "react-router-dom";
 
 
-import Formular from './components/formular';
 import Login from './components/login';
 import Register from './components/register';
 import Survey from './components/survey';
@@ -12,6 +11,10 @@ import RegisterProduct from './components/registerProduct';
 import Splash from './components/splash';
 import Process from './components/landingSystematized';
 import Emphatize from './components/emphatize';
+import Interview from './components/interview';
+import Derivation from './components/derivation';
+import Classification from './components/classification';
+
 
 import { connect } from 'react-redux';
 
@@ -47,13 +50,15 @@ class Router extends React.Component{
 					<App>
 						<Route exact path="/splash" component={Splash}/>
 						<Route exact path="/" component={ Login }/>
-			  			<Route exact path="/create" component={Formular}/>
 			  			<Route exact path="/register" component = {Register}/>
 			  			<Route exact path="/encuesta/:slug" component ={Survey} />
 			  			<Route exact path="/dashboard" component ={Dashboard}/>
 			  			<Route exact path="/registrar-producto/" component={RegisterProduct}/>
 			  			<Route exact path="/process/" component={Process}/>
 			  			<Route exact path="/emphatize/" component={Emphatize}/>
+			  			<Route exact path="/interview/" component={Interview}/>
+			  			<Route exact path="/derivation/" component={Derivation}/>
+			  			<Route exact path="/classification/" component={Classification}/>
 			  			{this.signInRoutes()}
 					</App>
 				</Switch>
