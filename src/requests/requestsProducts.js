@@ -1,5 +1,20 @@
+function getAuth(jwt){
+	return fetch(`http://127.0.0.1:5000/dashboard/`,{
+		method:'GET',
+		headers:{
+			'Content-Type':'application/json',
+			'Accept':'application/json',
+			'Authorization':'Bearer '+ jwt
+
+		}
+	}).then(response=>{
+		return response.json()
+	})
+}
+
+/*
 function getProducts(products){
-	return fetch(`http://127.0.0.1:5000/dashboard`,{
+	return fetch(`http://127.0.0.1:5000/dashboard/`,{
 		method:'GET',
 		body:JSON.stringify(products),
 		headers:{
@@ -10,6 +25,7 @@ function getProducts(products){
 		return response.json();
 	})
 }
+*/
 
 function createProduct(product_data){
 	return fetch(`http://127.0.0.1:5000/create`,{
@@ -24,14 +40,13 @@ function createProduct(product_data){
 	})
 }
 
-
 function getSingleProduct(slug){
-	return fetch(`http://127.0.0.1:5000/survey/answer-survey/`+slug).then(response=>{
+	return fetch(`http://127.0.0.1:5000/encuesta/`+slug).then(response=>{
 		return response.json();
 	})
 }
 
-
+export { getAuth };
 export { getSingleProduct };	
-export { getProducts };
+//export { getProducts };
 export { createProduct };

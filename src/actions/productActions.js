@@ -1,3 +1,4 @@
+/*
 import * as requests from '../requests/requestsProducts';
 
 
@@ -26,3 +27,6 @@ export function loadSingle(){
 		})
 	}		
 }
+
+
+*/

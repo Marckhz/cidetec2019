@@ -6,8 +6,8 @@ export default function userReducer(state = {name:'Marco'}, action){
 			return {};
 		case 'LOAD_USER':
 			return Object.assign({},state, {
-				username: action.user.username,
-				_id: action.user._id
+				//username: action.user.username,
+				//_id: action.user._id
 			})
 
 		default:

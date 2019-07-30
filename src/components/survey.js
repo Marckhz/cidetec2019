@@ -6,6 +6,7 @@ import CardHeader from '@material-ui/core/CardHeader';
 
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
+
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
@@ -15,12 +16,18 @@ import Button from '@material-ui/core/Button';
 import { withRouter } from 'react-router-dom';
 import { getSingleProduct } from '../requests/requestsProducts';
 
+import { fillUserForm }  from '../requests/surveyRequests';
+
 import List from '@material-ui/core/List';
 
 import GuestForm from './guestForm';
 
 import Input from '@material-ui/core/Input';
 
+import  { push } from 'react-router-redux';
+import  { Redirect } from 'react-router-dom'
+
+//agregar redirect
 
 import * as actions from '../actions/productActions';
 
@@ -31,7 +38,6 @@ constructor(props){
 	const slug = props.match.params.slug;
 	console.log(slug);
 	console.log(props);
-	
 
 	this.loadSingleProduct(slug);
 
@@ -53,6 +59,8 @@ constructor(props){
 	this.requestsInfo = this.requestsInfo.bind(this);
 	this.handleSubmit = this.handleSubmit.bind(this);
 
+	this.submitForm = this.submitForm.bind(this);
+
 
 
 	this.state={
@@ -62,7 +70,7 @@ constructor(props){
 		showSurvey:false,
 		product:{},
 		attr:[],
-		postive:{},
+		positive:{},
 		negative:{},
 		firstName:'',
 		lastName:'',
@@ -89,16 +97,17 @@ loadSingleProduct(slug){
 		console.log(this.state.attr)
 		console.log(this.state.product)
 	})
+
 }
 
 handleChangeRadioButtonsSurvey(event, index){
 	if(event.target.id.includes("No")){
 		this.state.negative[event.target.id.slice(2,)] = index
 	}else{
-		this.state.postive[event.target.id.slice(2,)] = index
+		this.state.positive[event.target.id.slice(2,)] = index
 	}
 	console.log(this.state.negative)
-	console.log(this.state.postive)
+	console.log(this.state.positive)
 }
 
 handleChangesShowSurvey(event){
@@ -177,6 +186,8 @@ handleChangeWorkPlace(event){
 }
 
 
+
+
 requestsInfo(event){
 	const user_data = {
 
@@ -201,7 +212,34 @@ requestsInfo(event){
 		//				}]
 	}
 	return user_data
-//	onsole.log(user_data)
+}
+
+
+submitForm(event){
+	
+
+	const user_info = this.requestsInfo();
+	const result = {
+			positive:[this.state.positive],
+			negative:[this.state.negative]
+	}
+	//product:this.state.product
+
+	const user_data = {
+		"user_info":user_info,
+		"results":result,
+		"product":this.state.product.product
+			
+	}
+	if(Object.keys(this.state.positive).length === this.state.attr.length || Object.keys(this.state.negative) === this.state.attr.length){
+		fillUserForm(user_data).then(console.log())
+		alert("La encuesta ha sido enviada")
+		return <Redirect to='/'/>
+
+		
+	}else{
+		alert("favor de llenar todos los campos")
+	}
 }
 
 handleSubmit(event){
@@ -217,9 +255,9 @@ handleSubmit(event){
 		}
 	}
 	if(Object.keys(user_data).length == aux_arr.length){
-		return true
+		this.handleChangesShowSurvey()
 	}else{
-		return false
+		alert("campos vacios")
 	}
 
 }
@@ -322,7 +360,7 @@ render(){
 																
 																<List key={index}>
 																	<h2 style={{"fontWeight":"bold", "color":"black"}}>Como te sentirias si el producto tuviera el attributo {key} </h2>
-																		<RadioGroup style={{"display":"flex", "flexDirection":"row"}} onChange={this.handleChange}>
+																		<RadioGroup style={{"display":"flex", "flexDirection":"row"}} onChange={this.handleChangeRadioButtonsSurvey}>
 																			<FormControlLabel  control={<Radio color="primary" value="1" id={"Si"+key} />}  label="No me gusta"/>
 																			<FormControlLabel  control={<Radio color="primary" value="2" id={"Si"+key} />}  label="Puedo vivir sin eso"/>
 																			<FormControlLabel  control={<Radio color="primary" value="3" id={"Si"+key} />}  label="Soy neutral"/>
@@ -331,7 +369,7 @@ render(){
 																		</RadioGroup>
 
 																		<h2 style={{"fontWeight":"bold", "color":"black"}}>Como te sentirias si el producto NO tuviera el attributo {key}</h2>
-																			<RadioGroup onChange={this.handleChange} style={{"display":"flex", "flexDirection":"row"}}>
+																			<RadioGroup onChange={this.handleChangeRadioButtonsSurvey} style={{"display":"flex", "flexDirection":"row"}}>
 																				<FormControlLabel value="1" control={<Radio color="primary" value="1" id={"No"+key}/> }  label="No me gusta"/>
 																				<FormControlLabel value="2" control ={<Radio color="primary"value="2" id={"No"+key}/>}  label="Puedo vivir sin eso"/>
 																				<FormControlLabel value="3" control={<Radio color="primary" value="3" id={"No"+key}/>}  label="Soy neutral"/>
@@ -343,7 +381,7 @@ render(){
 																})
 															}
 											</ul>
-											<Button variant="contained" color="primary"> Aceptar </Button> 
+											<Button onClick={this.submitForm} variant="contained" color="primary"> Aceptar </Button> 
 									</FormControl>
 
 									</div>

@@ -17,11 +17,11 @@ from bson.json_util import loads, dumps
 
 
 from pymongo import ReturnDocument
-from flask_jwt import JWT, jwt_required, current_identity
+#from flask_jwt import JWT, jwt_required, current_identity
 from werkzeug.security import safe_str_cmp
 
 from flask_cors import CORS, cross_origin
-import jwt
+#import jwt
 import os
 
 import pprint
@@ -39,6 +39,11 @@ import bson
 from bson.objectid import ObjectId
 
 
+from flask_jwt_extended import (
+    JWTManager, jwt_required, create_access_token,
+    get_jwt_identity
+)
+
 
 page = Blueprint('page', __name__)
 
@@ -48,10 +53,6 @@ key = 'secret'
 """
 Improve login
 """
-
-
-
-
 @page.route('/login', methods=['GET', 'POST'])
 def login():
 
@@ -71,13 +72,13 @@ def login():
     return "objecto es None"
 
   if bcrypt.check_password_hash(password, request.json.get('password')):
-    token = jwt.encode({'username':user_to_auth}, key)
-    print(token)
-    return dumps({ "user":user, 'jwt':token.decode('UTF-8') })
+    access_token = create_access_token(identity=user_to_auth)
+
+    return jsonify(jwt=access_token), 200
   else:
     return "False"
   return dumps({"user":user_to_auth})
-
+"""
 def token_required(f):
   @wraps(f)
   def decorated(*args, **kwargs):
@@ -100,6 +101,7 @@ def token_required(f):
     return f(current_user, *args, **kwargs)
 
   return decorated
+"""
 
 @page.route('/register', methods =['POST'])
 def register():
@@ -126,44 +128,35 @@ def create_product():
     })
   return dumps(document.inserted_id)
 
-@page.route('/dashboard', methods=['GET','POST'])
+@page.route('/dashboard/', methods=['GET'])
+@jwt_required
 def dashboard():
   docs = []
   documents = mongo.db.product.find({})
   for item in documents:
     docs.append(item)
   print(docs)
+
+  print(request.headers)
   return dumps({"docs":docs})
 
-@page.route('/dashboard/my-surveys/<usernames>/', methods=['GET'])
-def profile_dashboard(usernames):
 
-  docs = []
-  documents = mongo.db.product.find({"usernames":usernames})
+@page.route('/encuesta/responder/', methods=['POST'])
+def responder_encuesta():
 
-  for item in documents:
-    docs.append(item)
+  document = mongo.db.encuestas.insert_one({
+    "user_info":request.json.get("user_info"),
+    "results":request.json.get("results"),
+    "product":request.json.get("product")
+    })
+  return "200"
 
-  return dumps({"docs":docs})
 
-@page.route('/survey/answer-survey/<ObjectId:_id>/', methods=['GET', 'POST'])
-def survey_single_element(_id):
 
-  document = mongo.db.product.find_one_or_404({"_id":_id}) 
-  
-  if document and request.method == 'POST':
-    update_document = mongo.db.encuestas.insert_one({
-      "first_name":request.json.get("first_name"),
-      "last_name": request.json.get("last_name"),
-      "address":request.json.get("address"),
-      "email":request.json.get("email"),
-      "gender":request.json.get("gender"),
-      "age":request.json.get("age"),
-      "occupation":request.json.get("occupation"),
-      "work_place":request.json.get("work_place"),
-      "producto":document['product'],
-      "results":request.json.get("results")
-      })
+@page.route('/encuesta/<usernames>-<product>', methods=['GET'])
+def survey_single_element(usernames, product):
+
+  document = mongo.db.product.find_one_or_404({"usernames":usernames, "product":product}) 
     
 
   return dumps({"docs":document}), 200

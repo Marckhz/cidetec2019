@@ -9,7 +9,10 @@ from flask_bcrypt import Bcrypt
 import urllib.parse
 from flask_cors import CORS
 
-
+from flask_jwt_extended import (
+    JWTManager, jwt_required, create_access_token,
+    get_jwt_identity
+)
 
 app = Flask(__name__)
 
@@ -17,7 +20,8 @@ app = Flask(__name__)
 # csrf = CSRFProtect()
 login_manager = LoginManager()
 bcrypt = Bcrypt()
-
+app.config['JWT_SECRET_KEY'] = 'super-secret'
+jwt = JWTManager(app)
 
 username = urllib.parse.quote_plus('marco')
 password = urllib.parse.quote_plus('metallica1')
@@ -27,6 +31,7 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 
 
 mongo = PyMongo(app)
+
 
 CORS(app)
 

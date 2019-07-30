@@ -15,14 +15,20 @@ class App extends Component {
 
 	constructor(props){
 		super(props);
-	}
+    this.state = {
+      url:this.props.location.pathname
+    }
+  }
 
   render(){
-  	return (
+    const {url} = this.state
+    console.log(url)
+   
 
+  	return (
     		<div>
-          <Navigation/>
-    		    {this.props.children}
+          {url ==="/" ? false : <Navigation/> } 
+    		    {this.props.children}       
     		</div>
   	);
   }

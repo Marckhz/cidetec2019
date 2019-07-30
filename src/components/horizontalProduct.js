@@ -4,6 +4,8 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 
+import { Link } from 'react-router-dom';
+
 import Button from '@material-ui/core/Button';
 
 import { connect } from 'react-redux';
@@ -23,10 +25,12 @@ export default class ProductHorizontal extends React.Component{
                   </div>
                   <div className="row  Card-Attributes">
                   </div>
+                  <Link to={"/encuesta/"+this.props.products.usernames+"-"+this.props.products.product}>
                   <Button variant="contained" color="primary">Responder encuesta </Button>
+                  </Link>
   							</CardContent>
   					</Card>
-            <div class="w-100 d-none d-md-block"></div>
+            <div className="w-100 d-none d-md-block"></div>
           </div>
 
 				</div>

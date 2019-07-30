@@ -3,7 +3,7 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 
 
-import { getProducts } from '../requests/requestsProducts';
+import { getProducts, getAuth } from '../requests/requestsProducts';
 
 import ProductHorizontal from './horizontalProduct';
 
@@ -17,13 +17,30 @@ class Dashboard extends React.Component{
 	constructor(props){
 		super(props);
 
-		this.loadProducts();
+		//this.loadProducts();
+		this.loadAuth();
+		console.log(this.props.user.jwt)
+		this.state = {
+			myproducts:{}
+		}
+
 		//this.products()
 	}
 
-	loadProducts(){
-		this.props.dispatch(actions.loadAll() )
-	}	
+	loadAuth(){
+		getAuth(this.props.user.jwt).then(response=>{
+			this.setState({
+				myproducts:response.docs
+			})
+			//console.log(response.docs)
+			console.log(this.state.myproducts)
+		})
+
+	}
+
+	//loadProducts(){
+	//	this.props.dispatch(actions.loadAll() )
+	//}	
 	
 	products(){
 		return this.props.products.map((product, index)=>{
@@ -43,6 +60,7 @@ class Dashboard extends React.Component{
 function mapStateToProps(state, ownProps){
 	return {
 		products: state.products,
+		user: state.user
 	}
 }
 export default connect(mapStateToProps)(Dashboard);

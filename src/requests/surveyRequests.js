@@ -1,5 +1,5 @@
-function fillUserForm(survey_info){
-	return fetch(`http://127.0.0.1:5000/survey/answer-survey/`+slug,{
+function fillUserForm(user_info){
+	return fetch(`http://127.0.0.1:5000/encuesta/responder/`,{
 		method:'POST',
 		body:JSON.stringify(user_info),
 		headers:{
@@ -11,4 +11,4 @@ function fillUserForm(survey_info){
 	})
 }
 
-
+export { fillUserForm }

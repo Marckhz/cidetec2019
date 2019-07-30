@@ -10,9 +10,11 @@ import Container from '@material-ui/core/Container';
 import TextField from '@material-ui/core/TextField';
 
 
+import bannerCideteccrop from '../images/bannerCidetec.png';
+import splash from '../images/Group.png';
 
 import { connect } from 'react-redux';
-
+	
 import * as actions from '../actions/userAction';
 
 import  { push } from 'react-router-redux';
@@ -23,9 +25,13 @@ import { BrowserRouter as ReactRouter, Route, Link } from "react-router-dom";
 import { login } from '../requests/auth';
 
 
+import  teal from '@material-ui/core/colors/teal';
+
+import LoadingScreen from 'react-loading-screen';
+
 import AppBar from '@material-ui/core/AppBar';
 
-export  class Login extends React.Component {
+class Login extends React.Component {
 
 
 	constructor(props){
@@ -33,6 +39,7 @@ export  class Login extends React.Component {
 		this.state = {
 			user:'',
 			password:'',
+			isLoading:splash
 		}
 
 	//console.log(props.user)
@@ -43,7 +50,20 @@ export  class Login extends React.Component {
   	  this.requestAuth = this.requestAuth.bind(this);
 	}
 
+	componentWillMount(){
+		console.log(this.state.isLoading)
+	}
 
+	getData(){
+		setTimeout(()=>{
+			this.setState({
+				isLoading:""
+			})
+		},5000)
+	}
+	componentDidMount(){
+		this.getData()
+	}
 	handleChange(event){
 		this.setState({
 			user: event.target.value,
@@ -74,40 +94,66 @@ export  class Login extends React.Component {
 		})
 	}
 
+
 	render(){
 		return(
-			<Container>
-				<div className="container">
-					<div className="row">
-						<div className="col">
-							<Card>
-								<CardHeader title="Login"/>
-								<CardContent>
-									<Input  placeholder="usuario"
-									fullWidth={true}
-									onChange={this.handleChange}
-									
-									/>
-									 <Input className="Input-Password"
-									 	placeholder="password"
-									 	type="password"
-									 	fullWidth={true}
-									 	required={true}
-									 	onChange ={this.handlePasswordChange}
-									 	
-									 />
-										<Button variant="contained" 
-											color="primary" 
-											style={{"margin":"10px"}} 
-											onClick={this.requestAuth}
-											 >Iniciar Sesion
-										</Button>
-								</CardContent>
+			<div>
+			{this.state.isLoading ?  <LoadingScreen>
+					<div className="container-fluid stuff"></div>
+				</LoadingScreen> :
+				<div className="container-fluid login-forms">
+				
+					<div className="row justify-content-end Card-Form">
+						<div className="col-12 col-md-4">
+							<Card className="Card-login"raised= {true}>
+								<CardHeader title="WELCOME" disableTypography={true} 
+									style={{"textAlign":"center", "marginTop":"100px","fontSize":"36px","fontFamily":"Righteous" }}/>
+									<CardContent>
+										<div className="row justify-content-md-center login-form">
+											<div className="col-12 col-md-8">						
+												<TextField  placeholder="username"
+												fullWidth={true}
+												variant="outlined"
+												onChange={this.handleChange}
+												/>
+											</div>
+										</div>
+										<div className="row justify-content-md-center login-form">
+											<div className="col-12 col-md-8">
+												 <TextField className="Input-Password"
+												 	placeholder="password"
+												 	type="password"
+												 	variant="outlined"
+												 	fullWidth={true}
+												 	required={true}
+												 	onChange ={this.handlePasswordChange}								 	
+												 />
+												</div>
+											</div>
+										<div className="row justify-content-md-center login-form">
+											<div className="col-12 col-md-8">
+												<Button variant="contained" 
+													style={{"backgroundColor":"black", "color":"white", "fontSize":"24px", "fontFamily":"Righteous","marginTop":"25px"}} 
+													size="large"
+													fullWidth={true}
+													onClick={this.requestAuth}
+													 >Log In
+												</Button>
+											</div>
+										</div>
+										<div className="row justify-content-md-center login-form">
+											<div className="col-12 col-md-8">
+												<p style={{"textAlign":"center"}}> Don't have an account? <Link style={{"color":"black"}}>Sign Up </Link> </p> 
+											</div>
+										</div>
+									</CardContent>
 							</Card>
 						</div>
 					</div>
+				
+				</div>	
+				}
 				</div>
-			</Container>
 			)
 	}
 }
