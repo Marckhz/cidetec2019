@@ -29,12 +29,12 @@ export default class Classification extends React.Component{
 								</div>
 							</div>
 							<div className="row justify-content-center" style={{"marginTop":"25px"}}>
-								<div className="col-12 col-md-6">
+								<div className="col-12 col-md-8">
 									<h1>E3.-Attributes Classification</h1>
 								</div>
 							</div>
-							<div className="row justify-content-center">
-								<div className="col-12 col-md-10">
+							<div className="row justify-content-center" style={{"marginTop":"25px"}}>
+								<div className="col-12 col-md-8">
 									<Card raised={true}>
 										<CardHeader title="Attributes List" disableTypography={true} style={{"textAlign":"center", "fontSize":"36px"}}/>
 											<CardContent style={{"overflow":"auto", "height":"302px"}}>
@@ -43,15 +43,17 @@ export default class Classification extends React.Component{
 								</div>
 								<div className="col-12 col-md-2">
 									<div className="row justify-content-center">
+										<p style={{"zIndex":"10", "position":"absolute", "marginLeft":"235px", "marginTop":"60px", "width":"350px", "fontSize":"14px"}}>Click into the arrow to add attributes</p>
 										<Button variant="outlined"
-										fullWidth={true} 
-										style={{"border":"3px solid", "color":"black"}}> <Icon> arrow_right_alt</Icon> </Button>
+										style={{"border":"3px solid", "color":"black", "zIndex":"10","position":"absolute", "marginLeft":"180px","marginTop":"100px", "width":"250px"}}> <Icon> arrow_right_alt</Icon> </Button>
 									</div>
 								</div>
 							</div>
 						</div>
+						<div>
+						</div>
 						<div className="col-12 col-md-6 dis-col">
-							<div className="row justify-content-center">
+							<div className="row justify-content-center" style={{"marginTop":"180px"}}>
 								<div className="col-12 col-md-3">
 									<img src={Mesa}/>
 								</div>
@@ -59,12 +61,22 @@ export default class Classification extends React.Component{
 									<img src={ChexBoxOne}/>
 								</div>
 							</div>
-							<div className="row justify-content-center">
-								<div className="col-12 col-md-6">
+							<div className="row justify-content-center" style={{"marginTop":"25px"}}>
+								<div className="col-12 col-md-8">
 									<Card raised={true}>
 										<CardHeader title="Finals" disableTypography={true} style={{"fontSize":"36px", "textAlign":"center"}} />
+											<CardContent style={{"overflow":"auto", "height":"302px"}}>
 
+											</CardContent>
 									</Card>
+								</div>
+							</div>
+							<div className="row justify-content-center">
+								<div className="col-12 col-md-2">
+									<Button variant="contained"
+									fullWidth={true} 
+									style={{"backgroundColor":"black", "color":"white", "fontSize":"24px", "fontFamily":"Righteous", "marginTop":"25px"}}
+									>Finish</Button>
 								</div>
 							</div>
 

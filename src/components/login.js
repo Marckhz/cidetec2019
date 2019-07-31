@@ -101,8 +101,7 @@ class Login extends React.Component {
 			{this.state.isLoading ?  <LoadingScreen>
 					<div className="container-fluid stuff"></div>
 				</LoadingScreen> :
-				<div className="container-fluid login-forms">
-				
+				<div className="container-fluid login-forms">	
 					<div className="row justify-content-end Card-Form">
 						<div className="col-12 col-md-4">
 							<Card className="Card-login"raised= {true}>

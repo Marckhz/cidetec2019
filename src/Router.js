@@ -14,6 +14,8 @@ import Emphatize from './components/emphatize';
 import Interview from './components/interview';
 import Derivation from './components/derivation';
 import Classification from './components/classification';
+import FinalAttributes from './components/finalAttributes';
+import Define from './components/define';
 
 
 import { connect } from 'react-redux';
@@ -59,6 +61,8 @@ class Router extends React.Component{
 			  			<Route exact path="/interview/" component={Interview}/>
 			  			<Route exact path="/derivation/" component={Derivation}/>
 			  			<Route exact path="/classification/" component={Classification}/>
+			  			<Route exact path="/final-attributes/" component={FinalAttributes}/>
+			  			<Route exact path="/define/" component={Define}/>
 			  			{this.signInRoutes()}
 					</App>
 				</Switch>

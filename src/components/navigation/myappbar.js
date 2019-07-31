@@ -42,7 +42,7 @@ class MyAppBar extends React.Component{
 				<div className="container menu-container">
 					<div className="row justify-content-around row-menu">
 						<div className="border-here">
-							<Link className="links-navbar">
+							<Link to="/emphatize" className="links-navbar">
 								<div className="link-btn" color="inherit">
 									<h3 style={{"textAlign":"center"}}>Emphatize</h3>
 								</div>

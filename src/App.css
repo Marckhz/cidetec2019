@@ -161,7 +161,10 @@ html body .stuff{
   height: 100vh;
   background-color: rgba(41, 182,246,25%);  
 }
-
+.dis-col-def{
+  height: 100vh;
+  background-color: #D1FBDA;
+}
 .product-title{
   margin: 50px;
 }
@@ -174,4 +177,14 @@ html body .stuff{
   margin-left:50px;
   margin-top: 25PX;
   margin-bottom: 25PX;
+}
+
+.define-title{
+  background-color: #66BB6A;
+  margin-top: 100px;
+  text-align: center;
+  padding: 25px;
+  border-top-right-radius: 75px;
+  border-bottom-right-radius: 75px;
+  color: black;
 }

@@ -48,7 +48,7 @@ export default class Empathize extends React.Component{
 											<TableBody>
 												<TableRow component="th" scope="row">
 													<TableCell align="center" style={{"padding":"25px", "color":"black", "fontSize":"24px", "fontFamily":"Righteous"}} >
-														<Link style={{"color":"#29B6F6"}}>
+														<Link to="/interview" style={{"color":"#29B6F6"}}>
 															E1
 														</Link>
 													</TableCell>
@@ -61,7 +61,7 @@ export default class Empathize extends React.Component{
 												</TableRow>
 												<TableRow component="th" scope="row">
 													<TableCell align="center" style={{"padding":"25px", "color":"black", "fontSize":"24px", "fontFamily":"Righteous"}} >
-													<Link style={{"color":"#29B6F6"}}>
+													<Link to="/derivation" style={{"color":"#29B6F6"}}>
 														E2
 													</Link>
 													</TableCell>
@@ -74,7 +74,7 @@ export default class Empathize extends React.Component{
 												</TableRow>
 												<TableRow>
 													<TableCell align="center" style={{"padding":"25px", "color":"black", "fontSize":"24px", "fontFamily":"Righteous"}} >
-													<Link style={{"color":"#29B6F6"}}>
+													<Link to="/classification" style={{"color":"#29B6F6"}}>
 														E3
 													</Link>
 													</TableCell>
@@ -87,7 +87,7 @@ export default class Empathize extends React.Component{
 												</TableRow>
 												<TableRow>
 													<TableCell  align="center" style={{"padding":"25px", "color":"black", "fontSize":"24px", "fontFamily":"Righteous"}} >
-													<Link style={{"color":"#29B6F6"}}>
+													<Link to="/final-attributes" style={{"color":"#29B6F6"}}>
 														E4
 													</Link>
 													</TableCell>
