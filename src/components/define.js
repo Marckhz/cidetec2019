@@ -30,8 +30,9 @@ export default class Define extends React.Component{
 							</div>
 							<div className="row justify-content-center">
 								<div className="col-12 col-md-6">
-									<Card>
+									<Card raised={true}>
 										<CardHeader title="Attribute List"/>
+											
 									</Card>
 								</div>
 							</div> 

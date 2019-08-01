@@ -38,9 +38,8 @@ class Derivation extends React.Component{
 	//console.log(props.user)
   	  this.handleChange = this.handleChange.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);	
-     
-      this.handleProductChange = this.handleProductChange.bind(this);
       this.createProduct = this.createProduct.bind(this);
+
       //this.postCreateProduct = this.postCreateProduct.bind(this);
 
   	}
@@ -56,11 +55,7 @@ class Derivation extends React.Component{
 		})
 
 	}
-  	handleProductChange(event){
-    	this.setState({
-     	 product: event.target.value,
-    	})
-  	}
+
 	handleSubmit(event){
 		event.preventDefault();
 		if(this.state.value === ''){
@@ -68,7 +63,7 @@ class Derivation extends React.Component{
 		}
 		else{
 			var x = this.state.value;
-			this.state.dict = {[x]:""}
+			//this.state.dict = {[x]:""}
 			this.state.attributes.push(this.state.dict)
 			this.state.item.push(x)
 			this.clearData()	
@@ -78,7 +73,6 @@ class Derivation extends React.Component{
 
 	createProduct(){
 		const product_data = {
-			username: this.props.user,
 			product:this.state.product,
 			attributes:this.state.attributes
 		}
@@ -102,7 +96,8 @@ class Derivation extends React.Component{
 						</div>
 						<div className="row justify-content-center" style={{"marginTop":"25px"}}>
 							<div className="col-12 col-md-6">
-								<TextField 	
+								<TextField 
+								onChange={this.handleChange}	
 								variant="outlined" 
 								placeholder="Attribute"
 								fullWidth={true}
@@ -112,6 +107,7 @@ class Derivation extends React.Component{
 						<div className="row justify-content-center" style={{"marginTop":"25px"}}>
 							<div className="col-12 col-md-6">
 								<Button
+								onClick={this.handleSubmit}
 								style={{"backgroundColor":"black", "color":"white", "fontSize":"24px", "fontFamily":"Righteous"}}
 								variant="contained"
 								fullWidth={true} 
@@ -129,7 +125,14 @@ class Derivation extends React.Component{
 													item.map((newItem, index)=>{
 													return(
 															<List key={index}>
-																{newItem}
+																<div className="row">
+																	<div className="col-md-6">
+																		{index+1}.-{newItem}
+																	</div>
+																	<div className="col-md-6">
+																		<Button variant="outlined" style={{"border":"2px solid", "color":"red", "fontSize":"12px",  "fontFamily":"Righteous"}}>Remove</Button>
+																	</div>
+																</div>
 															</List>
 														)
 													})

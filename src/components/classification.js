@@ -10,6 +10,7 @@ import CardHeader from '@material-ui/core/CardHeader';
 import List from '@material-ui/core/List';
 
 import Icon from '@material-ui/core/Icon';
+import Checkbox from '@material-ui/core/Checkbox';
 
 import Mesa from '../images/icons/mesa.png';
 import ChexBoxOne from '../images/icons/checkOneBox.png';
@@ -17,7 +18,14 @@ import ChexBoxOne from '../images/icons/checkOneBox.png';
 export default class Classification extends React.Component{
 	constructor(props){
 		super(props);
+
+		this.state = {
+			list:['Plastic', 'S-shape'],
+			final_list:['White']
+		}
+
 	}render(){
+		const {list, final_list} = this.state
 		return (
 
 				<div className="container-fluid">
@@ -38,6 +46,28 @@ export default class Classification extends React.Component{
 									<Card raised={true}>
 										<CardHeader title="Attributes List" disableTypography={true} style={{"textAlign":"center", "fontSize":"36px"}}/>
 											<CardContent style={{"overflow":"auto", "height":"302px"}}>
+												<List>
+													<ul>
+														{
+															list.map((item,index)=>{
+															return(
+																	<List>
+																		<div className="row justify-content-around">
+																			<div className="col-12 col-md-3">
+																				{index+1}.-{item}
+																			</div>
+																			<div className="col-12 col-md-3">
+																				<Checkbox color="default"/>
+																			</div>
+																		</div>
+																	</List>
+																	
+																	)
+														})
+
+													}
+													</ul>
+												</List>
 											</CardContent>
 									</Card>
 								</div>
@@ -66,6 +96,30 @@ export default class Classification extends React.Component{
 									<Card raised={true}>
 										<CardHeader title="Finals" disableTypography={true} style={{"fontSize":"36px", "textAlign":"center"}} />
 											<CardContent style={{"overflow":"auto", "height":"302px"}}>
+											<List>
+												<ul>
+												{
+														final_list.map((item,index)=>{
+															return(
+																	<List kye={index}>
+																		<div className="row justify-content-around">
+																			<div className="col-12 col-md-3">
+																				{index+1}.-{item}
+																			</div>
+																			<div className="col-12 col-md-3">
+																				<Button
+																				variant="outlined"
+																				style={{"border":"3px solid", "fontSize":"12px", "fontFamily":"Righteous", "color":"red"}}
+																				>Remove</Button>
+																			</div>
+																		</div>
+
+																	</List>
+																)
+														})
+													}
+												</ul>
+											</List>
 
 											</CardContent>
 									</Card>

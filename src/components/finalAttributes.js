@@ -17,7 +17,12 @@ import FullCheckBox from '../images/icons/fullChecbox.png'
 export default class FinalAttributes extends React.Component{
 	constructor(props){
 		super(props);
+		this.state = {
+			list:['White']
+		}
+
 	}render(){
+		const {list} = this.state;
 		return(
 				<div className="container-fluid">
 					<div className="row">
@@ -37,6 +42,23 @@ export default class FinalAttributes extends React.Component{
 									<Card raised={true}>
 										<CardHeader title="Attributes List" disableTypography = {true} style={{"textAlign":"center", "fontSize":"36px"}}/>
 										<CardContent style={{"overflow":"auto", "height":"302px"}}>
+											<List>
+												<ul>
+													{
+														list.map((item,index)=>{
+															return(
+
+																	<List>
+																		<div classNames="row justify-content-center">
+																			{index+1}.-{item}
+																		</div>
+																	</List>
+																)
+														})
+													}
+												</ul>
+											</List>
+
 										</CardContent>
 									</Card>
 								</div>

@@ -78,6 +78,9 @@ def login():
   else:
     return "False"
   return dumps({"user":user_to_auth})
+
+
+
 """
 def token_required(f):
   @wraps(f)
@@ -152,12 +155,53 @@ def responder_encuesta():
   return "200"
 
 
+@page.route('/register_product/', methods=['GET','POST'])
+@jwt_required
+def register_product():
+  """
+  0 equivale a nuevo producto,
+  1 a producto conocido
+  """
+  document = mongo.db.product.insert_one({
+    "product_name":request.json.get("product_name"),
+    "type_product":request.json.get("type_product"),
+    "number_surveys":request.json.get("number_surveys"),
+    "username":get_jwt_identity()
+    })
+  docs = document.inserted_id
+
+  return dumps({"docs":docs}), 200
+
+@page.route('/emphatize/<product>', methods=['GET'])
+@jwt_required
+def emphatize_menu(product):
+
+  document = mongo.db.product.find_one_or_404({"username":get_jwt_identity(), "product_name":product})
+
+  return dumps({"docs":document}), 200
+
+@page.route('/emphatize/interview/<product>', methods=['GET', 'POST'])
+@jwt_required
+def interview(product):
+
+  document = mongo.db.interview.insert_one({
+    "market":request.json.get("market"),
+    "gender":request.json.get("gender"),
+    "age_range_start":request.json.get("age_range_start"),
+    "age_range_end":request.json.get("age_range_end"),
+    "description":request.json.get("description"),
+    "username":get_jwt_identity()
+    })
+
+  return dumps({"docs":document.inserted_id}), 200
+
+
 
 @page.route('/encuesta/<usernames>-<product>', methods=['GET'])
 def survey_single_element(usernames, product):
 
   document = mongo.db.product.find_one_or_404({"usernames":usernames, "product":product}) 
-    
+      
 
   return dumps({"docs":document}), 200
 

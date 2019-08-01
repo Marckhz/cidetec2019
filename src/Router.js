@@ -57,11 +57,11 @@ class Router extends React.Component{
 			  			<Route exact path="/dashboard" component ={Dashboard}/>
 			  			<Route exact path="/registrar-producto/" component={RegisterProduct}/>
 			  			<Route exact path="/process/" component={Process}/>
-			  			<Route exact path="/emphatize/" component={Emphatize}/>
-			  			<Route exact path="/interview/" component={Interview}/>
-			  			<Route exact path="/derivation/" component={Derivation}/>
-			  			<Route exact path="/classification/" component={Classification}/>
-			  			<Route exact path="/final-attributes/" component={FinalAttributes}/>
+			  			<Route exact path="/emphatize/:slug" component={Emphatize}/>
+			  			<Route exact path="/interview/:slug" component={Interview}/>
+			  			<Route exact path="/derivation/:slug" component={Derivation}/>
+			  			<Route exact path="/classification/:slug" component={Classification}/>
+			  			<Route exact path="/final-attributes/:slug" component={FinalAttributes}/>
 			  			<Route exact path="/define/" component={Define}/>
 			  			{this.signInRoutes()}
 					</App>

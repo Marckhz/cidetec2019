@@ -14,7 +14,17 @@ import monitos from '../images/icons/monitos.png';
 
 export default class Interview extends React.Component{
 	constructor(props){
-		super(props)
+		super(props);
+
+		this.state = {
+			market:'',
+			gender:'',
+			age_range_start:'',
+			age_range_end:'',
+			description:'',
+		}
+
+	onMarketChang
 
 	}render(){
 		return(

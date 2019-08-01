@@ -15,10 +15,15 @@ import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
 
+import { connect } from 'react-redux';
 
-export default class Empathize extends React.Component{
+
+
+
+class Empathize extends React.Component{
 	constructor(props){
 		super(props);
+		console.log(props)
 	}render(){
 		return(
 				<div className="container-fluid dis-col">
@@ -39,14 +44,14 @@ export default class Empathize extends React.Component{
 									<Paper className="table">
 										<Table size="medium" padding="checkbox">
 											<TableHead>
-												<TableRow>
+												<TableRow component="tr">
 													<TableCell className="table-head"  align="center" size="small" style={{"padding":"25px", "color":"black", "fontSize":"36px", "fontFamily":"Righteous"}} >Phase</TableCell>
 													<TableCell className="table-head" align="center" size="small" style={{"padding":"25px", "color":"black", "fontSize":"36px","fontFamily":"Righteous"}} >Type</TableCell>
 													<TableCell className="table-head" align="center" size="small" style={{"padding":"25px", "color":"black", "fontSize":"36px", "fontFamily":"Righteous"}} >Status</TableCell>
 												</TableRow>
 											</TableHead>
 											<TableBody>
-												<TableRow component="th" scope="row">
+												<TableRow component="tr" scope="row">
 													<TableCell align="center" style={{"padding":"25px", "color":"black", "fontSize":"24px", "fontFamily":"Righteous"}} >
 														<Link to="/interview" style={{"color":"#29B6F6"}}>
 															E1
@@ -59,7 +64,7 @@ export default class Empathize extends React.Component{
 														<Checkbox color="default" />
 													</TableCell>
 												</TableRow>
-												<TableRow component="th" scope="row">
+												<TableRow component="tr" scope="row">
 													<TableCell align="center" style={{"padding":"25px", "color":"black", "fontSize":"24px", "fontFamily":"Righteous"}} >
 													<Link to="/derivation" style={{"color":"#29B6F6"}}>
 														E2
@@ -129,3 +134,9 @@ export default class Empathize extends React.Component{
 			)
 	}
 }
+function mapStateToProps(state, ownProps){
+	return {
+		user: state.user
+	}
+}
+export default connect(mapStateToProps)(Empathize);

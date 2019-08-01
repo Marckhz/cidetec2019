@@ -20,7 +20,11 @@ app = Flask(__name__)
 # csrf = CSRFProtect()
 login_manager = LoginManager()
 bcrypt = Bcrypt()
-app.config['JWT_SECRET_KEY'] = 'super-secret'
+
+
+
+app.config['JWT_TOKEN_LOCATION'] = ['headers']
+#app.config['JWT_SECRET_KEY'] = 'super-secret'
 jwt = JWTManager(app)
 
 username = urllib.parse.quote_plus('marco')
