@@ -24,6 +24,8 @@ class Empathize extends React.Component{
 	constructor(props){
 		super(props);
 		console.log(props)
+		//const slug = this.props.match.params.slug
+
 	}render(){
 		return(
 				<div className="container-fluid dis-col">
@@ -53,7 +55,7 @@ class Empathize extends React.Component{
 											<TableBody>
 												<TableRow component="tr" scope="row">
 													<TableCell align="center" style={{"padding":"25px", "color":"black", "fontSize":"24px", "fontFamily":"Righteous"}} >
-														<Link to="/interview" style={{"color":"#29B6F6"}}>
+														<Link to={"interview/"+this.props.match.params.slug} style={{"color":"#29B6F6"}}>
 															E1
 														</Link>
 													</TableCell>
@@ -66,7 +68,7 @@ class Empathize extends React.Component{
 												</TableRow>
 												<TableRow component="tr" scope="row">
 													<TableCell align="center" style={{"padding":"25px", "color":"black", "fontSize":"24px", "fontFamily":"Righteous"}} >
-													<Link to="/derivation" style={{"color":"#29B6F6"}}>
+													<Link to={"derivation/"+this.props.match.params.slug} style={{"color":"#29B6F6"}}>
 														E2
 													</Link>
 													</TableCell>
@@ -79,7 +81,7 @@ class Empathize extends React.Component{
 												</TableRow>
 												<TableRow>
 													<TableCell align="center" style={{"padding":"25px", "color":"black", "fontSize":"24px", "fontFamily":"Righteous"}} >
-													<Link to="/classification" style={{"color":"#29B6F6"}}>
+													<Link to={"classification/"+this.props.match.params.slug} style={{"color":"#29B6F6"}}>
 														E3
 													</Link>
 													</TableCell>
@@ -92,7 +94,7 @@ class Empathize extends React.Component{
 												</TableRow>
 												<TableRow>
 													<TableCell  align="center" style={{"padding":"25px", "color":"black", "fontSize":"24px", "fontFamily":"Righteous"}} >
-													<Link to="/final-attributes" style={{"color":"#29B6F6"}}>
+													<Link to={"final-attributes/"+this.props.match.params.slug} style={{"color":"#29B6F6"}}>
 														E4
 													</Link>
 													</TableCell>

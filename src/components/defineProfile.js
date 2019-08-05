@@ -1,49 +1,49 @@
 import React from 'react';
-
 import TextField from '@material-ui/core/TextField';
+
+
+
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormLabel from '@material-ui/core/FormLabel';
+
 import Checkbox from '@material-ui/core/Checkbox';
+
+import MonitoNegro from '../images/icons/monitoNegro.png';
 import Button from '@material-ui/core/Button';
+
+
 import InputLabel from '@material-ui/core/InputLabel';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import Select from '@material-ui/core/Select';
 
-import { connect } from 'react-redux';
-import  { push } from 'react-router-redux';
-
-import { registerInterview } from '../requests/requestsProducts';
-
-
-import target from '../images/icons/target.png';
-import monitos from '../images/icons/monitos.png';
-
-
-class Interview extends React.Component{
+export default class DefineProfile extends React.Component{
 	constructor(props){
 		super(props);
-		console.log(props);
-		this.slug = this.props.match.params.slug;
 
 		this.state = {
-			market:'',
-			female:'',
+			profession:'',
 			male:'',
+			female:'',
 			age_range_start:'',
 			age_range_end:'',
-			description:'',
 		}
 
-		this.onMarketChange = this.onMarketChange.bind(this);
+		this.onProfessionChange = this.onProfessionChange.bind(this);
 		this.onGenderMaleChange = this.onGenderMaleChange.bind(this);
 		this.onGenderFemaleChange = this.onGenderFemaleChange.bind(this);
 		this.onAgeStartChange = this.onAgeStartChange.bind(this);
 		this.onAgeEndChange = this.onAgeEndChange.bind(this);
-		this.onDescriptionChange = this.onDescriptionChange.bind(this);
-		this.postInterviewData = this.postInterviewData.bind(this);
+
 	}
 
-	onMarketChange(event){
+	onProfessionChange(event){
 		this.setState({
-			market:event.target.value
+			profession:event.target.value
 		})
 		//console.log(this.state.market)
 	}
@@ -69,24 +69,18 @@ class Interview extends React.Component{
 			age_range_end:event.target.value
 		})
 	}
-	onDescriptionChange(event){
-		this.setState({
-			description:event.target.value
-		})
-	}
-
+/*
 	postInterviewData(){
 
-		if(this.state.market ==='' || this.state.age_range_start ==='' || this.state.age_range_end ==='' || this.state.description ===''){
+		if(this.state.market ==='' || this.state.age_range_start ==='' || this.state.age_range_end ===''){
 			alert("Revisar informacion por favor")
 		}else{
 			if(this.state.male ==='0' && this.state.female ===''){
 				const data = {
-					"market":this.state.market,
+					"profession":this.state.profession,
 					"gender":this.state.male,
 					"age_range_start":this.state.age_range_start,
 					"age_range_end":this.state.age_range_end,
-					"description":this.state.description,
 					"product_name":this.slug,
 				}
 				registerInterview(this.props.match.params.slug, data, this.props.user.jwt).then(response=>{
@@ -99,11 +93,10 @@ class Interview extends React.Component{
 			
 			if(this.state.female ==='1' && this.state.male===''){
 				const data = {
-					"market":this.state.market,
+					"profession":this.state.market,
 					"gender":this.state.female,
 					"age_range_start":this.state.age_range_start,
 					"age_range_end":this.state.age_range_end,
-					"description":this.state.description,
 					"product_name":this.slug,
 				}
 				registerInterview(this.slug, data, this.props.user.jwt).then(response=>{
@@ -114,11 +107,10 @@ class Interview extends React.Component{
 			}
 			if(this.state.female ==='1' && this.state.male ==='0'){
 				const data = { 
-					"market":this.state.market,
+					"profession":this.state.market,
 					"gender":[this.state.male, this.state.female],
 					"age_range_start":this.state.age_range_start,
 					"age_range_end":this.state.age_range_end,
-					"description":this.state.description,
 					"product_name":this.slug,
 				}
 				registerInterview(this.props.match.params.slug, data, this.props.user.jwt).then(response=>{
@@ -129,29 +121,32 @@ class Interview extends React.Component{
 			}
 		}
 	}
+	*/
+
 	render(){
 		return(
-			<div className="container-fluid">
-				<div className="row">
-					<div className="col-12 col-md-6">
+
+				<div className="container-fluid">
+					<div className="row">
+						<div className="col-12 col-md-6">
 							<div className="row">
-								<div className="col-12 col-md-8 emp-title">
-									<h1> EMPHATIZE </h1>
+								<div className="col-12 col-md-8 define-title">	
+									<h1> DEFINE </h1>
 								</div>
 							</div>
 							<div className="row justify-content-start interview-head">
 								<div className="col-12 col-md-6">
-									<h1>E1.- Interview </h1>
+									<h1>Define Profile </h1>
 								</div>
 							</div>
 							<div className="row">
-								<div className="col-12 col-md-6">
+								<div className="col-12 col-md-6" >
 									<TextField
-									onChange={this.onMarketChange} 
-									variant="outlined" 
-									placeholder="Market"
+									onChange={this.onProfessionChange}
+									style={{"marginLeft":"80px"}} 
+									variant="outlined"
+									placeholder="Profession"
 									fullWidth={true}
-									style={{"marginLeft":"80px"}}
 									/>
 								</div>
 							</div>
@@ -208,58 +203,28 @@ class Interview extends React.Component{
 									</NativeSelect>
 								</div>
 							</div>
-							<div className="row">
-								<div className="col-12 col-md-4">
-									<h2 style={{"marginTop":"25px","marginLeft":"80px", "color":"rgba(0,0,0,50%)"}}>Description</h2>
+						</div>
+						<div className="col-12 col-md-6 dis-col-def">
+							<div className="row justify-content-center" style={{"marginTop":"200px"}}>
+								<div className="col-12 col-md-2">
+									<img src={MonitoNegro}/>
 								</div>
 							</div>
-							<div className="row" style={{"marginLeft":"80px"}}>
+							<div className="row justify-content-center" style={{"marginTop":"25px"}}>
 								<div className="col-12 col-md-8">
-									<TextField
-									onChange={this.onDescriptionChange}
-									variant="outlined"
-									multiline= {true}
-									rows="10"
-									fullWidth={true}	
-									/>
+									<h1>In this section you must define the potential market of your Product or Service</h1>
 								</div>
 							</div>
-					</div>
-					<div className="col-12 col-md-6 dis-col">
-						<div className="row justify-content-center" style={{"marginTop":"200px"}}>
-							<div className="col-12 col-md-3">
-								<img src={target}/>
-							</div>
-							<div className="col-12 col-md-3">
-								<img src={monitos}/>
-							</div>
-						</div>
-						<div className="row justify-content-center" style={{"marginTop":"25px"}}>
-							<div className="col-12 col-md-10">
-								<h1 style={{"fontSize":"64px", "color":"black"}}>In this section you must define the potential market of your product or service</h1>
-							</div>
-						</div>
-						<div className="row justify-content-center">
-							<div className="col-12 col-md-2">
-								<Button
-								onClick={this.postInterviewData} 
-								style={{"marginTop":"25px","backgroundColor":"black", "color":"white", "fontSize":"24px", "fontFamily":"Righteous"}}
-								variant="contained"
-								fullWidth={true} 
-								>Send</Button>
+							<div className="row justify-content-center" style={{"marginTop":"25px"}}>
+								<div className="col-md-3">
+									<Button variant="contained"
+									fullWidth={true}
+									style={{"backgroundColor":"black","color":"white","fontSize":"24px", "fontFamily":"Righteous"}}>Send</Button>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-
-			</div>			
 			)
 	}
 }
-
-function mapStateToProps(state, ownProps){
-	return {
-		user: state.user
-	}
-}
-export default connect(mapStateToProps)(Interview);

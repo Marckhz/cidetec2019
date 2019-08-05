@@ -91,7 +91,7 @@ class RegisterProduct extends React.Component{
 				"product_name":this.state.product,
 				"type_product":this.state.type_product,
 				"number_surveys":this.state.number_surveys,
-				"username":this.props.user.jwt
+				//"username":this.props.user.jwt
 				}
 				console.log(data['product_name'])
 				registerProduct(data, this.props.user.jwt).then(response=>{

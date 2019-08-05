@@ -10,18 +10,24 @@ import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import List from '@material-ui/core/List';
 
+import  { push } from 'react-router-redux';
+import { connect } from 'react-redux';
 
 import FullCheckBox from '../images/icons/fullChecbox.png'
 
-
-export default class FinalAttributes extends React.Component{
+class FinalAttributes extends React.Component{
 	constructor(props){
 		super(props);
 		this.state = {
 			list:['White']
 		}
+		this.moveToDefine = this.moveToDefine.bind(this);
+	}
+	moveToDefine(){
+		this.props.dispatch(push("/define/"+this.props.match.params.slug))
 
-	}render(){
+	}
+	render(){
 		const {list} = this.state;
 		return(
 				<div className="container-fluid">
@@ -85,7 +91,10 @@ export default class FinalAttributes extends React.Component{
 									<Button color="secondary"variant="outlined" style={{"fontFamily":"Righteous", "fontSize":"24px"}}>Cancel</Button>
 								</div>
 								<div className="col-12 col-md-3">
-									<Button variant="contained" style={{"color":"white","backgroundColor":"black", "fontSize":"24px", "fontFamily":"Righteous"}}>Finish</Button> 
+									<Button
+									onClick={this.moveToDefine	}
+									 variant="contained" 
+									 style={{"color":"white","backgroundColor":"black", "fontSize":"24px", "fontFamily":"Righteous"}}>Finish</Button> 
 								</div>
 							</div>
 						</div>	
@@ -95,3 +104,11 @@ export default class FinalAttributes extends React.Component{
 			)
 	}
 }
+
+
+function mapStateToProps(state, ownProps){
+	return {
+		user: state.user
+	}
+}
+export default connect(mapStateToProps)(FinalAttributes);

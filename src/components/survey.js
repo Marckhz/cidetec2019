@@ -88,7 +88,7 @@ constructor(props){
 }
 
 loadSingleProduct(slug){
-	getSingleProduct(slug).then(response=>{
+		getSingleProduct(slug).then(response=>{
 		let json = response.docs;
 		this.setState({
 			product:json,

@@ -17,6 +17,9 @@ import TextField from '@material-ui/core/TextField';
 import EmptyChecboxPng from '../images/icons/emptyCheckbox.png';
 import monitos from '../images/icons/monitos.png';
 
+import { addAttributes } from '../requests/requestsProducts';
+import  { push } from 'react-router-redux';
+
 
 import { green } from '@material-ui/core/colors';
 
@@ -26,21 +29,18 @@ class Derivation extends React.Component{
 	
 	constructor(props){
 		super(props);
+		this.slug = this.props.match.params.slug
 		this.state = {
 			user: props.user,
 			product:'',
 			value:'',
-			attributes:[],
-			dict:{},
 			item:[]
 			//x = {}
 		}
 	//console.log(props.user)
   	  this.handleChange = this.handleChange.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);	
-      this.createProduct = this.createProduct.bind(this);
-
-      //this.postCreateProduct = this.postCreateProduct.bind(this);
+      this.postAttributes = this.postAttributes.bind(this);
 
   	}
 
@@ -64,18 +64,35 @@ class Derivation extends React.Component{
 		else{
 			var x = this.state.value;
 			//this.state.dict = {[x]:""}
-			this.state.attributes.push(this.state.dict)
 			this.state.item.push(x)
 			this.clearData()	
-			console.log(this.state.attributes)
+			console.log(this.state.item)
 		}
 	}
+	deleteItem(newItem){
+		const newItems = this.state.item.filter(items=>{
+			return(items !== newItem)
+		})
+		this.setState({
+			item:[...newItems]
+		})
+		console.log(this.state.item)
+	}
 
-	createProduct(){
-		const product_data = {
-			product:this.state.product,
-			attributes:this.state.attributes
-		}
+	postAttributes(){
+		if(this.state.item.length > 1){
+			const data = {
+				"attributes":this.state.item,
+				"product_name":this.slug
+			}
+			addAttributes(this.slug, data, this.props.user.jwt).then(response=>{
+				if(response.status === 200){
+					this.props.dispatch(push(`/emphatize/classification/${this.slug}`))
+				}
+			})
+		}else{
+			alert("Hey there i guess you missing something")
+		}	
 	}
 	render(){
 		const {item} = this.state;
@@ -130,7 +147,7 @@ class Derivation extends React.Component{
 																		{index+1}.-{newItem}
 																	</div>
 																	<div className="col-md-6">
-																		<Button variant="outlined" style={{"border":"2px solid", "color":"red", "fontSize":"12px",  "fontFamily":"Righteous"}}>Remove</Button>
+																		<Button onClick={(e)=>this.deleteItem(newItem) } variant="outlined" style={{"border":"2px solid", "color":"red", "fontSize":"12px",  "fontFamily":"Righteous"}}>Remove</Button>
 																	</div>
 																</div>
 															</List>
@@ -160,7 +177,9 @@ class Derivation extends React.Component{
 						</div>
 						<div className="row justify-content-center" style={{"marginTop":"25px"}}>
 							<div className="col-12 col-md-2">
-								<Button variant="contained" 
+								<Button 
+								onClick={this.postAttributes}
+								variant="contained" 
 								style={{"fontSize":"24px", "fontFamily":"Righteous","backgroundColor":"black", "color":"white"}}  
 								fullWidth={true}
 								>Send</Button>	

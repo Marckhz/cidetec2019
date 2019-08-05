@@ -188,3 +188,35 @@ html body .stuff{
   border-bottom-right-radius: 75px;
   color: black;
 }
+
+.ideate-title{
+  background-color: #FFA726;
+  margin-top: 100px;
+  text-align: center;
+  padding: 25px;
+  border-top-right-radius: 75px;
+  border-bottom-right-radius: 75px;
+  color: black;-color: 
+}
+
+.dis-col-ideate{
+  background-color: rgba(255,167,38, .50);
+  height: 100vh;
+
+}
+.dis-col-prototype{
+  background-color: rgba(239,83,80, .50);
+  height: 100vh;
+
+}
+
+.prototype-title{
+   background-color: #EF5350;
+  margin-top: 100px;
+  text-align: center;
+  padding: 25px;
+  border-top-right-radius: 75px;
+  border-bottom-right-radius: 75px;
+  color: black;-color: 
+
+}

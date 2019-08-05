@@ -22,7 +22,10 @@ import Button from '@material-ui/core/Button';
 import { Link } from "react-router-dom";
 import IconMenu from '../../images/iconMenu.jpg';
  
-
+//Registrar producto debe quedar guardado como 
+//jwt para almanecenar todo el flujo de la aplicacion
+//para poder navegar.
+// (:
 
 class MyAppBar extends React.Component{
 	constructor(props){
@@ -42,7 +45,7 @@ class MyAppBar extends React.Component{
 				<div className="container menu-container">
 					<div className="row justify-content-around row-menu">
 						<div className="border-here">
-							<Link to="/emphatize" className="links-navbar">
+							<Link to={"/emphatize/"} className="links-navbar">
 								<div className="link-btn" color="inherit">
 									<h3 style={{"textAlign":"center"}}>Emphatize</h3>
 								</div>

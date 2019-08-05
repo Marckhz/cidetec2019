@@ -16,7 +16,13 @@ import Derivation from './components/derivation';
 import Classification from './components/classification';
 import FinalAttributes from './components/finalAttributes';
 import Define from './components/define';
-
+import DefineSurvey from './components/defineSurvey';
+import DefineProfile from './components/defineProfile';
+import DefineTotalSurvey from './components/defineTotalSurvey';
+import Methodology from './components/methodology';
+import GenerateReport from './components/generateReport';
+import Ideate from './components/ideate';
+import Prototype from './components/prototype';
 
 import { connect } from 'react-redux';
 
@@ -58,11 +64,18 @@ class Router extends React.Component{
 			  			<Route exact path="/registrar-producto/" component={RegisterProduct}/>
 			  			<Route exact path="/process/" component={Process}/>
 			  			<Route exact path="/emphatize/:slug" component={Emphatize}/>
-			  			<Route exact path="/interview/:slug" component={Interview}/>
-			  			<Route exact path="/derivation/:slug" component={Derivation}/>
-			  			<Route exact path="/classification/:slug" component={Classification}/>
-			  			<Route exact path="/final-attributes/:slug" component={FinalAttributes}/>
-			  			<Route exact path="/define/" component={Define}/>
+			  			<Route exact path="/emphatize/interview/:slug" component={Interview}/>
+			  			<Route exact path="/emphatize/derivation/:slug" component={Derivation}/>
+			  			<Route exact path="/emphatize/classification/:slug" component={Classification}/>
+			  			<Route exact path="/emphatize/final-attributes/:slug" component={FinalAttributes}/>
+			  			<Route exact path="/define/:slug" component={Define}/>
+			  			<Route exact path="/define/generate-survey/:slug" component={DefineSurvey}/>
+			  			<Route exact path="/define/define-profile/:slug" component={DefineProfile}/>
+			  			<Route exact path="/define/define-total-survey/:slug" component={DefineTotalSurvey}/>
+			  			<Route exact path ="/define/methodology/:slug" component= {Methodology}/>
+			  			<Route exact path="/define/generate-report/:slug" component={GenerateReport}/>
+			  			<Route exact path="/ideate/:slug" component={Ideate}/>
+			  			<Route exact path="/prototype/:slug" component={Prototype}/>
 			  			{this.signInRoutes()}
 					</App>
 				</Switch>

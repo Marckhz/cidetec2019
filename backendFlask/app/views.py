@@ -79,33 +79,6 @@ def login():
     return "False"
   return dumps({"user":user_to_auth})
 
-
-
-"""
-def token_required(f):
-  @wraps(f)
-  def decorated(*args, **kwargs):
-    token = None
-
-    if 'x-access-token' in request.headers:
-      token = request.headers['x-access-token']
-      #Necesito agregar esta parte a las cabezaras
-      #Si no, Flask nunca obtendra mi token.
-
-    if not token:
-      return jsonify({'message':"no token"})
-    try:
-      data = jwt.decode(token, key)
-      current_user = mongo.db.users.find_one({"username":data['username']})
-      print(current_user)
-    except:
-      return jsonify({"message":"token invalid"}, 401)
-
-    return f(current_user, *args, **kwargs)
-
-  return decorated
-"""
-
 @page.route('/register', methods =['POST'])
 def register():
 
@@ -190,11 +163,36 @@ def interview(product):
     "age_range_start":request.json.get("age_range_start"),
     "age_range_end":request.json.get("age_range_end"),
     "description":request.json.get("description"),
+    "product":request.json.get("product"),
     "username":get_jwt_identity()
     })
 
   return dumps({"docs":document.inserted_id}), 200
 
+@page.route('/emphatize/derivation/<product>', methods=['GET', 'POST'])
+@jwt_required
+def derivation(product):
+
+  document = mongo.db.attributes.insert_one({
+    "attributes":request.json.get("attributes"),
+    "product_name":request.json.get("product_name"),
+    "username":get_jwt_identity()
+    })
+
+  return dumps({"docs":document.inserted_id}),200
+
+
+@page.route('/emphatize/classification/<product>', methods=['GET', 'POST'])
+@jwt_required
+def classification(product):
+
+  document = mongo.db.final_attributes.insert_one({
+    "final_attributes":request.json.get("final_attributes"),
+    "product_name":request.json.get("product_name"),
+    "username":get_jwt_identity()
+    })
+
+  return dumps({"docs":document.inserted_id}),200
 
 
 @page.route('/encuesta/<usernames>-<product>', methods=['GET'])
