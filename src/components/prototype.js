@@ -143,7 +143,7 @@ export default class Prototype extends React.Component{
 									<TextField type="date" label="end" defaultValue="2017-06-13" />
 								</div>
 							</div>
-							<div className="row justify-content-end">
+							<div className="row justify-content-center">
 								<div className="col-12 col-md-4">
 									<Button variant="contained"
 								style={{"backgroundColor":"black", "color":"white","fontFamily":"Righteous","fontSize":"24px"}}	>Sprint backlog</Button>

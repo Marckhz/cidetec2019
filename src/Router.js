@@ -23,6 +23,9 @@ import Methodology from './components/methodology';
 import GenerateReport from './components/generateReport';
 import Ideate from './components/ideate';
 import Prototype from './components/prototype';
+import BuildSprint from './components/buildSprint';
+import Todo from './components/prototypeTodo';
+import Test from './components/test';
 
 import { connect } from 'react-redux';
 
@@ -76,6 +79,9 @@ class Router extends React.Component{
 			  			<Route exact path="/define/generate-report/:slug" component={GenerateReport}/>
 			  			<Route exact path="/ideate/:slug" component={Ideate}/>
 			  			<Route exact path="/prototype/:slug" component={Prototype}/>
+			  			<Route exact path ="/prototype/build-sprint/:slug" component={BuildSprint}/>
+			  			<Route exact path ="/prototype/todo/:slug" component= {Todo}/>
+			  			<Route exact path ="/test/:slug" component={Test}/>
 			  			{this.signInRoutes()}
 					</App>
 				</Switch>

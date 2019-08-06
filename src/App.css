@@ -211,7 +211,7 @@ html body .stuff{
 }
 
 .prototype-title{
-   background-color: #EF5350;
+  background-color: #EF5350;
   margin-top: 100px;
   text-align: center;
   padding: 25px;
@@ -219,4 +219,22 @@ html body .stuff{
   border-bottom-right-radius: 75px;
   color: black;-color: 
 
+}
+
+
+
+.test-title{
+  background-color: #AB47BC;
+  margin-top: 100px;
+  text-align: center;
+  padding: 25px;
+  border-top-right-radius: 75px;
+  border-bottom-right-radius: 75px;
+  color: black;-color: 
+
+}
+.dis-col-test{
+
+  background-color: rgba(171,71,188, .25);
+  height: 100vh;
 }
