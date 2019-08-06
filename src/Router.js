@@ -26,6 +26,7 @@ import Prototype from './components/prototype';
 import BuildSprint from './components/buildSprint';
 import Todo from './components/prototypeTodo';
 import Test from './components/test';
+import UserBreakdown from './components/userBreakdown';
 
 import { connect } from 'react-redux';
 
@@ -82,6 +83,7 @@ class Router extends React.Component{
 			  			<Route exact path ="/prototype/build-sprint/:slug" component={BuildSprint}/>
 			  			<Route exact path ="/prototype/todo/:slug" component= {Todo}/>
 			  			<Route exact path ="/test/:slug" component={Test}/>
+			  			<Route exact path ="/user-breakdown/:slug" component={UserBreakdown}/>
 			  			{this.signInRoutes()}
 					</App>
 				</Switch>
