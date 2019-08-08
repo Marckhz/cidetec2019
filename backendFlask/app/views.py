@@ -79,6 +79,7 @@ def login():
     return "False"
   return dumps({"user":user_to_auth})
 
+
 @page.route('/register', methods =['POST'])
 def register():
 
@@ -93,6 +94,86 @@ def register():
   doc = user.inserted_id
 
   return dumps({"doc":doc})
+
+@page.route('/register_product/', methods=['GET','POST'])
+@jwt_required
+def register_product():
+  """
+  0 equivale a nuevo producto,
+  1 a producto conocido
+  """
+  document = mongo.db.product.insert_one({
+    "username":get_jwt_identity(),
+    "product":[{
+            "product_name":request.json.get("product_name"),
+            "product_type":request.json.get("product_type"),
+            "number_surveys":request.json.get("number_surveys")
+      }]
+
+    })
+  docs = document.inserted_id
+
+  return dumps({"docs":docs}), 200
+
+
+@page.route('/emphatize/interview/<product>', methods=['POST'])
+@jwt_required
+def interview(product):
+
+  document = mongo.db.product.find_one_and_update({
+    "username":get_jwt_identity(),
+    "product.product_name":product},
+    {"$push":{"product":{"emphatize":[{"interview":[{
+              "market":request.json.get("market"),
+              "gender":request.json.get("gender"),
+              "age_range_start":request.json.get("age_range_start"),
+              "age_range_end":request.json.get("age_range_end"),
+              "description":request.json.get("description")
+            }]
+          }]
+        }
+      }
+    }
+  )
+  return dumps({"docs":document}), 200
+
+@page.route('/emphatize/check/interview/', methods=['GET'])
+#@jwt_required
+def interview_check():
+
+  document = mongo.db.product.find_one({
+    #"username":get_jwt_identity(),
+    "product.product_name":"guitar",
+    #"product.emphatize":"interview"
+    })
+
+  docs = {}
+  for k,v in document['product'][1]:
+    docs = k,v
+  return dumps({"docs":docs}),200
+
+@page.route('/emphatize/derivation/<product>', methods=['GET', 'POST'])
+def derivation(product):
+
+  document = mongo.db.product.find_one_and_update({
+    #"username":get_jwt_identity(),
+    "product.product_name":product},
+    {"$addToSet":{"product.1.emphatize":{
+        "derivation":{
+            "attributes":request.json.get("attributes")
+            }
+          }
+        }
+      }
+    )
+  print(document)
+    
+  return dumps({"docs":document}),200
+
+
+
+
+
 
 @page.route('/create', methods= ['GET', 'POST'])
 def create_product():
@@ -128,22 +209,6 @@ def responder_encuesta():
   return "200"
 
 
-@page.route('/register_product/', methods=['GET','POST'])
-@jwt_required
-def register_product():
-  """
-  0 equivale a nuevo producto,
-  1 a producto conocido
-  """
-  document = mongo.db.product.insert_one({
-    "product_name":request.json.get("product_name"),
-    "type_product":request.json.get("type_product"),
-    "number_surveys":request.json.get("number_surveys"),
-    "username":get_jwt_identity()
-    })
-  docs = document.inserted_id
-
-  return dumps({"docs":docs}), 200
 
 @page.route('/emphatize/<product>', methods=['GET'])
 @jwt_required
@@ -153,33 +218,8 @@ def emphatize_menu(product):
 
   return dumps({"docs":document}), 200
 
-@page.route('/emphatize/interview/<product>', methods=['GET', 'POST'])
-@jwt_required
-def interview(product):
 
-  document = mongo.db.interview.insert_one({
-    "market":request.json.get("market"),
-    "gender":request.json.get("gender"),
-    "age_range_start":request.json.get("age_range_start"),
-    "age_range_end":request.json.get("age_range_end"),
-    "description":request.json.get("description"),
-    "product":request.json.get("product"),
-    "username":get_jwt_identity()
-    })
 
-  return dumps({"docs":document.inserted_id}), 200
-
-@page.route('/emphatize/derivation/<product>', methods=['GET', 'POST'])
-@jwt_required
-def derivation(product):
-
-  document = mongo.db.attributes.insert_one({
-    "attributes":request.json.get("attributes"),
-    "product_name":request.json.get("product_name"),
-    "username":get_jwt_identity()
-    })
-
-  return dumps({"docs":document.inserted_id}),200
 
 
 @page.route('/emphatize/classification/<product>', methods=['GET', 'POST'])
