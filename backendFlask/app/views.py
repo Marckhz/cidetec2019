@@ -116,6 +116,7 @@ def register_product():
   return dumps({"docs":docs}), 200
 
 
+
 @page.route('/emphatize/interview/<product>', methods=['POST'])
 @jwt_required
 def interview(product):
@@ -137,20 +138,27 @@ def interview(product):
   )
   return dumps({"docs":document}), 200
 
-@page.route('/emphatize/check/interview/', methods=['GET'])
-#@jwt_required
-def interview_check():
+@page.route('/emphatize/check/interview/<product>', methods=['GET'])
+@jwt_required
+def interview_check(product):
 
   document = mongo.db.product.find_one({
-    #"username":get_jwt_identity(),
-    "product.product_name":"guitar",
-    #"product.emphatize":"interview"
+    "username":get_jwt_identity(),
+    "product.product_name":product,
     })
-
   docs = {}
-  for k,v in document['product'][1]:
+  this = {}
+  other = {}
+  for k,v in document['product'][1].items():
     docs = k,v
-  return dumps({"docs":docs}),200
+    this[k] = v
+    for element in this['emphatize']:
+      for i,j in element.items():
+        if(i=='interview'):
+          other[i]=j
+  #print(other)
+
+  return dumps({"docs":other}),200
 
 @page.route('/emphatize/derivation/<product>', methods=['GET', 'POST'])
 def derivation(product):

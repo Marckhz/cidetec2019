@@ -1,9 +1,11 @@
-export default function productReducer(state = [1], action){
+export default function productReducer(state ={name:'Marco'}, action){
 	switch(action.type){
-		case 'LOAD_PRODUCTS':
-			return action.products;
-		case 'LOAD_SINGLE_PRODUCT':
-			return action.products;
+		case 'LOAD_PRODUCT':
+			return Object.assign({},state,{ product: action.product });
+		case 'IN_LOG_OUT':
+			return {};
+		case 'INTERVIEW':
+			return Object.assign({}, state, { product: action.interview });
 		default:
 			return state;
 	}

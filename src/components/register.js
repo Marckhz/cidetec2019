@@ -2,13 +2,18 @@ import React from 'react';
 import axios from 'axios';
 
 import Button from '@material-ui/core/Button';
-import Input from '@material-ui/core/Input';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
-import InputLabel from '@material-ui/core/InputLabel';
 import List from '@material-ui/core/List';
 import { green } from '@material-ui/core/colors';
+
+import { Link } from "react-router-dom";
+
+import Net from '../images/net.mp4';
+
+import TextField from '@material-ui/core/TextField';
+
 
 //import TextField from '@material-ui/core/TextField';
 
@@ -78,33 +83,74 @@ export default class Register extends React.Component{
 	render(){
 		return(
 			<div className="container">
-				<div className="row">
-					<div className="col">
-						<Card>
-							<CardHeader title="Registrarse" />
-							<CardContent>
-								<div className="row Card-Input">
-									<Input placeholder="username" 
-									fullWidth={true}
-									onChange={this.handleChangeUsername}
-									/>
+				<video  id="myVideo" loop autoPlay>
+					<source src={Net} type="video/mp4"/>
+				</video>
+				<div className="row justify-content-center" style={{"margin":"auto", "marginTop":"225px"}}>
+					<div className="col-12 col-md-6" style={{"margin":"auto"}}>
+						<Card raised={true} style={{"margin":"auto"}}>
+							<CardHeader title="Register" disableTypography={true} style={{"textAlign":"center", "fontSize":"48px", "fontFamily":"Righteous"}}/>
+								<CardContent >
+								<div className="row" style={{"margin":"1em"}}>
+									<div className="col-12 col-md-12">
+										<TextField 
+										fullWidth={true}
+										variant="outlined"
+										placeholder="username" 
+										label="username"/>
+									</div>
 								</div>
-								<div className="row Card-Input">
-									<Input  onChange={this.handleChangePwd} type="password" placeholder="password"fullWidth={true}/>
+								<div className="row" style={{"margin":"1em"}}>
+									<div className="col-12 col-md-12">
+										<TextField fullWidth={true}
+										variant="outlined"
+										type="password"
+										placeholder="password"
+										label="password"/>
+									</div>
 								</div>
-								<div className="row Card-Input">
-									<Input  onChange={this.handleChangeName}  placeholder="nombre"fullWidth={true}/>
+								<div className="row" style={{"margin":"1em"}}>
+									<div className="col-12 col-md-12">
+										<TextField
+										fullWidth={true}
+										type="email"
+										variant="outlined"
+										placeholder="email"
+										label="email"/>
+									</div>
 								</div>
-								<div className="row Card-Input">
-									<Input onChange={this.handleChangeLastName} placeholder="apellido" fullWidth={true}/>
+								<div  className="row" style={{"margin":"1em"}}>
+									<div className="col-12 col-md-12">
+										<TextField 
+										fullWidth={true}
+										variant="outlined"
+										placeholder="First Name"
+										label="First Name"/>
+									</div>
 								</div>
-								<div className="row Card-Input">
-									<Input onChange={this.handleChangeEmail} type="email"placeholder="email" fullWidth={true}/>
+								<div className="row" style={{"margin":"1em"}}>
+									<div className="col-12 col-md-12">
+										<TextField 
+										fullWidth={true}
+										variant="outlined"
+										placeholder="Last Name"
+										label="Last Name"/>
+									</div>
 								</div>
-								<div>
-									<Button variant="contained" color="primary" onClick={this.requestSignUp}> Registrarse </Button>
+								<div className="row" style={{"margin":"1em"}}>
+									<div className="col-12 col-md-12">
+										<Button 
+										size="large"
+										variant="contained" 
+										fullWidth={true} style={{"fontSize":"24px", "fontFamily":"Righteous", "color":"white","backgroundColor":"black"}}>Register</Button>
+									</div>
 								</div>
-							</CardContent>
+								<div className="row justify-content-center" style={{"margin":"1em", "fontSize":"12px"}}>
+									<div className="col-1 col-md-6">
+										<p> Already have an account? <Link to="/">Sign</Link> </p>
+									</div>
+								</div>
+								</CardContent>
 						</Card>
 					</div>
 				</div>

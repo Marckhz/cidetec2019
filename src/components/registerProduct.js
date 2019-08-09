@@ -26,12 +26,16 @@ import Logo from '../images/logo.png';
 
 import { connect } from 'react-redux';
 
-import * as actions from '../actions/userAction';
+//import * as actions from '../actions/userAction';
+import * as actions from '../actions/productActions';
+
 
 import  { push } from 'react-router-redux';
 
 import { getAuth } from '../requests/requestsProducts';
 import { registerProduct } from '../requests/requestsProducts';
+
+
 import { getSingleProduct } from '../requests/requestsProducts';
 
 
@@ -45,6 +49,8 @@ import  teal from '@material-ui/core/colors/teal';
 class RegisterProduct extends React.Component{
 	constructor(props){
 		super(props);
+
+
 
 		this.state = {
 			product:'',
@@ -89,7 +95,7 @@ class RegisterProduct extends React.Component{
 		}else{
 			const data = {
 				"product_name":this.state.product,
-				"type_product":this.state.type_product,
+				"product_type":this.state.type_product,
 				"number_surveys":this.state.number_surveys,
 				//"username":this.props.user.jwt
 				}
@@ -97,8 +103,10 @@ class RegisterProduct extends React.Component{
 				registerProduct(data, this.props.user.jwt).then(response=>{
 					if(response.docs){
 					 	console.log(response.docs)
-				 		getSingleProduct(data['product_name'], this.props.user.jwt)
-					 		this.props.dispatch(push(`/emphatize/${data["product_name"]}`))
+					 	console.log(data['product_name'])
+				 		//getSingleProduct(data['product_name'], this.props.user.jwt)
+				 		this.props.dispatch(actions.loadSingleProduct(data['product_name']))
+					 	this.props.history.push('/emphatize/'+this.props.product.product)
 					 }
 				})
 			//console.log(data)
@@ -179,7 +187,8 @@ class RegisterProduct extends React.Component{
 
 function mapStateToProps(state, ownProps){
 	return {
-		user: state.user
+		user: state.user,
+		product: state.products
 	}
 }
 export default connect(mapStateToProps)(RegisterProduct);

@@ -1,3 +1,5 @@
+	
+
 function getAuth(jwt){
 	return fetch(`http://127.0.0.1:5000/register_product/`,{
 		method:'POST',
@@ -65,6 +67,22 @@ function addAttributes(slug, data, jwt){
 	})
 }
 
+
+function getInterview(slug, jwt){
+	return fetch(`http://127.0.0.1:5000/emphatize/check/interview/`+slug,{
+		method:'GET',
+		headers:{
+			'Content-Type':'application/json',
+			'Accept':'application.json',
+			'Authorization':'Bearer '+jwt
+		}
+	}).then(response=>{
+		return response.json()
+	})
+}
+
+
+export { getInterview };
 export { addAttributes };
 export { registerInterview };
 export { registerProduct };

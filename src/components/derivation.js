@@ -41,7 +41,7 @@ class Derivation extends React.Component{
   	  this.handleChange = this.handleChange.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);	
       this.postAttributes = this.postAttributes.bind(this);
-
+      this.clearData = this.clearData.bind(this); 
   	}
 
 	clearData(){
@@ -83,11 +83,10 @@ class Derivation extends React.Component{
 		if(this.state.item.length > 1){
 			const data = {
 				"attributes":this.state.item,
-				"product_name":this.slug
 			}
-			addAttributes(this.slug, data, this.props.user.jwt).then(response=>{
+			addAttributes(this.props.product.product, data, this.props.user.jwt).then(response=>{
 				if(response.status === 200){
-					this.props.dispatch(push(`/emphatize/classification/${this.slug}`))
+					this.props.history.push('/emphatize/classification/'+this.props.product.product)
 				}
 			})
 		}else{
@@ -198,7 +197,8 @@ class Derivation extends React.Component{
 
 function mapStateToProps(state, ownProps){
 	return {
-		user: state.user
+		user: state.user,
+		product:state.products
 	}
 }
 export default connect(mapStateToProps)(Derivation);

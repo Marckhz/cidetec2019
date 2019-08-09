@@ -12,6 +12,8 @@ import  { push } from 'react-router-redux';
 
 import { registerInterview } from '../requests/requestsProducts';
 
+import * as actions from '../actions/productActions';
+
 
 import target from '../images/icons/target.png';
 import monitos from '../images/icons/monitos.png';
@@ -21,7 +23,9 @@ class Interview extends React.Component{
 	constructor(props){
 		super(props);
 		console.log(props);
-		this.slug = this.props.match.params.slug;
+		//this.slug = this.props.match.params.slug;
+		const slug = props.product.product
+
 
 		this.state = {
 			market:'',
@@ -74,29 +78,27 @@ class Interview extends React.Component{
 			description:event.target.value
 		})
 	}
-
 	postInterviewData(){
 
 		if(this.state.market ==='' || this.state.age_range_start ==='' || this.state.age_range_end ==='' || this.state.description ===''){
 			alert("Revisar informacion por favor")
 		}else{
 			if(this.state.male ==='0' && this.state.female ===''){
-				const data = {
-					"market":this.state.market,
-					"gender":this.state.male,
-					"age_range_start":this.state.age_range_start,
-					"age_range_end":this.state.age_range_end,
-					"description":this.state.description,
-					"product_name":this.slug,
-				}
-				registerInterview(this.props.match.params.slug, data, this.props.user.jwt).then(response=>{
+				const data = {			
+									"market":this.state.market,
+									"gender":this.state.male,
+									"age_range_start":this.state.age_range_start,
+									"age_range_end":this.state.age_range_end,
+									"description":this.state.description,
+						}
+						console.log(data)
+				registerInterview(this.props.product.product, data, this.props.user.jwt).then(response=>{
 					console.log(response)
 					if(response.status === 200){
-						this.props.dispatch(push(`/emphatize/derivation/${this.props.match.params.slug}`))
+						this.props.history.push('/emphatize/derivation/'+this.props.product.product)
 					}
 				})
 			}
-			
 			if(this.state.female ==='1' && this.state.male===''){
 				const data = {
 					"market":this.state.market,
@@ -106,10 +108,10 @@ class Interview extends React.Component{
 					"description":this.state.description,
 					"product_name":this.slug,
 				}
-				registerInterview(this.slug, data, this.props.user.jwt).then(response=>{
+				registerInterview(this.props.product.product, data, this.props.user.jwt).then(response=>{
 					if(response.status === 200){
-						this.props.dispatch(push(`/emphatize/derivation/${this.props.match.params.slug}`))
-					}				
+						this.props.dispatch.push('/emphatize/derivation/'+this.props.product.product)
+					}
 				})
 			}
 			if(this.state.female ==='1' && this.state.male ==='0'){
@@ -121,11 +123,12 @@ class Interview extends React.Component{
 					"description":this.state.description,
 					"product_name":this.slug,
 				}
-				registerInterview(this.props.match.params.slug, data, this.props.user.jwt).then(response=>{
+				registerInterview(this.props.product.product, data, this.props.user.jwt).then(response=>{
 					if(response.status === 200){
-						this.props.dispatch(push(`/emphatize/derivation/${data["product_name"]}`))
+						const bool = true
+						this.props.history.push('/emphatize/derivation/'+this.props.product.product)
 					}
-				})
+				})			
 			}
 		}
 	}
@@ -259,7 +262,8 @@ class Interview extends React.Component{
 
 function mapStateToProps(state, ownProps){
 	return {
-		user: state.user
+		user: state.user,
+		product:state.products
 	}
 }
 export default connect(mapStateToProps)(Interview);

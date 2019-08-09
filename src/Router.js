@@ -38,10 +38,16 @@ import history from './index.js'
 import App from './App';
 
 
+
+
+
 const userSignedIn = false;
 
 class Router extends React.Component{
-
+	constructor(props){
+		super(props);
+		console.log("Router props ->", props.history)
+	}
 	signInRoutes(){
 		if(this.props.user.jwt){
 			return(
@@ -49,7 +55,6 @@ class Router extends React.Component{
 				);
 		}
 	}
-
 	home(){
 		if(this.props.user.jwt) return Login;
 		return Login;
@@ -57,9 +62,9 @@ class Router extends React.Component{
 
 	render(){
 		return(	
-			<ReactRouter history = {this.props.history}>
-				<Switch>
-					<App>
+			<ReactRouter history={this.props.history}>
+					<Switch>
+						<App>
 						<Route exact path="/splash" component={Splash}/>
 						<Route exact path="/" component={ Login }/>
 			  			<Route exact path="/register" component = {Register}/>
@@ -84,8 +89,7 @@ class Router extends React.Component{
 			  			<Route exact path ="/prototype/todo/:slug" component= {Todo}/>
 			  			<Route exact path ="/test/:slug" component={Test}/>
 			  			<Route exact path ="/user-breakdown/:slug" component={UserBreakdown}/>
-			  			{this.signInRoutes()}
-					</App>
+			  			</App>
 				</Switch>
 
 			</ReactRouter>

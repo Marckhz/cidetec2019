@@ -15,18 +15,35 @@ import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
 
-import { connect } from 'react-redux';
 
+import * as actions from '../actions/productActions';
+import { getInterview } from '../requests/requestsProducts';
+
+
+
+import { connect } from 'react-redux';
 
 
 
 class Empathize extends React.Component{
 	constructor(props){
 		super(props);
-		console.log(props)
+		//console.log(props)
+		//console.log(props.product.product)
 		//const slug = this.props.match.params.slug
+	}
+		checkInterview(){
+		getInterview(this.props.product.product, this.props.user.jwt).then(response=>{
+				const check_me = response.docs
+				if(check_me.interview){
+					this.setState({
+						emphatize:true
+					})
+				}
+		});
+	}
 
-	}render(){
+	render(){
 		return(
 				<div className="container-fluid dis-col">
 						<div className="row" style={{"backgroundColor":"white"}}>
@@ -138,7 +155,8 @@ class Empathize extends React.Component{
 }
 function mapStateToProps(state, ownProps){
 	return {
-		user: state.user
+		user: state.user,
+		product: state.products
 	}
 }
 export default connect(mapStateToProps)(Empathize);

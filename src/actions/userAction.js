@@ -9,6 +9,6 @@ export function logout(){
 }
 
 export function loadUser(user){
-	console.log(user);
+	//console.log(user);
 	return { type: 'LOAD_USER', user}
 }

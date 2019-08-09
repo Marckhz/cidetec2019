@@ -88,9 +88,10 @@ class Login extends React.Component {
 		}
 		login(credentials).then(data =>{
 			console.log(data.jwt)
+			//console.log(data.user)
 			this.props.dispatch(actions.login(data.jwt));
 			this.props.dispatch(actions.loadUser(data.user))
-			this.props.dispatch(push('/process'))
+			this.props.history.push('/process')
 		})
 	}
 
@@ -142,7 +143,7 @@ class Login extends React.Component {
 										</div>
 										<div className="row justify-content-md-center login-form">
 											<div className="col-12 col-md-8">
-												<p style={{"textAlign":"center"}}> Don't have an account? <Link style={{"color":"black"}}>Sign Up </Link> </p> 
+												<p style={{"textAlign":"center"}}> Don't have an account? <Link to="/register"style={{"color":"black"}}>Sign Up </Link> </p> 
 											</div>
 										</div>
 									</CardContent>

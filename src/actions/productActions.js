@@ -1,32 +1,13 @@
-/*
-import * as requests from '../requests/requestsProducts';
-
-
-export  function loadProducts(products){
-	return {type:'LOAD_PRODUCTS', products}
-
-}
-export function loadAll(){
-	return(dispatch, getState)=>{
-		requests.getProducts().then(results=>{
-			console.log(results)
-			dispatch(loadProducts(results.docs))
-		})
-	}
+export function loadSingleProduct(product){
+	console.log(product)
+	return { type:'LOAD_PRODUCT', product };
 }
 
-export function loadSingleProduct(slug){
-	return { type:'LOAD_SINGLE_PRODUCT', slug}
+export function unloadProduct(){
+	return { type : 'IN_LOG_OUT' };
 }
 
-export function loadSingle(){
-	return(dispatch, getState)=>{
-		requests.getSingleProduct().then(results=>{
-			console.log(results)
-			dispatch(loadSingleProduct(results.docs))
-		})
-	}		
+export function interview(interview){
+	console.log("soy bool", interview)
+	return { type : 'INTERVIEW', interview };
 }
-
-
-*/

@@ -9,11 +9,11 @@ import { routerReducer } from 'react-router-redux';
 
 
 const enhancer = compose(
-	persistState('user')
+	persistState(['user','products'])
 )
 
 
-const rootReducer= combineReducers({
+const rootReducer = combineReducers({
 	...reducers,
 	router: routerReducer
 })
