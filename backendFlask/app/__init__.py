@@ -26,7 +26,7 @@ bcrypt = Bcrypt()
 app.config['JWT_TOKEN_LOCATION'] = ['headers']
 #app.config['JWT_SECRET_KEY'] = 'super-secret'
 jwt = JWTManager(app)
-
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = False
 username = urllib.parse.quote_plus('marco')
 password = urllib.parse.quote_plus('metallica1')
 

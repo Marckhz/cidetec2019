@@ -11,6 +11,8 @@ import pprint
 from . import mongo
 from . import bcrypt
 from datetime import datetime
+from collections import defaultdict
+
 
 #from flask import jsonify
 from bson.json_util import loads, dumps
@@ -74,11 +76,10 @@ def login():
   if bcrypt.check_password_hash(password, request.json.get('password')):
     access_token = create_access_token(identity=user_to_auth)
 
-    return jsonify(jwt=access_token), 200
+    return dumps({"jwt":access_token,"username":user_to_auth }), 200
   else:
     return "False"
   return dumps({"user":user_to_auth})
-
 
 @page.route('/register', methods =['POST'])
 def register():
@@ -115,6 +116,20 @@ def register_product():
 
   return dumps({"docs":docs}), 200
 
+@page.route('/projects/', methods=['GET'])
+@jwt_required
+def get_projects():
+
+  dict_=defaultdict(list)
+  for element in mongo.db.product.find({"username":get_jwt_identity()}):
+    for i,j in element['product'][0].items():
+     if(i=='product_name'):
+      print(i,j)
+      dict_[i].append(j)
+
+  return dumps({"docs":dict_}),200
+
+
 
 
 @page.route('/emphatize/interview/<product>', methods=['POST'])
@@ -138,6 +153,87 @@ def interview(product):
   )
   return dumps({"docs":document}), 200
 
+@page.route('/emphatize/derivation/<product>', methods=['POST'])
+@jwt_required
+def derivation(product):
+
+  document = mongo.db.product.find_one_and_update({
+    "username":get_jwt_identity(),
+    "product.product_name":product},
+    {"$addToSet":{"product.1.emphatize":{
+        "derivation":{
+            "attributes":request.json.get("attributes")
+            }
+          }
+        }
+      }
+    )
+  print("soy document ", document)
+    
+  return dumps({"docs":document}),200
+
+@page.route('/emphatize/classification/<product>', methods=['POST'])
+@jwt_required
+def classification(product):
+
+  document = mongo.db.product.find_one_and_update({
+    "username":get_jwt_identity(),
+    "product.product_name":product},
+    {"$addToSet":{"product.1.emphatize":
+        {"classification":{
+            "final_attributes":request.json.get("final_attributes")
+          }
+        }
+      }
+    }
+  )   
+  print("soy document", document)
+  return dumps({"docs":document}),200
+
+@page.route('/emphatize/update/classification<product>', methods=['POST'])
+@jwt_required
+def update_classification(product):
+
+  document = mongo.db.product.find_one_and_update({
+    "username":get_jwt_identity(),
+    "product.product_name":product},
+    {"$set":{"product.1.emphatize":{"classification":{
+      "final_attributes":request.json.get("final_attributes")
+          }
+        }
+      }
+    }  
+  )
+  print(document)
+  return dumps({"docs":document}),200
+
+@page.route('/emphatize/final_attributes/<product>', methods=['POST'])
+@jwt_required
+def final_attributes(product):
+
+  document = mongo.db.product.find_one_and_update({
+    "username":get_jwt_identity(),
+    "product.product_name":product},
+    {"$addToSet":{"product.1.emphatize":
+        {"final":{
+          "final_attributes":request.json.get("final_attributes")
+            }   
+          }
+        }
+      }
+    )
+  return dumps({"docs":document}),200
+  
+
+###################################
+##                               ##
+##  FUNCIONES GET PARA CHECAR    ##
+##    EL ESTADO DE LA FASE       ##
+##        { EMPHATIZE }          ##
+##               user                ##
+###################################
+
+
 @page.route('/emphatize/check/interview/<product>', methods=['GET'])
 @jwt_required
 def interview_check(product):
@@ -149,106 +245,107 @@ def interview_check(product):
   docs = {}
   this = {}
   other = {}
-  for k,v in document['product'][1].items():
-    docs = k,v
-    this[k] = v
-    for element in this['emphatize']:
-      for i,j in element.items():
-        if(i=='interview'):
-          other[i]=j
-  #print(other)
+  try:
+    for k,v in document['product'][1].items():
+      docs = k,v
+      this[k] = v
+      for element in this['emphatize']:
+        for i,j in element.items():
+          if(i=='interview'):
+            other[i]=j
+  except:
+    pass
 
   return dumps({"docs":other}),200
 
-@page.route('/emphatize/derivation/<product>', methods=['GET', 'POST'])
-def derivation(product):
+
+@page.route('/emphatize/check/derivation/<product>', methods=['GET'])
+@jwt_required
+def derivation_check(product):
+
+  document = mongo.db.product.find_one({
+    "username":get_jwt_identity(),
+    "product.product_name":product})
+  docs = {}
+  this = {}
+  other = {}
+  try:
+    for k,v in document['product'][1].items():
+        docs = k,v
+        this[k] = v
+        for element in this['emphatize']:
+          for i,j in element.items():
+            if(i=='derivation'):
+              other[i]=j
+  except:
+    pass
+  return dumps({"docs":other}), 200
+
+@page.route('/emphatize/check/classification/<product>', methods=['GET'])
+@jwt_required
+def classification_check(product):
+
+  document = mongo.db.product.find_one({
+    "username":get_jwt_identity(),
+    "product.product_name":product})
+
+  new_dict={}
+  docs={}
+  try:
+    for k,v in document['product'][1].items():
+      new_dict[k]=v
+      for element in new_dict['emphatize']:
+        for i, j in element.items():
+          if(i=='classification'):
+            docs[i]=j
+  except:
+    pass
+  return dumps({"docs":docs}), 200
+
+@page.route('/emphatize/check/final/<product>', methods=['GET'])
+@jwt_required
+def final_check(product):
+
+  document = mongo.db.product.find_one({
+    "username":get_jwt_identity(),
+    "product.product_name":product})
+
+  new_dict = {}
+  docs={}
+
+  try:
+    for k,v in document['product'][1].items():
+      new_dict[k]=v
+      for element in new_dict['emphatize']:
+        for i, j in element.items():
+          if(i=='final'):
+            docs[i]=j
+  except:
+    pass
+
+  return dumps({"docs":docs}),200
+
+
+###########################
+###########################
+##                       ##
+##   Funciones POST      ##
+##      invitados        ##
+##                       ##
+###########################
+###########################
+
+@page.route('/survey/<product>', methods=['POST'])
+def survey(product, username):
 
   document = mongo.db.product.find_one_and_update({
-    #"username":get_jwt_identity(),
+    "username":username,
     "product.product_name":product},
-    {"$addToSet":{"product.1.emphatize":{
-        "derivation":{
-            "attributes":request.json.get("attributes")
-            }
+    {"$push":{"product":{"survey":{"clients":request.json.get("clients")
           }
         }
       }
-    )
-  print(document)
-    
+    }
+  )
   return dumps({"docs":document}),200
 
-
-
-
-
-
-@page.route('/create', methods= ['GET', 'POST'])
-def create_product():
-
-  document = mongo.db.product.insert_one({
-      "username":request.json.get("username"),
-      "product":request.json.get("product",""),
-      "attributes":request.json.get("attributes","")
-    })
-  return dumps(document.inserted_id)
-
-@page.route('/dashboard/', methods=['GET'])
-@jwt_required
-def dashboard():
-  docs = []
-  documents = mongo.db.product.find({})
-  for item in documents:
-    docs.append(item)
-  print(docs)
-
-  print(request.headers)
-  return dumps({"docs":docs})
-
-
-@page.route('/encuesta/responder/', methods=['POST'])
-def responder_encuesta():
-
-  document = mongo.db.encuestas.insert_one({
-    "user_info":request.json.get("user_info"),
-    "results":request.json.get("results"),
-    "product":request.json.get("product")
-    })
-  return "200"
-
-
-
-@page.route('/emphatize/<product>', methods=['GET'])
-@jwt_required
-def emphatize_menu(product):
-
-  document = mongo.db.product.find_one_or_404({"username":get_jwt_identity(), "product_name":product})
-
-  return dumps({"docs":document}), 200
-
-
-
-
-
-@page.route('/emphatize/classification/<product>', methods=['GET', 'POST'])
-@jwt_required
-def classification(product):
-
-  document = mongo.db.final_attributes.insert_one({
-    "final_attributes":request.json.get("final_attributes"),
-    "product_name":request.json.get("product_name"),
-    "username":get_jwt_identity()
-    })
-
-  return dumps({"docs":document.inserted_id}),200
-
-
-@page.route('/encuesta/<usernames>-<product>', methods=['GET'])
-def survey_single_element(usernames, product):
-
-  document = mongo.db.product.find_one_or_404({"usernames":usernames, "product":product}) 
-      
-
-  return dumps({"docs":document}), 200
-
-#@page.route()

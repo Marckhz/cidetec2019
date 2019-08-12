@@ -247,3 +247,7 @@ html body .stuff{
   min-height: 100%;
   opacity: 0.5;
 }
+
+.guess-rows{
+  margin: 1em;
+}

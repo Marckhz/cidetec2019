@@ -7,7 +7,12 @@ export function unloadProduct(){
 	return { type : 'IN_LOG_OUT' };
 }
 
-export function interview(interview){
-	console.log("soy bool", interview)
-	return { type : 'INTERVIEW', interview };
+export function loadClassification(classification){
+	console.log("soy la classification ", classification)
+	return { type : 'CLASSIFICATION', classification };
+}
+
+export function derivationAttributes(derivation){
+	console.log("soy la derivation", derivation)
+	return { type: 'DERIVATION', derivation}
 }

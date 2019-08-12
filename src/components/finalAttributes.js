@@ -13,20 +13,47 @@ import List from '@material-ui/core/List';
 import  { push } from 'react-router-redux';
 import { connect } from 'react-redux';
 
+import { getClassification, addDefinitiveAttributes } from '../requests/requestsProducts';
+
+
 import FullCheckBox from '../images/icons/fullChecbox.png'
 
 class FinalAttributes extends React.Component{
 	constructor(props){
 		super(props);
 		this.state = {
-			list:['White']
+			list:[]
 		}
-		this.moveToDefine = this.moveToDefine.bind(this);
+		this.pushToFinal = this.pushToFinal.bind(this);
+		this.goBackToClassification = this.goBackToClassification.bind(this);
+		this.getFinalAttributes();
 	}
-	moveToDefine(){
-		this.props.dispatch(push("/define/"+this.props.match.params.slug))
+	getFinalAttributes(){
+		getClassification(this.props.product.product, this.props.user.jwt).then(response=>{
+			console.log(response.docs)
+			this.setState({
+				list:[... response.docs.classification.final_attributes]
+			})
+		}).catch(error=>{console.log(error)})
+	}
+	
+	pushToFinal(){
+		const data = {
+			"final_attributes":this.state.list
+		}
+		console.log(data)
+		addDefinitiveAttributes(this.props.product.product,data, this.props.user.jwt).then(response=>{
+			if(response.status === 200){
+				this.props.history.push("/define/"+this.props.product.product)
+			}
+		}).catch(error=>{console.log(error)})
+		this.props.history.push("/define/"+this.props.product.product)
+	}
 
+	goBackToClassification(){
+		this.props.history.push("/emphatize/classification/"+this.props.product.product)
 	}
+
 	render(){
 		const {list} = this.state;
 		return(
@@ -88,11 +115,11 @@ class FinalAttributes extends React.Component{
 							</div>
 							<div className="row justify-content-center" style={{"marginTop":"50px"}}>
 								<div className="col-12 col-md-3">
-									<Button color="secondary"variant="outlined" style={{"fontFamily":"Righteous", "fontSize":"24px"}}>Cancel</Button>
+									<Button onClick={this.goBackToClassification} color="secondary"variant="outlined" style={{"fontFamily":"Righteous", "fontSize":"24px"}}>Cancel</Button>
 								</div>
 								<div className="col-12 col-md-3">
 									<Button
-									onClick={this.moveToDefine	}
+									onClick={this.pushToFinal	}
 									 variant="contained" 
 									 style={{"color":"white","backgroundColor":"black", "fontSize":"24px", "fontFamily":"Righteous"}}>Finish</Button> 
 								</div>
@@ -108,7 +135,8 @@ class FinalAttributes extends React.Component{
 
 function mapStateToProps(state, ownProps){
 	return {
-		user: state.user
+		user: state.user,
+		product:state.products
 	}
 }
 export default connect(mapStateToProps)(FinalAttributes);

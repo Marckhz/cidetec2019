@@ -19,6 +19,7 @@ import monitos from '../images/icons/monitos.png';
 
 import { addAttributes } from '../requests/requestsProducts';
 import  { push } from 'react-router-redux';
+import * as actions from '../actions/productActions';
 
 
 import { green } from '@material-ui/core/colors';
@@ -84,7 +85,10 @@ class Derivation extends React.Component{
 			const data = {
 				"attributes":this.state.item,
 			}
+			console.log(data)
+			this.props.dispatch(actions.derivationAttributes(data.attributes))
 			addAttributes(this.props.product.product, data, this.props.user.jwt).then(response=>{
+				console.log(response)
 				if(response.status === 200){
 					this.props.history.push('/emphatize/classification/'+this.props.product.product)
 				}

@@ -10,17 +10,27 @@ import MenuItem from '@material-ui/core/MenuItem';
 
 import { Link } from "react-router-dom";
 
+import { connect }  from 'react-redux';
 
-export default class Process extends React.Component{
+import { getAllProjects } from '../requests/requestsProducts';
+import List from '@material-ui/core/List';
+import * as actions from '../actions/productActions';
+
+
+
+
+class Process extends React.Component{
 	constructor(props){
 		super(props);
 		this.state = {
 			openMenu:false,
-			anchorEl:null
+			anchorEl:null,
+			products:[]
 		}
 
 		this.handleMenuOpen = this.handleMenuOpen.bind(this);
 		this.handleCloseMenu = this.handleCloseMenu.bind(this);
+		this.getProjects();
 }
 	
 	handleMenuOpen(event){
@@ -37,8 +47,21 @@ export default class Process extends React.Component{
 		})
 	}
 
+	getProjects(){
+		getAllProjects(this.props.user.jwt).then(response=>{
+			console.log(response.docs.product_name)
+			this.state.products = [...response.docs.product_name]
+			console.log("estado del producto ", this.state.products)
+		})
+		//console.log("yoooo",this.state.products)
+	}
+	getValue(item){
+		this.props.dispatch(actions.loadSingleProduct(item))
+		this.props.history.push('/emphatize/'+item)
+	}
+
 	render(){
-		const {openMenu, anchorEl} = this.state
+		const {openMenu, anchorEl, products} = this.state
 		return(
 						<div className="container">
 							<div className="row justify-content-center">
@@ -76,8 +99,16 @@ export default class Process extends React.Component{
 								</div>
 								<Menu id="simple-menu" anchorEl={anchorEl} keepMounted
 								open={openMenu}
-								onClose={this.handleCloseMenu} >
-											<MenuItem onClick={this.handleCloseMenu} style={{"color":"black","fontSize":"24px", "fontFamily":"Righteous"}}>Product: Hola Mundo</MenuItem>
+								onClose={this.handleCloseMenu}>
+									{	
+										products.map((key,index)=>{
+											return(
+												<List key={index}>
+													<Button onClick={(e)=>{this.getValue(key)}} style={{"color":"black","fontSize":"24px", "fontFamily":"Righteous"}}>Product: {key}</Button>
+												</List>
+											)
+										})	
+									}
 								</Menu>
 							</div>
 						</div>
@@ -85,3 +116,11 @@ export default class Process extends React.Component{
 			)
 	}
 }
+
+function mapStateToProps(state, ownProps){
+	return {
+		user: state.user,
+		product:state.user
+	}
+}
+export default connect(mapStateToProps)(Process);

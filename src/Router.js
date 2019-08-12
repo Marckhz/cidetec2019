@@ -27,6 +27,8 @@ import BuildSprint from './components/buildSprint';
 import Todo from './components/prototypeTodo';
 import Test from './components/test';
 import UserBreakdown from './components/userBreakdown';
+import GuessForm from './components/guess';
+import RadioForm from './components/surveyRadio';
 
 import { connect } from 'react-redux';
 
@@ -36,10 +38,6 @@ import { ConnectedRouter } from 'react-router-redux';
 import history from './index.js'
 
 import App from './App';
-
-
-
-
 
 const userSignedIn = false;
 
@@ -89,6 +87,7 @@ class Router extends React.Component{
 			  			<Route exact path ="/prototype/todo/:slug" component= {Todo}/>
 			  			<Route exact path ="/test/:slug" component={Test}/>
 			  			<Route exact path ="/user-breakdown/:slug" component={UserBreakdown}/>
+			  			<Route exact path ="/survey/:slug" component={GuessForm}/>
 			  			</App>
 				</Switch>
 

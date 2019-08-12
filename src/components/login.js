@@ -90,7 +90,7 @@ class Login extends React.Component {
 			console.log(data.jwt)
 			//console.log(data.user)
 			this.props.dispatch(actions.login(data.jwt));
-			this.props.dispatch(actions.loadUser(data.user))
+			this.props.dispatch(actions.loadUser(data.username))
 			this.props.history.push('/process')
 		})
 	}

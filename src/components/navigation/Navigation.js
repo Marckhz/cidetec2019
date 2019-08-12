@@ -22,7 +22,9 @@ class Navigation extends React.Component{
 
 	logout(){
 		this.props.dispatch(logout());
+		//this.props.history.push("/")
 		this.props.dispatch(unloadProduct());
+		//this.props.history.push("/")
 	}
 	render(){
 		return  <MyAppBar logout={this.logout}/>

@@ -17,33 +17,72 @@ import Button from '@material-ui/core/Button';
 
 
 import * as actions from '../actions/productActions';
-import { getInterview } from '../requests/requestsProducts';
-
-
+import { getInterview, getDerivation, getClassification, getFinal } from '../requests/requestsProducts';
 
 import { connect } from 'react-redux';
-
-
 
 class Empathize extends React.Component{
 	constructor(props){
 		super(props);
-		//console.log(props)
-		//console.log(props.product.product)
-		//const slug = this.props.match.params.slug
+		this.state = {
+			emphatize:false,
+			derivation:false,
+			classification:false,
+			final:false
+		}
+		this.checkInterview();
+		this.checkDerivation();
+		this.checkClassification();
+		this.checkFinal();
 	}
-		checkInterview(){
+	checkInterview(){
 		getInterview(this.props.product.product, this.props.user.jwt).then(response=>{
 				const check_me = response.docs
+				console.log("check me check me ", check_me)
 				if(check_me.interview){
 					this.setState({
 						emphatize:true
 					})
 				}
-		});
+		}).catch(error=>{console.log(error)});
 	}
-
+	checkDerivation(){
+		getDerivation(this.props.product.product, this.props.user.jwt).then(response=>{
+			const check_me = response.docs
+			console.log("check me derivation", check_me)
+			if(check_me.derivation){
+				this.setState({
+					derivation:true
+				})
+			}
+		}).catch(error=>{console.log(error)});
+	}
+	checkClassification(){
+		getClassification(this.props.product.product, this.props.user.jwt).then(response=>{
+			const check_me = response.docs
+			console.log("check check me classification", check_me)
+			localStorage.setItem(check_me.classification.final_attributes, "final_attributes")
+			if(check_me.classification){
+				this.setState({
+					classification:true
+				})
+			}
+		}).catch(error=>{console.log(error)});
+	}
+	checkFinal(){
+		getFinal(this.props.product.product, this.props.user.jwt).then(response=>{
+			const check_me = response.docs
+			console.log("check me final", check_me)
+			if(check_me.final){
+				this.setState({
+					final:true
+				})
+				//localStorage.setItem(check_me);
+			}
+		}).catch(error=>{console.log(error)})
+	}
 	render(){
+		const {emphatize, derivation, classification, final} = this.state
 		return(
 				<div className="container-fluid dis-col">
 						<div className="row" style={{"backgroundColor":"white"}}>
@@ -72,7 +111,7 @@ class Empathize extends React.Component{
 											<TableBody>
 												<TableRow component="tr" scope="row">
 													<TableCell align="center" style={{"padding":"25px", "color":"black", "fontSize":"24px", "fontFamily":"Righteous"}} >
-														<Link to={"interview/"+this.props.match.params.slug} style={{"color":"#29B6F6"}}>
+														<Link to={"interview/"+this.props.product.product} style={{"color":"#29B6F6"}}>
 															E1
 														</Link>
 													</TableCell>
@@ -80,12 +119,12 @@ class Empathize extends React.Component{
 														Interview 
 													</TableCell>
 													<TableCell align="center">
-														<Checkbox color="default" />
+														<Checkbox checked={emphatize} disabled={true} style={{"color":"black"}} />
 													</TableCell>
 												</TableRow>
 												<TableRow component="tr" scope="row">
 													<TableCell align="center" style={{"padding":"25px", "color":"black", "fontSize":"24px", "fontFamily":"Righteous"}} >
-													<Link to={"derivation/"+this.props.match.params.slug} style={{"color":"#29B6F6"}}>
+													<Link to={"derivation/"+this.props.product.product} style={{"color":"#29B6F6"}}>
 														E2
 													</Link>
 													</TableCell>
@@ -93,12 +132,12 @@ class Empathize extends React.Component{
 														Derivation 
 													</TableCell>
 													<TableCell align="center">
-														<Checkbox color="default"/>
+														<Checkbox checked={derivation} disabled={true} style={{"color":"black"}}/>
 													</TableCell>
 												</TableRow>
 												<TableRow>
 													<TableCell align="center" style={{"padding":"25px", "color":"black", "fontSize":"24px", "fontFamily":"Righteous"}} >
-													<Link to={"classification/"+this.props.match.params.slug} style={{"color":"#29B6F6"}}>
+													<Link to={"classification/"+this.props.product.product} style={{"color":"#29B6F6"}}>
 														E3
 													</Link>
 													</TableCell>
@@ -106,12 +145,12 @@ class Empathize extends React.Component{
 														Classification 
 													</TableCell>
 													<TableCell align="center">
-														<Checkbox color="default"/>
+														<Checkbox checked={classification} disabled={true} style={{"color":"black"}}/>
 													</TableCell>
 												</TableRow>
 												<TableRow>
 													<TableCell  align="center" style={{"padding":"25px", "color":"black", "fontSize":"24px", "fontFamily":"Righteous"}} >
-													<Link to={"final-attributes/"+this.props.match.params.slug} style={{"color":"#29B6F6"}}>
+													<Link to={"final-attributes/"+this.props.product.product} style={{"color":"#29B6F6"}}>
 														E4
 													</Link>
 													</TableCell>
@@ -119,7 +158,7 @@ class Empathize extends React.Component{
 														Final 
 													</TableCell>
 													<TableCell align="center">
-														<Checkbox color="default" />
+														<Checkbox checked={final} disabled={true} style={{"color":"black"}} />
 													</TableCell>
 												</TableRow>
 											</TableBody>

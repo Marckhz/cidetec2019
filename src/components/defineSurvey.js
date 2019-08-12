@@ -11,11 +11,16 @@ import { Modal } from '@material-ui/core';
 
 import GroupQuestion from '../images/icons/groupQuestion.png'
 
+import { postSurvey } from '../requests/requestsProducts';
+
 import { Link } from "react-router-dom"
 
+import { connect }  from 'react-redux';
+
+import RadioForm from './surveyRadio';
 
 
-export default class DefineSurvey extends React.Component{
+class DefineSurvey extends React.Component{
 	constructor(props){
 		super(props);
 		
@@ -53,7 +58,6 @@ export default class DefineSurvey extends React.Component{
 
 	}
 
-
 	render(){
 		const {onOpen, openSend} =this.state
 		return(
@@ -73,11 +77,9 @@ export default class DefineSurvey extends React.Component{
 							</div>
 							<div className="row justify-content-center">
 								<div className="col-12 col-md-8">
-									<Card raised={true}>
-										<CardHeader title="Question List" disableTypography={true} style={{"fontSize":"36px", "textAlign":"center"}}/>
-											<CardContent style={{"height":"302px", "overflow":"auto"}}>
-											</CardContent>
-									</Card>
+									<div style={{"overflow":"auto", "height":"302px"}}>
+										<RadioForm />
+									</div>
 								</div>
 							</div>
 							<div className="row justify-content-center" style={{"marginTop":"25px", "marginLeft":"10px"}}>
@@ -172,3 +174,11 @@ export default class DefineSurvey extends React.Component{
 			)
 	}
 }
+
+function mapStateToProps(state, ownProps){
+	return {
+		user: state.user,
+		product:state.products
+	}
+}
+export default connect(mapStateToProps)(DefineSurvey);

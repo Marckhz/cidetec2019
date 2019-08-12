@@ -15,6 +15,10 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Mesa from '../images/icons/mesa.png';
 import ChexBoxOne from '../images/icons/checkOneBox.png';
 
+import { addFinalAttributes, updateClassification, getDerivation } from '../requests/requestsProducts';
+
+import * as actions from '../actions/productActions';
+
 import  { push } from 'react-router-redux';
 import { connect } from 'react-redux';
 
@@ -23,27 +27,37 @@ class Classification extends React.Component{
 		super(props);
 
 		this.state = {
-			list:['Plastic', 'S-shape'],
-			final_list:['White'],
+			list:[],
+			final_list:[],
 			lista:[],
-			attr:[]
+			attr:[],
+			other:''
 		}
 
 		this.handleCheckBoxChange = this.handleCheckBoxChange.bind(this);
 		this.handleItemPushFinalList = this.handleItemPushFinalList.bind(this);
 		this.postItemsFinal = this.postItemsFinal.bind(this);
+		
+		this.getAttributesFromStorage();
 	}
 
 	handleCheckBoxChange(event){
 		if(event.target.checked){
-			this.state.lista.push(event.target.value);
+			if(this.state.lista.includes(event.target.value)){
+
+			}else{
+				this.state.lista.push(event.target.value)
+			}
 		}
 	}
 
 	handleItemPushFinalList(event){
-		this.setState({
-			final_list:this.state.lista
-		})
+		if(this.state.final_list.includes(this.state.lista)){	
+		}else{
+			this.setState({
+				final_list:this.state.lista
+			})
+		}
 		console.log(this.state.final_list)
 	}
 
@@ -52,21 +66,44 @@ class Classification extends React.Component{
 			return (item !== newItem)
 		})
 		this.setState({
-			final_list:[...newItems]
+			final_list:[...newItems],
+			lista:[...newItems]
 		})
 	}
 	postItemsFinal(){
 		const data = {
-			"final_attributes":this.state.final_list,
-			"product_name":this.props.match.params.slug
+			"final_attributes":this.state.final_list
 		}
-		if(data){
-			this.props.dispatch(push("/emphatize/final-attributes/"+this.props.match.params.slug))
+		/*
+		if(this.state.list !== data.attributes){
+			console.log("Esta wea es true", true)
+			updateClassification(this.props.product.product, data, this.props.user.jwt).then(response=>{
+				console.log(response)
+				if(response.status == 200){
+					this.props.history.push("/emphatize/final-attributes/"+this.props.product.product)
+				}
+			})
 		}
+		*/
 		console.log(data)
-
+		addFinalAttributes(this.props.product.product, data, this.props.user.jwt).then(response=>{
+			console.log(response)
+			this.props.dispatch(actions.derivationAttributes(data.final_attributes))
+			if(response.status == 200){
+					this.props.history.push("/emphatize/final-attributes/"+this.props.product.product)
+			}
+		}).catch(error=>{console.log(error)})
+		console.log(data)
 	}
-
+	getAttributesFromStorage(){
+		getDerivation(this.props.product.product, this.props.user.jwt).then(response=>{
+			const api_attributes = response.docs.derivation.attributes
+			this.setState({
+				list:[...api_attributes]
+			})
+		})
+	}
+	
 	render(){
 		const {list, final_list} = this.state
 		return (
@@ -100,7 +137,7 @@ class Classification extends React.Component{
 																				{index+1}.-{item}
 																			</div>
 																			<div className="col-12 col-md-3">
-																				<Checkbox value={item} onChange={this.handleCheckBoxChange}color="default"/>
+																				<Checkbox  value={item} onChange={this.handleCheckBoxChange}color="default"/>
 																			</div>
 																		</div>
 																	</List>												
@@ -145,7 +182,7 @@ class Classification extends React.Component{
 												{
 														final_list.map((item,index)=>{
 															return(
-																	<List kye={index}>
+																	<List key={index}>
 																		<div className="row justify-content-around">
 																			<div className="col-12 col-md-3">
 																				{index+1}.-{item}
@@ -190,7 +227,8 @@ class Classification extends React.Component{
 
 function mapStateToProps(state, ownProps){
 	return {
-		user: state.user
+		user: state.user,
+		product:state.products
 	}
 }
 export default connect(mapStateToProps)(Classification);

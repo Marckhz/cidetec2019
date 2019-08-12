@@ -11,6 +11,8 @@ import Button from '@material-ui/core/Button';
 import Input from '@material-ui/core/Input';
 
 
+import { getFinal } from '../requests/requestsProducts';
+
 
 import Container from '@material-ui/core/Container';
 
@@ -19,10 +21,33 @@ import tablePad from '../images/icons/tablePad.png'
 
 import List from '@material-ui/core/List';
 
+import { connect } from 'react-redux';
 
 
-export default class Define extends React.Component{
+class Define extends React.Component{
+	constructor(props){
+		super(props);
+		this.state = {
+			list:[]
+		}
+		this.loadAttributes();
+		this.generateSurvey();
+	}
+
+	loadAttributes(){
+		getFinal(this.props.product.product, this.props.user.jwt).then(response=>{
+			this.setState({
+				list:[... response.docs.final.final_attributes]
+			})
+		})
+	}
+
+	generateSurvey(){
+		this.props.history.push("/define/generate-survey/"+this.props.product.product)
+	}
+
 	render(){
+		const {list} = this.state
 		return(
 
 				<div className="container-fluid">
@@ -43,19 +68,23 @@ export default class Define extends React.Component{
 									<Card raised={true}>
 										<CardHeader title="Attribute List" disableTypography={true} style={{"textAlign":"center", "fontSize":"36px"}}/>
 											<CardContent style={{"overflow":"auto", "height":"302px"}}>
-												<List>
-													<ul>
-													<List>
-														<div className="row">
-															<div className="col-12 col-md-6">
-																1.-Attribute 
-															</div>
-														</div>
-													</List>
-													</ul>
-												</List>
-											</CardContent>
-											
+											<List>
+												<ul>
+													{
+														list.map((item,index)=>{
+															return(
+
+																	<List>
+																		<div classNames="row justify-content-center">
+																			{index+1}.-{item}
+																		</div>
+																	</List>
+																)
+														})
+													}
+												</ul>
+											</List>
+										</CardContent>						
 									</Card>
 								</div>
 							</div> 
@@ -73,7 +102,8 @@ export default class Define extends React.Component{
 							</div>
 							<div className="row justify-content-center" style={{"marginTop":"25px"}}>
 								<div className="col-12 col-md-4">
-									<Button 
+									<Button
+									onClick={this.generateSurvey} 
 									variant="contained"
 									style={{"backgroundColor":"black", "color":"white","fontFamily":"Righteous", "fontSize":"24px"}}
 									>Generate Survey</Button>
@@ -86,3 +116,11 @@ export default class Define extends React.Component{
 			)
 	}
 }
+
+function mapStateToProps(state, ownProps){
+	return {
+		user: state.user,
+		product:state.products
+	}
+}
+export default connect(mapStateToProps)(Define);

@@ -4,8 +4,10 @@ export default function productReducer(state ={name:'Marco'}, action){
 			return Object.assign({},state,{ product: action.product });
 		case 'IN_LOG_OUT':
 			return {};
-		case 'INTERVIEW':
-			return Object.assign({}, state, { product: action.interview });
+		case 'DERIVATION':
+			return Object.assign({}, state, { derivation_attributes: action.derivation})
+		case 'CLASSIFICATION':
+			return Object.assign({}, state, { class_attributes: action.classification });
 		default:
 			return state;
 	}

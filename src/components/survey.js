@@ -87,6 +87,7 @@ constructor(props){
 	}
 }
 
+
 loadSingleProduct(slug){
 		getSingleProduct(slug).then(response=>{
 		let json = response.docs;
@@ -223,7 +224,6 @@ submitForm(event){
 			positive:[this.state.positive],
 			negative:[this.state.negative]
 	}
-	//product:this.state.product
 
 	const user_data = {
 		"user_info":user_info,

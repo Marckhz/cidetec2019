@@ -50,7 +50,7 @@ class MyAppBar extends React.Component{
 		//this.checkInterview();
 	}
 	componentDidMount(){
-			if(this.state.product){
+		if(this.state.product){
 				this.setState({
 					emphatize:true
 				})
@@ -61,29 +61,12 @@ class MyAppBar extends React.Component{
 		}
 		console.log("soy el estado del producto", this.state.product)
 	}
-
-
-	/*
-	checkInterview(){
-		getInterview(this.props.product.product, this.props.user.jwt).then(response=>{
-				const check_me = response.docs
-				if(check_me.interview){
-					this.setState({
-						emphatize:true
-					})
-				}
-		});
-	}
-	*/
-
-	//{this.props.user.jwt ? <LogoutButton logout ={this.props.logout }/> : <LogInButton/> }
-
 	render(){
 		const {user, emphatize, define, ideate, prototype, test} = this.state
 	return(
 		<div>{this.props.user.jwt ? <AppBar style={{"backgroundColor":"black"}} position="static">
 				<Toolbar >
-					<img src={IconMenu} style={{"height":"100px"}}/>
+					<Link to="/process"><img src={IconMenu} style={{"height":"100px"}}/> </Link>
 				<div className="container menu-container">
 					<div className="row justify-content-around row-menu">
 						<div className="border-here">

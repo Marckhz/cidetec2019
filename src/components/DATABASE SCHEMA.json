@@ -21,12 +21,17 @@
 						{"attributes":["x1, x2...Xn,"]}
 					]
 				},
-				{"classificaction":["x1, x2,...Xn"]},
-				{"finals":["x1, x2,...Xn"]}
+				{"classificaction":[
+					{"final_attributes":["x1, x2,...Xn"]}
+					]
+				},
+				{"final":[{"final_attributes":["x1, x2,...Xn"]}
+					]
+				}
 			],
 		"survey":[{
-				"id":"1",
-				"client":[{
+				"clients":[{
+					"_id":"BSON.object_id",
 					"first_name":"Marco",
 					"last_name":"Hernandez",
 					"address":[
