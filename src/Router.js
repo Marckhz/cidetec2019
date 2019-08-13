@@ -87,7 +87,7 @@ class Router extends React.Component{
 			  			<Route exact path ="/prototype/todo/:slug" component= {Todo}/>
 			  			<Route exact path ="/test/:slug" component={Test}/>
 			  			<Route exact path ="/user-breakdown/:slug" component={UserBreakdown}/>
-			  			<Route exact path ="/survey/:slug" component={GuessForm}/>
+			  			<Route exact path ="/survey/:user/:slug" component={GuessForm}/>
 			  			</App>
 				</Switch>
 

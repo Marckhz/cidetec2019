@@ -15,6 +15,8 @@ import Button from '@material-ui/core/Button';
 import { connect } from 'react-redux';
 import { postSurvey } from '../requests/requestsProducts';
 
+import { withRouter } from 'react-router-dom';
+
 
 /*usar la url para el post */
 
@@ -48,36 +50,39 @@ class RadioForm extends React.Component{
 	}
 	
 	postDataSurvey(){
-		const survey_data ={
-			"clients":[{
+		const data ={
+			"clients":{
 				"user_info":this.props.user_info,
 				"results":{
 					"positive":this.state.positive,
 					"negative":this.state.negative
 					}
-				}]
-		}	
-	if(Object.keys(this.state.positive).length === this.state.attr.length && Object.keys(this.state.negative) === this.state.attr.length){
-		postSurvey(this.props.product.product, survey_data, this.props.user.username).then(response=>{
+				}
+		}
+	//console.log(survey_data.clients)
+	console.log(Object.keys(this.state.positive).length)
+	console.log(Object.keys(this.state.negative).length)
+
+	const username = {
+		"username":this.props.match.params.user
+	}
+	const product = {
+		"product":this.props.match.params.slug
+	}
+	console.log(this.state.attr.length)
+	if(Object.keys(this.state.positive).length === this.state.attr.length && Object.keys(this.state.negative).length === this.state.attr.length){
+		postSurvey(product.product, data, username.username).then(response=>{
 			if(response.status === 200){
 				console.log(true)
+				alert("La encuesta ha sido enviada")
 			}
 		})
-		alert("La encuesta ha sido enviada")
 		//return <Redirect to='/'/>		
 	}else{
 		alert("favor de llenar todos los campos")
 	}
-		console.log(survey_data);
+		console.log(data)
 	}
-	checkData(){
-		if(Object.keys(this.state.positive).length === this.state.attr.length && Object.keys(this.state.negative).length === this.state.attr.length){
-			this.setState({
-				button:true
-			})
-		}
-	}
-
 	render(){
 		const {attr, button} = this.state
 		return(
@@ -109,14 +114,8 @@ class RadioForm extends React.Component{
 																</List>
 																	)
 																})
-														}
-											
-
-								</div>
-							</div>
-						</CardContent>
-				</Card>
-					{button ?  <div className="row justify-content-center">
+														}	
+											 <div className="row justify-content-center">
 												<div className="col-12 col-md-4">
 													<Button variant="contained"
 													color="primary"
@@ -124,18 +123,15 @@ class RadioForm extends React.Component{
 													onClick={this.postDataSurvey}
 													style={{"fontSize":"24px", "fontFamily":"Righteous"}}>Finalizar</Button>
 												</div>
-											</div>: null } 		
-
+											</div>
+								</div>
+							</div>
+						</CardContent>
+				</Card>
 			</section>
 			)
 	}
 }
 
-function mapStateToProps(state, ownProps){
-	return {
-		user: state.user,
-		product:state.products
-	}
-}
-export default connect(mapStateToProps)(RadioForm);
 
+export default withRouter(RadioForm)

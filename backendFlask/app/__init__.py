@@ -5,6 +5,7 @@ from flask import Flask
 from flask_pymongo import PyMongo 
 from flask_login import LoginManager
 from flask_bcrypt import Bcrypt 
+from flask_mail import Mail
 
 import urllib.parse
 from flask_cors import CORS
@@ -34,8 +35,10 @@ app.config['MONGO_URI'] = 'mongodb+srv://%s:%s@uas-6xetc.mongodb.net/test?retryW
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 
-mongo = PyMongo(app)
 
+
+mongo = PyMongo(app)
+mail = Mail()
 
 CORS(app)
 
@@ -48,6 +51,7 @@ def create_app(config):
 	#csrf.init_app(app)
 	login_manager.init_app(app)
 	bcrypt.init_app(app)
+	mail.init_app(app)
 
 	app.register_blueprint(page)
 

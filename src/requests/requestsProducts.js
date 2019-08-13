@@ -152,7 +152,7 @@ function updateClassification(slug, data, jwt){
 		body:JSON.stringify(data),
 		headers:{
 			'Content-Type':'application/json',
-			'Authorization':'Bearer '+jwt
+			'Authori/zation':'Bearer '+jwt
 		}
 	})
 }
@@ -172,8 +172,8 @@ function getAllProjects(jwt){
 }
 
 
-function postSurvey(slug, data, user){
-	return fetch(`http://127.0.0.1:5000/surveys`+slug,{
+function postSurvey(product, data, username){
+	return fetch(`http://192.168.1.79:5000/survey/`+username+`/`+product,{
 		method:'POST',
 		body:JSON.stringify(data),
 		headers:{
@@ -183,8 +183,21 @@ function postSurvey(slug, data, user){
 	})
 }
 
+function email(url){
+	return fetch(`http://127.0.0.1:5000/email/`,{
+		method:'POST',
+		body:JSON.stringify(url),
+		headers:{
+			'Content-Type':'application/json',
+			'Accept':'application/json'
+		}
+	}).then(response=>{
+		return response.json()
+	})
+}
 
-export  { postSurvey };
+export { email };
+export { postSurvey };
 export { addDefinitiveAttributes };
 export { getAllProjects };
 export { updateClassification };

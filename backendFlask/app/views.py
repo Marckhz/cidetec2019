@@ -4,6 +4,7 @@ from flask import render_template, request, flash, session, redirect,url_for
 from flask import request, jsonify
 from functools import wraps
 
+from flask_mail import Message
 
 import requests as req
 
@@ -31,7 +32,7 @@ import pprint
 from flask_login import login_required, login_user
 
 from . import login_manager
-
+from . import mail
 from .model import User
 
 
@@ -40,6 +41,7 @@ import base64
 import bson
 from bson.objectid import ObjectId
 
+from flask import current_app
 
 from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token,
@@ -335,17 +337,58 @@ def final_check(product):
 ###########################
 ###########################
 
-@page.route('/survey/<product>', methods=['POST'])
-def survey(product, username):
+@page.route('/survey/<username>/<product>', methods=['POST'])
+def survey(username, product):
+
 
   document = mongo.db.product.find_one_and_update({
     "username":username,
     "product.product_name":product},
-    {"$push":{"product":{"survey":{"clients":request.json.get("clients")
+    {"$push":{"product":{"survey":{"clients":[{
+              "user_info":{
+                  "address":{
+                      "street":request.json.get("street"),
+                      "location":request.json.get("location"),
+                      "occupation":request.json.get("occupation"),
+                      "postal_code":request.json.get("postal_code"),
+                      "workplace":request.json.get("workplace"),
+                      "city":request.json.get("city")
+                    },
+                  "user_data":{
+                    "first_name":request.json.get("first_name"),
+                    "last_name":request.json.get("last_name"),
+                    "gender":request.json.get("gender"),
+                    "age":request.json.get("age")
+                  }
+                }
+              }]
+            }
           }
         }
       }
-    }
-  )
+    )
+  print(document)
   return dumps({"docs":document}),200
 
+
+
+####################
+####################
+##                ##
+##      Mail      ##
+##    Service     ##
+##                ##  
+##                ##
+####################
+
+@page.route('/email/', methods=['POST'])
+def email():
+  url = request.json.get("url")
+  ip ='192.168.1.79:3000/'+url
+  msg = Message("Hola te invito a contestar la siguiente Encuesta Marco",
+          sender=current_app.config['MAIL_USERNAME'],
+          recipients=['marcohdes94i@gmail.com'],
+          body=("link ->{0}").format(ip) ) 
+  mail.send(msg)
+
+  return "200"

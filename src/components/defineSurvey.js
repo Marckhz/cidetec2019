@@ -11,7 +11,6 @@ import { Modal } from '@material-ui/core';
 
 import GroupQuestion from '../images/icons/groupQuestion.png'
 
-import { postSurvey } from '../requests/requestsProducts';
 
 import { Link } from "react-router-dom"
 
@@ -19,11 +18,14 @@ import { connect }  from 'react-redux';
 
 import RadioForm from './surveyRadio';
 
+import { email } from '../requests/requestsProducts';
+
 
 class DefineSurvey extends React.Component{
 	constructor(props){
 		super(props);
-		
+			
+			//const url ="/define"+this.props.product.product
 			this.state = {
 				onOpen:false,
 				openSend:false
@@ -32,6 +34,7 @@ class DefineSurvey extends React.Component{
 		this.closeModal = this.closeModal.bind(this);
 		this.openModalSend = this.openModalSend.bind(this);
 		this.closeModalSend = this.closeModalSend.bind(this);
+		this.postEmail = this.postEmail.bind(this);
 }
 	openModalSend(event){
 		this.setState({
@@ -51,6 +54,21 @@ class DefineSurvey extends React.Component{
 	closeModal(event){
 		this.setState({
 			onOpen:false
+		})
+	}
+
+	postEmail(){
+		const url = {
+			"url":"survey/"+this.props.user.username+"/"+this.props.product.product
+				}
+		email(url).then(response=>{
+			console.log(response)
+			if(response == 200){
+				alert("El Correo ha sido enviado")
+				this.setState({
+					onOpen:false,
+				})
+			}
 		})
 	}
 
@@ -148,7 +166,9 @@ class DefineSurvey extends React.Component{
 																		<p style={{"fontSize":"10px"}}> The meessage has been sent</p>
 																	</div>
 																	<div className="row justify-content-center">
-																		<Button style={{"color":"green"}}>OK </Button>
+																		<Button
+																		onClick={this.closeModalSend}
+																	style={{"color":"green"}}>OK </Button>
 																	</div>
 																</CardContent>
 															</Card>
@@ -159,7 +179,7 @@ class DefineSurvey extends React.Component{
 											<div className="row justify-content-end">
 												<div className="col-12 col-md-3">
 													<Button 
-													onClick={this.openModalSend}
+													onClick={this.postEmail}
 													style={{"marginTop":"100px", "color":"green"}}>Send</Button>
 												</div>
 											</div>
