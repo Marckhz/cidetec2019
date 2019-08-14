@@ -17,6 +17,7 @@ import { postSurvey } from '../requests/requestsProducts';
 
 import { withRouter } from 'react-router-dom';
 
+import { Redirect } from 'react-router-dom';
 
 /*usar la url para el post */
 
@@ -28,8 +29,8 @@ class RadioForm extends React.Component{
 
 		this.state = {
 			attr:['hola','marco', 'cesar'],
-			negative:[],
-			positive:[],
+			negative:{},
+			positive:{},
 			button:false
 			//user_info:{}
 
@@ -50,13 +51,33 @@ class RadioForm extends React.Component{
 	}
 	
 	postDataSurvey(){
+		
+		const results = {
+			positive:[this.state.positive],
+			negative:[this.state.negative]
+		}
+		console.log(results)
+
 		const data ={
-			"clients":{
-				"user_info":this.props.user_info,
+
+
+					"first_name":this.props.user_info.user_data.first_name,
+					"last_name":this.props.user_info.user_data.last_name,
+					"address":{
+						"street":this.props.user_info.address.street,
+						"location":this.props.user_info.address.location,
+						"postal_code":this.props.user_info.address.postal_code,
+						"city":this.props.user_info.address.city,
+						"country":this.props.user_info.address.country
+					},
+					"email":this.props.user_info.user_data.email,
+					"gender":this.props.user_info.user_data.gender,
+					"age":this.props.user_info.user_data.age,
+					"occupation":this.props.user_info.address.occupation,
+					"workplace":this.props.user_info.address.workplace,
 				"results":{
 					"positive":this.state.positive,
 					"negative":this.state.negative
-					}
 				}
 		}
 	//console.log(survey_data.clients)
@@ -69,12 +90,14 @@ class RadioForm extends React.Component{
 	const product = {
 		"product":this.props.match.params.slug
 	}
+	console.log(data)
 	console.log(this.state.attr.length)
 	if(Object.keys(this.state.positive).length === this.state.attr.length && Object.keys(this.state.negative).length === this.state.attr.length){
 		postSurvey(product.product, data, username.username).then(response=>{
 			if(response.status === 200){
 				console.log(true)
 				alert("La encuesta ha sido enviada")
+				return window.location.replace(`https://www.facebook.com/cidetec/`)
 			}
 		})
 		//return <Redirect to='/'/>		

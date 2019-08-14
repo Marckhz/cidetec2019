@@ -173,7 +173,7 @@ function getAllProjects(jwt){
 
 
 function postSurvey(product, data, username){
-	return fetch(`http://192.168.1.79:5000/survey/`+username+`/`+product,{
+	return fetch(`http://192.168.15.7:5000/survey/`+username+`/`+product,{
 		method:'POST',
 		body:JSON.stringify(data),
 		headers:{

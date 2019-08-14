@@ -328,6 +328,47 @@ def final_check(product):
   return dumps({"docs":docs}),200
 
 
+
+@page.route('/survey/total/', methods=['GET'])
+def total_survey_by_user():
+
+  dict_ = defaultdict()
+  document = mongo.db.product.find_one_or_404({
+    "username":"marck",
+    "product.product_name":"PAPEL"})
+
+  for k,v in document['product'][0].items():
+    if(k == 'number_surveys'):
+      dict_[k]=v
+  
+  return dumps({"docs":dict_}), 200
+
+
+@page.route('/survey/count/', methods=['GET'])
+def total_survey_counter():
+
+  dict_ = defaultdict()
+  clients_dict = defaultdict()
+  document = mongo.db.product.find_one_or_404({
+    "username":"marck",
+    "product.product_name":"PAPEL"})
+
+  for k,v in document['product'][2].items():
+    dict_[k]=v
+
+  for i,j in dict_['survey'].items():
+    clients_dict[i] = j
+
+  total_surveys=0
+  for element, in_list in clients_dict.items():
+    for z in in_list:
+      total_surveys+=1
+
+  print(total_surveys)
+  return dumps({"docs":total_surveys})
+
+
+
 ###########################
 ###########################
 ##                       ##
@@ -344,28 +385,19 @@ def survey(username, product):
   document = mongo.db.product.find_one_and_update({
     "username":username,
     "product.product_name":product},
-    {"$push":{"product":{"survey":{"clients":[{
-              "user_info":{
-                  "address":{
-                      "street":request.json.get("street"),
-                      "location":request.json.get("location"),
-                      "occupation":request.json.get("occupation"),
-                      "postal_code":request.json.get("postal_code"),
-                      "workplace":request.json.get("workplace"),
-                      "city":request.json.get("city")
-                    },
-                  "user_data":{
-                    "first_name":request.json.get("first_name"),
-                    "last_name":request.json.get("last_name"),
-                    "gender":request.json.get("gender"),
-                    "age":request.json.get("age")
-                  }
-                }
-              }]
+    {"$addToSet":{"product.2.survey.clients":{
+              "first_name":request.json.get("first_name"),
+              "last_name":request.json.get("last_name"),
+              "address":request.json.get("address"),
+              "email":request.json.get("email"),
+              "gender":request.json.get("gender"),
+              "age":request.json.get("age"),
+              "occupation":request.json.get("occupation"),
+              "workplace":request.json.get("workplace"),
+              "results":request.json.get("results")
+              }
             }
           }
-        }
-      }
     )
   print(document)
   return dumps({"docs":document}),200
@@ -389,6 +421,19 @@ def email():
           sender=current_app.config['MAIL_USERNAME'],
           recipients=['marcohdes94i@gmail.com'],
           body=("link ->{0}").format(ip) ) 
+  mail.send(msg)
+
+  return "200"
+
+
+@page.route('/email/survey_notification/', methods=['POST'])
+def email_survey_notification():
+  url = request.json.get("url")
+  ip='192.168.1.79:3000/'+url
+  msg = Message("Encuesta Terminada",
+    sender=current_app.config['MAIL_USERNAME'],
+    recipients= ['marcohdes94i@gmail.com'],
+    body="Tu encuesta ha sido finalizada, por favor, continue el proceso")
   mail.send(msg)
 
   return "200"
