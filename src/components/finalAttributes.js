@@ -44,10 +44,10 @@ class FinalAttributes extends React.Component{
 		console.log(data)
 		addDefinitiveAttributes(this.props.product.product,data, this.props.user.jwt).then(response=>{
 			if(response.status === 200){
-				this.props.history.push("/define/"+this.props.product.product)
+				this.props.history.push("/emphatize/"+this.props.product.product)
 			}
 		}).catch(error=>{console.log(error)})
-		this.props.history.push("/define/"+this.props.product.product)
+		this.props.history.push("/emphatize/"+this.props.product.product)
 	}
 
 	goBackToClassification(){

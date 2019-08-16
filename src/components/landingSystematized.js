@@ -52,6 +52,8 @@ class Process extends React.Component{
 			console.log(response.docs.product_name)
 			this.state.products = [...response.docs.product_name]
 			console.log("estado del producto ", this.state.products)
+		}).catch(error=>{
+			console.log(error)
 		})
 		//console.log("yoooo",this.state.products)
 	}

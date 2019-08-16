@@ -7,6 +7,9 @@ import Navigation  from './components/navigation/Navigation';
 import './App.css';
 import Router from './Router';
 
+import {getNotification} from './requests/auth'
+
+
 class App extends Component {
 
 	constructor(props){
@@ -15,6 +18,13 @@ class App extends Component {
     this.state = {
       url:this.props.location.pathname
     }
+    setTimeout(this.getNotificationEmails(),3000)
+  }
+
+  getNotificationEmails(){
+    getNotification().then(response=>{
+      console.log(response);
+    })
   }
 
   render(){
@@ -25,7 +35,7 @@ class App extends Component {
   	return (
     		<div>
           <Navigation/>
-    		    {this.props.children}       
+    		    {this.props.children}
     		</div>
   	);
   }

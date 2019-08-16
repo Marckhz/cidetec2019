@@ -31,13 +31,13 @@ class Define extends React.Component{
 			list:[]
 		}
 		this.loadAttributes();
-		this.generateSurvey();
+		this.generateSurvey = this.generateSurvey.bind(this);
 	}
 
 	loadAttributes(){
 		getFinal(this.props.product.product, this.props.user.jwt).then(response=>{
 			this.setState({
-				list:[... response.docs.final.final_attributes]
+				list:this.props.product.class_attributes
 			})
 		})
 	}

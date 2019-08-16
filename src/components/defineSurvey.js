@@ -18,24 +18,37 @@ import { connect }  from 'react-redux';
 
 import RadioForm from './surveyRadio';
 
-import { email } from '../requests/requestsProducts';
+import { email, getFinal } from '../requests/requestsProducts';
 
+import { getEmail } from '../requests/auth';
+import List from '@material-ui/core/List';
 
 class DefineSurvey extends React.Component{
 	constructor(props){
 		super(props);
+		console.log("define survey props", props)
 			
 			//const url ="/define"+this.props.product.product
 			this.state = {
 				onOpen:false,
-				openSend:false
+				openSend:false,
+				emailField:'',
+				list:[],
+				emailHasChanged:''
+
 			}
 		this.openModal = this.openModal.bind(this);
 		this.closeModal = this.closeModal.bind(this);
 		this.openModalSend = this.openModalSend.bind(this);
 		this.closeModalSend = this.closeModalSend.bind(this);
 		this.postEmail = this.postEmail.bind(this);
-}
+		this.getMyEmail();
+		this.loadAttributes();
+		this.onEmailChange = this.onEmailChange.bind(this);
+		this.toDefineProfile = this.toDefineProfile.bind(this);
+		this.toSurveyCounter = this.toSurveyCounter.bind(this);
+	}
+
 	openModalSend(event){
 		this.setState({
 			openSend:true
@@ -57,12 +70,30 @@ class DefineSurvey extends React.Component{
 		})
 	}
 
+	getMyEmail(){
+		getEmail(this.props.user.jwt).then(response=>{
+			console.log("hola", response.docs)
+			this.setState({
+				emailField:response.docs
+			})
+		}).catch(error=>{console.log(error)})
+	}
+
+	loadAttributes(){
+			getFinal(this.props.product.product, this.props.user.jwt).then(response=>{
+				this.setState({
+					list:this.props.product.class_attributes
+				})
+			})
+		}
+
 	postEmail(){
 		const url = {
-			"url":"survey/"+this.props.user.username+"/"+this.props.product.product
+			"url":"survey/"+this.props.user.username+"/"+this.props.product.product,
+			"email":this.state.emailField
 				}
-		email(url).then(response=>{
-			console.log(response)
+		email(url,this.props.user.jwt).then(response=>{
+			console.log(url)
 			if(response == 200){
 				alert("El Correo ha sido enviado")
 				this.setState({
@@ -71,13 +102,23 @@ class DefineSurvey extends React.Component{
 			}
 		})
 	}
+	onEmailChange(event){
+		this.setState({
+			emailField:event.target.value
+		})
+		console.log(this.state.emailHasChanged)
+	}
 
-	defineProfile(event){
+	toDefineProfile(event){
+		this.props.history.push("/define/define-profile/"+this.props.product.product)
+	}
 
+	toSurveyCounter(event){
+		this.props.history.push("/define/define-total-survey/"+this.props.product.product)
 	}
 
 	render(){
-		const {onOpen, openSend} =this.state
+		const {onOpen, openSend, list, emailField} =this.state
 		return(
 
 			<div className="container-fluid">
@@ -96,7 +137,27 @@ class DefineSurvey extends React.Component{
 							<div className="row justify-content-center">
 								<div className="col-12 col-md-8">
 									<div style={{"overflow":"auto", "height":"302px"}}>
-										<RadioForm />
+										<Card raised={true}>
+											<CardContent>
+											<List>
+												<ul>
+													{
+														list.map((key,index)=>{
+															return(
+
+																	<List>
+																		<div classNames="row justify-content-center">
+																			<h5 style={{"fontWeight":"bold", "color":"black"}}>Como te sentirias si el producto tuviera el attributo <h5 style={{"color":"blue", "display":"inline-block"}}>{key}</h5> </h5>
+																			<h5 style={{"fontWeight":"bold", "color":"black"}}>Como te sentirias si el producto <h5 style={{"color":"red", "display":"inline-block"}}>NO</h5> tuviera el attributo <h5 style={{"color":"blue", "display":"inline-block"}}>{key}</h5></h5>
+																		</div>
+																	</List>
+																)
+														})
+													}
+												</ul>
+											</List>				
+											</CardContent>
+										</Card>
 									</div>
 								</div>
 							</div>
@@ -111,6 +172,7 @@ class DefineSurvey extends React.Component{
 								<div className="col-12 col-md-3">
 
 									<Button
+									onClick={this.toDefineProfile}
 									variant="contained"
 									style={{"backgroundColor":"black", "color":"white", "fontFamily":"Righteous"}}
 									>Define Profile</Button>
@@ -131,12 +193,14 @@ class DefineSurvey extends React.Component{
 							<div className="row  justify-content-center" style={{"marginTop":"25px"}}>
 								<div className="col-12 col-md-3">
 									<Button
+									onClick={this.toSurveyCounter}
 									fullWidth={true}
 									style={{"backgroundColor":"black", "color":"white","fontSize":"24px", "fontFamily":"Righteous"}}
 									variant="contained"
 									>Next</Button>
 								</div>
 							</div>
+	
 
 						</div>
 					</div>
@@ -152,7 +216,9 @@ class DefineSurvey extends React.Component{
 											<div className="row justify-content-center">
 												<div className="col-12 col-md-10">
 													<TextField fullWidth={true}
-													placeholder="Email"
+													placeholder={emailField}
+													onChange={this.onEmailChange}
+													
 													/>
 												</div>
 												<div className="row justify-content-center">

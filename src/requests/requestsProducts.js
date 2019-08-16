@@ -1,7 +1,7 @@
 	
 
 function getAuth(jwt){
-	return fetch(`http://127.0.0.1:5000/register_product/`,{
+	return fetch(`http://192.168.1.79:5000/register_product/`,{
 		method:'POST',
 		headers:{
 			'Content-Type':'application/json',
@@ -16,7 +16,7 @@ function getAuth(jwt){
 
 
 function registerProduct(data, jwt){
-	return fetch(`http://127.0.0.1:5000/register_product/`,{
+	return fetch(`http://192.168.1.79:5000/register_product/`,{
 		method:'POST',
 		body:JSON.stringify(data),
 		headers:{
@@ -30,7 +30,7 @@ function registerProduct(data, jwt){
 }
 
 function getSingleProduct(slug, jwt){
-	return fetch(`http://127.0.0.1:5000/emphatize/`+slug,{
+	return fetch(`http://192.168.1.79:5000/emphatize/`+slug,{
 		method:'GET',
 		headers:{
 			'Content-Type':'application/json',
@@ -44,7 +44,7 @@ function getSingleProduct(slug, jwt){
 
 
 function registerInterview(slug, data, jwt){
-	return fetch(`http://127.0.0.1:5000/emphatize/interview/`+slug,{
+	return fetch(`http://192.168.1.79:5000/emphatize/interview/`+slug,{
 		method:'POST',
 		body:JSON.stringify(data),
 		headers:{
@@ -56,7 +56,7 @@ function registerInterview(slug, data, jwt){
 }
 
 function addAttributes(slug, data, jwt){
-	return fetch(`http://127.0.0.1:5000/emphatize/derivation/`+slug,{
+	return fetch(`http://192.168.1.79:5000/emphatize/derivation/`+slug,{
 		method:'POST',
 		body:JSON.stringify(data),
 		headers:{
@@ -69,7 +69,7 @@ function addAttributes(slug, data, jwt){
 
 
 function addFinalAttributes(slug, data, jwt){
-	return fetch(`http://127.0.0.1:5000/emphatize/classification/`+slug,{
+	return fetch(`http://192.168.1.79:5000/emphatize/classification/`+slug,{
 		method:'POST',
 		body:JSON.stringify(data),
 		headers:{
@@ -82,7 +82,7 @@ function addFinalAttributes(slug, data, jwt){
 
 
 function addDefinitiveAttributes(slug, data, jwt){
-	return fetch(`http://127.0.0.1:5000/emphatize/final_attributes/`+slug,{
+	return fetch(`http://192.168.1.79:5000/emphatize/final_attributes/`+slug,{
 		method:'POST',
 		body:JSON.stringify(data),
 		headers:{
@@ -94,7 +94,7 @@ function addDefinitiveAttributes(slug, data, jwt){
 }
 
 function getInterview(slug, jwt){
-	return fetch(`http://127.0.0.1:5000/emphatize/check/interview/`+slug,{
+	return fetch(`http://192.168.1.79:5000/emphatize/check/interview/`+slug,{
 		method:'GET',
 		headers:{
 			'Content-Type':'application/json',
@@ -108,7 +108,7 @@ function getInterview(slug, jwt){
 
 
 function getDerivation(slug, jwt){
-	return fetch(`http://127.0.0.1:5000/emphatize/check/derivation/`+slug,{
+	return fetch(`http://192.168.1.79:5000/emphatize/check/derivation/`+slug,{
 		method:'GET',
 		headers:{
 			'Content-Type':'application/json',
@@ -121,7 +121,7 @@ function getDerivation(slug, jwt){
 }
 
 function getClassification(slug, jwt){
-	return fetch(`http://127.0.0.1:5000/emphatize/check/classification/`+slug,{
+	return fetch(`http://192.168.1.79:5000/emphatize/check/classification/`+slug,{
 		method:'GET',
 		headers:{
 			'Content-Type':'application/json',
@@ -134,7 +134,7 @@ function getClassification(slug, jwt){
 }
 
 function getFinal(slug, jwt){
-	return fetch(`http://127.0.0.1:5000/emphatize/check/final/`+slug,{
+	return fetch(`http://192.168.1.79:5000/emphatize/check/final/`+slug,{
 		method:'GET',
 		headers:{
 			'Content-Type':'application/json',
@@ -146,8 +146,21 @@ function getFinal(slug, jwt){
 	})
 }
 
+function getFinalPublic(slug,user){
+	return fetch(`http://192.168.1.79:5000/emphatize/check/final/public/`+slug,{
+		method:'POST',
+		body:JSON.stringify(user),
+		headers:{
+			'Content-Type':'application/json',
+			'Accept':'application/json',
+		}
+	}).then(response=>{
+		return response.json()
+	})
+}
+
 function updateClassification(slug, data, jwt){
-	return fetch(`http://127.0.0.1:5000/emphatize/update/classification`+slug,{
+	return fetch(`http://192.168.1.79:5000/emphatize/update/classification`+slug,{
 		method:'POST',
 		body:JSON.stringify(data),
 		headers:{
@@ -159,7 +172,59 @@ function updateClassification(slug, data, jwt){
 
 
 function getAllProjects(jwt){
-	return fetch(`http://127.0.0.1:5000/projects/`,{
+	return fetch(`http://192.168.1.79:5000/projects/`,{
+		method:'GET',
+		headers:{
+			'Content-Type':'application/json',
+			'Accept':'application/json',
+			'Authorization':'Bearer '+jwt
+		}
+	}).then(response=>{
+		return response.json();
+	})
+}
+
+//Function publica CLIENTES A CONTESTAR LA ENCUESTA
+function postSurvey(product, data, username){
+	return fetch(`http://192.168.1.79:5000/survey/`+username+`/`+product,{
+		method:'POST',
+		body:JSON.stringify(data),
+		headers:{
+			'Content-Type':'application/json',
+			'Accept':'application/json'
+		}
+	})
+}
+
+function email(url,jwt){
+	return fetch(`http://192.168.1.79:5000/email/`,{
+		method:'POST',
+		body:JSON.stringify(url),
+		headers:{
+			'Content-Type':'application/json',
+			'Accept':'application/json',
+			'Authorization':'Bearer '+jwt
+		}
+	}).then(response=>{
+		return response.json()
+	})
+}
+
+function getTotalSurveysByUser(slug, jwt){
+	return fetch(`http://192.168.1.79:5000/survey/total/`+slug,{
+		method:'GET',
+		headers:{
+			'Content-Type':'application/json',
+			'Accept':'application/json',
+			'Authorization':'Bearer '+jwt
+		}
+	}).then(response=>{
+		return response.json();
+	})
+}
+
+function getTotalSurveysCounter(slug, jwt){
+	return fetch(`http://192.168.1.79:5000/survey/count/`+slug,{
 		method:'GET',
 		headers:{
 			'Content-Type':'application/json',
@@ -172,30 +237,9 @@ function getAllProjects(jwt){
 }
 
 
-function postSurvey(product, data, username){
-	return fetch(`http://192.168.15.7:5000/survey/`+username+`/`+product,{
-		method:'POST',
-		body:JSON.stringify(data),
-		headers:{
-			'Content-Type':'application/json',
-			'Accept':'application/json'
-		}
-	})
-}
-
-function email(url){
-	return fetch(`http://127.0.0.1:5000/email/`,{
-		method:'POST',
-		body:JSON.stringify(url),
-		headers:{
-			'Content-Type':'application/json',
-			'Accept':'application/json'
-		}
-	}).then(response=>{
-		return response.json()
-	})
-}
-
+export { getTotalSurveysByUser }
+export { getTotalSurveysCounter };
+export { getFinalPublic };
 export { email };
 export { postSurvey };
 export { addDefinitiveAttributes };

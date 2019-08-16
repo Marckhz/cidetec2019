@@ -17,7 +17,7 @@ from collections import defaultdict
 
 #from flask import jsonify
 from bson.json_util import loads, dumps
-
+import re
 
 from pymongo import ReturnDocument
 #from flask_jwt import JWT, jwt_required, current_identity
@@ -96,7 +96,7 @@ def register():
 
   doc = user.inserted_id
 
-  return dumps({"doc":doc})
+  return dumps({"docs":doc}),200
 
 @page.route('/register_product/', methods=['GET','POST'])
 @jwt_required
@@ -327,15 +327,37 @@ def final_check(product):
 
   return dumps({"docs":docs}),200
 
+@page.route('/emphatize/check/final/public/<product>', methods=['GET','POST'])
+def final_check_(product):
+
+  document = mongo.db.product.find_one({
+    "username":request.json.get("username"),
+    "product.product_name":product})
+
+  new_dict = {}
+  docs={}
+
+  try:
+    for k,v in document['product'][1].items():
+      new_dict[k]=v
+      for element in new_dict['emphatize']:
+        for i, j in element.items():
+          if(i=='final'):
+            docs[i]=j
+  except:
+    pass
+
+  return dumps({"docs":docs}),200
 
 
-@page.route('/survey/total/', methods=['GET'])
-def total_survey_by_user():
+@page.route('/survey/total/<product>', methods=['GET'])
+@jwt_required
+def total_survey_by_user(product):
 
   dict_ = defaultdict()
   document = mongo.db.product.find_one_or_404({
-    "username":"marck",
-    "product.product_name":"PAPEL"})
+    "username":get_jwt_identity(),
+    "product.product_name":product})
 
   for k,v in document['product'][0].items():
     if(k == 'number_surveys'):
@@ -344,14 +366,22 @@ def total_survey_by_user():
   return dumps({"docs":dict_}), 200
 
 
-@page.route('/survey/count/', methods=['GET'])
-def total_survey_counter():
+@page.route('/survey/count/<product>', methods=['GET'])
+@jwt_required
+def total_survey_counter(product):
+
+  survey_by_user= total_survey_by_user(product)[0]
+  print(survey_by_user)
+
+  search_number = re.findall("[0-9]",survey_by_user)
+  formated_search = int(''.join(search_number))
+  print(formated_search)
 
   dict_ = defaultdict()
   clients_dict = defaultdict()
   document = mongo.db.product.find_one_or_404({
-    "username":"marck",
-    "product.product_name":"PAPEL"})
+    "username":get_jwt_identity(),
+    "product.product_name":product})
 
   for k,v in document['product'][2].items():
     dict_[k]=v
@@ -365,6 +395,10 @@ def total_survey_counter():
       total_surveys+=1
 
   print(total_surveys)
+
+  #if(total_surveys == 2):
+  #  email_survey_notification(get_jwt_identity())
+  
   return dumps({"docs":total_surveys})
 
 
@@ -413,27 +447,72 @@ def survey(username, product):
 ##                ##
 ####################
 
+@page.route('/me/email/', methods=['GET'])
+@jwt_required
+def get_me_email():
+
+  docs = {}
+  document = mongo.db.users.find_one({
+    "username":get_jwt_identity()})
+
+  return dumps({"docs":document['email']})
+
+
+
 @page.route('/email/', methods=['POST'])
+@jwt_required
 def email():
+
+
   url = request.json.get("url")
+  email = request.json.get("email")
+ 
   ip ='192.168.1.79:3000/'+url
-  msg = Message("Hola te invito a contestar la siguiente Encuesta Marco",
+  msg = Message("Hola te invito a contestar la siguiente Encuesta",
           sender=current_app.config['MAIL_USERNAME'],
-          recipients=['marcohdes94i@gmail.com'],
+          recipients=[email],
           body=("link ->{0}").format(ip) ) 
   mail.send(msg)
 
   return "200"
 
 
-@page.route('/email/survey_notification/', methods=['POST'])
+@page.route('/email/notification/', methods=['GET'])
 def email_survey_notification():
-  url = request.json.get("url")
-  ip='192.168.1.79:3000/'+url
+  
+  document = mongo.db.users.find_one({
+    "username":check_surveys()})
+
   msg = Message("Encuesta Terminada",
     sender=current_app.config['MAIL_USERNAME'],
-    recipients= ['marcohdes94i@gmail.com'],
+    recipients= [document['email']],
     body="Tu encuesta ha sido finalizada, por favor, continue el proceso")
   mail.send(msg)
 
   return "200"
+
+def check_surveys():
+
+  counter = {}
+  clients_dict = defaultdict()
+  username = None
+  survey_by_user = {}
+
+  for user in mongo.db.users.find({}):
+    if user['username']:
+      username = user['username']
+      element = mongo.db.product.find_one({"username":username})
+      for k,v in element['product'][0].items():
+        if(k == 'number_surveys'):
+          survey_by_user[username] = v
+      for key, value in element['product'][2].items():
+        clients_dict[key] = value
+        for i, j in clients_dict['survey'].items():
+          for x in range(len(j)+1):
+            counter[username] = x
+
+  for user, client in counter.items():
+    for username, survey in survey_by_user.items():
+      if client == int(survey):
+        return username
+

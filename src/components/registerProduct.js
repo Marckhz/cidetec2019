@@ -85,6 +85,9 @@ class RegisterProduct extends React.Component{
 		console.log(this.state.number_surveys)
 	}
 
+	newProcess(){
+		
+	}
 
 /* pasar el producto al redux storage */
 
@@ -112,6 +115,9 @@ class RegisterProduct extends React.Component{
 			//console.log(data)
 		}
 		
+	}
+	componentDidMount(){
+		this.props.dispatch(actions.unloadProduct({}))
 	}
 	/*
 	auth(){

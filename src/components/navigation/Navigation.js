@@ -17,17 +17,35 @@ class Navigation extends React.Component{
 	constructor(props){
 		super(props);
 		console.log("navigation props", props)
+		
+		this.state = {
+			define:false
+		}
 		this.logout = this.logout.bind(this);
+		this.checkDefine();
+		
+		
+
 	}
 
 	logout(){
 		this.props.dispatch(logout());
 		//this.props.history.push("/")
 		this.props.dispatch(unloadProduct());
-		//this.props.history.push("/")
 	}
+	checkDefine(){
+		if(this.props.product.final_completed===true){
+		this.setState({
+			define:true
+			})
+		}
+		console.log("state", this.state.define)
+		console.log(this.props.product.final_completed)
+	}
+
+
 	render(){
-		return  <MyAppBar logout={this.logout}/>
+		return  <MyAppBar logout={this.logout} define={this.checkDefine}/>
 	}
 }
 

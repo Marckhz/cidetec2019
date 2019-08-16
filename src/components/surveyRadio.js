@@ -18,6 +18,9 @@ import { postSurvey } from '../requests/requestsProducts';
 import { withRouter } from 'react-router-dom';
 
 import { Redirect } from 'react-router-dom';
+import { getFinalPublic } from '../requests/requestsProducts';
+
+
 
 /*usar la url para el post */
 
@@ -28,7 +31,7 @@ class RadioForm extends React.Component{
 		console.log("user", this.props)
 
 		this.state = {
-			attr:['hola','marco', 'cesar'],
+			attr:[],
 			negative:{},
 			positive:{},
 			button:false
@@ -37,6 +40,7 @@ class RadioForm extends React.Component{
 		}
 		this.handleChangeRadioButtonsSurvey = this.handleChangeRadioButtonsSurvey.bind(this);
 		this.postDataSurvey = this.postDataSurvey.bind(this);
+		this.loadAttributes();
 		//this.hideButton();
 	}
 
@@ -49,7 +53,16 @@ class RadioForm extends React.Component{
 		console.log(this.state.negative)
 		console.log(this.state.positive)
 	}
-	
+	loadAttributes(){
+		const username = { 
+			"username":this.props.match.params.user
+			}
+		getFinalPublic(this.props.match.params.slug,username).then(response=>{
+				this.setState({
+					attr:response.docs.final.final_attributes
+			})
+		})
+	}
 	postDataSurvey(){
 		
 		const results = {
@@ -57,7 +70,6 @@ class RadioForm extends React.Component{
 			negative:[this.state.negative]
 		}
 		console.log(results)
-
 		const data ={
 
 
@@ -106,6 +118,8 @@ class RadioForm extends React.Component{
 	}
 		console.log(data)
 	}
+
+
 	render(){
 		const {attr, button} = this.state
 		return(

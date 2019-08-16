@@ -17,6 +17,7 @@ import Button from '@material-ui/core/Button';
 
 
 import * as actions from '../actions/productActions';
+
 import { getInterview, getDerivation, getClassification, getFinal } from '../requests/requestsProducts';
 
 import { connect } from 'react-redux';
@@ -28,12 +29,14 @@ class Empathize extends React.Component{
 			emphatize:false,
 			derivation:false,
 			classification:false,
-			final:false
+			final:false,
+			disabled:true
 		}
 		this.checkInterview();
 		this.checkDerivation();
 		this.checkClassification();
 		this.checkFinal();
+		this.toDefine = this.toDefine.bind(this);
 	}
 	checkInterview(){
 		getInterview(this.props.product.product, this.props.user.jwt).then(response=>{
@@ -75,14 +78,22 @@ class Empathize extends React.Component{
 			console.log("check me final", check_me)
 			if(check_me.final){
 				this.setState({
-					final:true
+					final:true,
+					disabled:false
 				})
-				//localStorage.setItem(check_me);
+				this.props.dispatch(actions.emphatizeCompleted(this.state.final))
+				this.props.dispatch(actions.loadClassification(response.docs.final.final_attributes))
+			}else{
+				this.props.dispatch(actions.emphatizeCompleted(false))
 			}
 		}).catch(error=>{console.log(error)})
 	}
+
+	toDefine(){
+		this.props.history.push("/define/"+this.props.product.product)		
+	}
 	render(){
-		const {emphatize, derivation, classification, final} = this.state
+		const {emphatize, derivation, classification, final, disabled} = this.state
 		return(
 				<div className="container-fluid dis-col">
 						<div className="row" style={{"backgroundColor":"white"}}>
@@ -176,8 +187,9 @@ class Empathize extends React.Component{
 						<div className="row justify-content-center">
 							<div className="col-12 col-md-4">
 								<Button
-
+								onClick={this.toDefine}
 								fullWidth={true}
+								disabled={disabled}
 								variant="contained" 
 								style={{"marginTop":"50px","backgroundColor":"black", "color":"white", "fontSize":"24px", "fontFamily":"Righteous"}}>Next</Button>
 							</div>

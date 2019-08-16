@@ -8,6 +8,8 @@ export default function productReducer(state ={name:'Marco'}, action){
 			return Object.assign({}, state, { derivation_attributes: action.derivation})
 		case 'CLASSIFICATION':
 			return Object.assign({}, state, { class_attributes: action.classification });
+		case 'FINAL_COMPLETED':
+			return Object.assign({}, state, { final_completed : action.final });
 		default:
 			return state;
 	}

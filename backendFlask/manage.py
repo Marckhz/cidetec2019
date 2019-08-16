@@ -2,18 +2,30 @@ from app import create_app
 from flask_script import Manager, Server
 from config import config
 
-#from create_user import CreateUser
+from app.views import email_survey_notification
+
+import time
+
+import datetime
+
 
 
 config_class = config['development']
 
-app = create_app(config_class)
 
-#createsuperuser = CreateUser()
+#AGREGAR JOB
+
+app = create_app(config_class)
+def send_emails():	
+	email_survey_notification()
+
 
 
 if __name__ == '__main__':
+	with app.app_context():
+		if(time.strftime("%H:%M") == '17:06'):
+			email_survey_notification()
 	manager = Manager(app)
 	#manager.add_command("createsuperuser", createsuperuser)
-	manager.add_command("runserver", Server('192.168.15.7') )
+	manager.add_command("runserver", Server('192.168.1.79') )
 	manager.run()

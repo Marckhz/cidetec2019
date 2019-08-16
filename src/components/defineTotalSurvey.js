@@ -8,8 +8,43 @@ import Button from '@material-ui/core/Button';
 
 import GraphIcon from '../images/icons/grafiquita.png'
 
-export default class DefineTotalSurvey extends React.Component{
+import { connect } from 'react-redux';
+
+import { getTotalSurveysByUser, getTotalSurveysCounter } from '../requests/requestsProducts';
+
+
+class DefineTotalSurvey extends React.Component{
+	constructor(props){
+		super(props);
+
+		this.state = {
+
+			total_survey:'',
+			counter_survey:''
+		}
+		this.getTotalSurveys();
+		this.getSurveysSofar();
+	}
+
+	getTotalSurveys(){
+		getTotalSurveysByUser(this.props.product.product, this.props.user.jwt).then(response=>{
+			this.setState({
+				total_survey:response.docs.number_surveys
+			})
+		}).catch(error=>{console.log(error)})
+	}
+
+	getSurveysSofar(){
+		getTotalSurveysCounter(this.props.product.product, this.props.user.jwt).then(response=>{
+			this.setState({
+				counter_survey:response.docs
+			})
+		}).catch(error=>{console.log(error)})
+	}
+
+
 	render(){
+		const {total_survey, counter_survey} = this.state
 		return(
 			<div className="container-fluid">
 				<div className="row">
@@ -31,7 +66,7 @@ export default class DefineTotalSurvey extends React.Component{
 										<CardContent style={{"height":"302px"}}>
 											<div className="row">
 												<div className="col-12 col-md-6">
-													<h5>Total Surveys: </h5>
+													<h5>Total Surveys: {counter_survey} /{total_survey} </h5>
 												</div>
 											</div>
 										</CardContent>
@@ -63,3 +98,11 @@ export default class DefineTotalSurvey extends React.Component{
 			)
 	}
 }
+
+function mapStateToProps(state, ownProps){
+	return {
+		user: state.user,
+		product:state.products
+	}
+}
+export default connect(mapStateToProps)(DefineTotalSurvey);

@@ -36,7 +36,10 @@ class MyAppBar extends React.Component{
 		super(props);
 		console.log("user props", props.user.jwt)
 		console.log("product props",props.product.product)
-		const myproduct = props.product.product;
+
+
+		console.log(props)
+
 		this.state = {
 			user: props.user.jwt,
 			emphatize : false,
@@ -44,22 +47,7 @@ class MyAppBar extends React.Component{
 			ideate:false,
 			prototype:false,
 			test:false,
-			product:props.product.product
 		}
-		//this.componentDidMount();
-		//this.checkInterview();
-	}
-	componentDidMount(){
-		if(this.state.product){
-				this.setState({
-					emphatize:true
-				})
-		}else{
-			this.setState({
-				emphatize:false
-			})
-		}
-		console.log("soy el estado del producto", this.state.product)
 	}
 	render(){
 		const {user, emphatize, define, ideate, prototype, test} = this.state
@@ -70,14 +58,14 @@ class MyAppBar extends React.Component{
 				<div className="container menu-container">
 					<div className="row justify-content-around row-menu">
 						<div className="border-here">
-							{emphatize ? <Link to={"/emphatize/"+this.props.product.product} className="links-navbar">
+							{this.props.product.product ? <Link to={"/emphatize/"+this.props.product.product} className="links-navbar">
 								<div className="link-btn" color="inherit">
 									<h3 style={{"textAlign":"center"}}>Emphatize</h3>
 								</div>
 							</Link>	:null }
 						</div>
 						 <div className="border-here">				
-						{define ?	<Link  to={"/define/"+this.props.product.product}className="links-navbar">
+						{this.props.product.final_completed ?	<Link  to={"/define/"+this.props.product.product}className="links-navbar">
 								<div className="link-btn" color="inherit">
 									<h3 style={{"textAlign":"center"}}>Define</h3>
 								</div>

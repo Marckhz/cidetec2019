@@ -34,21 +34,16 @@ password = urllib.parse.quote_plus('metallica1')
 app.config['MONGO_URI'] = 'mongodb+srv://%s:%s@uas-6xetc.mongodb.net/test?retryWrites=true' %(username, password)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-
-
-
 mongo = PyMongo(app)
 mail = Mail()
-
 CORS(app)
+
 
 from app.views import page
 
 def create_app(config):
 
 	app.config.from_object(config)
-
-	#csrf.init_app(app)
 	login_manager.init_app(app)
 	bcrypt.init_app(app)
 	mail.init_app(app)

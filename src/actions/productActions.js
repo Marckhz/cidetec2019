@@ -16,3 +16,7 @@ export function derivationAttributes(derivation){
 	console.log("soy la derivation", derivation)
 	return { type: 'DERIVATION', derivation}
 }
+
+export function emphatizeCompleted(final){
+	return { type : 'FINAL_COMPLETED', final}
+}

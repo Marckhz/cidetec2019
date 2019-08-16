@@ -13,13 +13,14 @@ import { Link } from "react-router-dom";
 import Net from '../images/net.mp4';
 
 import TextField from '@material-ui/core/TextField';
+import { withRouter } from 'react-router-dom';
 
 
 //import TextField from '@material-ui/core/TextField';
 
 import { register } from '../requests/auth'; 
 
-export default class Register extends React.Component{
+class Register extends React.Component{
 	
 	constructor(props){
 		super(props);
@@ -75,8 +76,15 @@ export default class Register extends React.Component{
 			first_name:this.state.first_name,
 			last_name:this.state.last_name
 		}
-
-		register(data).then()
+		register(data).then(response=>{
+			console.log(response)
+			if(response){
+				alert("ha sido registrado (:")
+				this.props.history.push("/")
+			}
+		}).catch(error=>{
+			console.log(error)
+		})
 
 	}
 
@@ -93,7 +101,8 @@ export default class Register extends React.Component{
 								<CardContent >
 								<div className="row" style={{"margin":"1em"}}>
 									<div className="col-12 col-md-12">
-										<TextField 
+										<TextField
+										onChange={this.handleChangeUsername}
 										fullWidth={true}
 										variant="outlined"
 										placeholder="username" 
@@ -103,6 +112,7 @@ export default class Register extends React.Component{
 								<div className="row" style={{"margin":"1em"}}>
 									<div className="col-12 col-md-12">
 										<TextField fullWidth={true}
+										onChange={this.handleChangePwd}
 										variant="outlined"
 										type="password"
 										placeholder="password"
@@ -112,6 +122,7 @@ export default class Register extends React.Component{
 								<div className="row" style={{"margin":"1em"}}>
 									<div className="col-12 col-md-12">
 										<TextField
+										onChange={this.handleChangeEmail}
 										fullWidth={true}
 										type="email"
 										variant="outlined"
@@ -122,6 +133,7 @@ export default class Register extends React.Component{
 								<div  className="row" style={{"margin":"1em"}}>
 									<div className="col-12 col-md-12">
 										<TextField 
+										onChange={this.handleChangeName}
 										fullWidth={true}
 										variant="outlined"
 										placeholder="First Name"
@@ -130,7 +142,8 @@ export default class Register extends React.Component{
 								</div>
 								<div className="row" style={{"margin":"1em"}}>
 									<div className="col-12 col-md-12">
-										<TextField 
+										<TextField
+										onChange={this.handleChangeLastName} 
 										fullWidth={true}
 										variant="outlined"
 										placeholder="Last Name"
@@ -139,7 +152,8 @@ export default class Register extends React.Component{
 								</div>
 								<div className="row" style={{"margin":"1em"}}>
 									<div className="col-12 col-md-12">
-										<Button 
+										<Button
+										onClick={this.requestSignUp}
 										size="large"
 										variant="contained" 
 										fullWidth={true} style={{"fontSize":"24px", "fontFamily":"Righteous", "color":"white","backgroundColor":"black"}}>Register</Button>
@@ -159,3 +173,5 @@ export default class Register extends React.Component{
 			);
 	}
 }
+
+export default withRouter(Register)
