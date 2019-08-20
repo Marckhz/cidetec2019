@@ -11,21 +11,67 @@ import Icon from '@material-ui/core/Icon';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import { connect } from 'react-redux';
 
 
+import { getMethodology, postMethodology } from '../requests/requestsProducts';
 
 
-
-export default class Methodology extends React.Component{
+class Methodology extends React.Component{
 	constructor(props){
 	super(props);
 	
-	this.state = {
-		newProduct:true,
-	}	
+		this.state = {
+			//product_type:'',
+			new_product:false,
+			meth:''
+		}		
+		this.getData();
+		//this.onMethodologyChange= this.onMethodologyChange.bind(this);
+		this.postDataMethodology = this.postDataMethodology.bind(this);
+	}
+
+	getData(){
+		getMethodology(this.props.product.product, this.props.user.jwt).then(response=>{
+			if(response.docs.product_type === '0'){
+				this.setState({
+					new_product:true,
+					meth:response.docs.product_type
+				})
+			}else{
+				this.setState({
+					meth:response.docs.product_type
+				})
+			}
+			console.log(response.docs.product_type)
+			console.log(this.state.meth)
+		}).catch(error=>{console.log(error)})
+	}
+
 	
-}render(){
-	const {newProduct} = this.state
+	onMethodologyChange(event){
+		this.setState({
+			meth:event.target.value
+		})
+	}
+	
+
+	postDataMethodology(){
+
+		console.log(this.state.meth)
+		const data = {
+			"methodology_type":this.status.methodology_type
+		}
+		console.log(data)
+		//postMethodology(this.props.product.product, data, this.props.user.jwt).then(response=>{
+		//	console.log(response.docs)
+		//}).catch(error=>{console.log(error)})
+	}
+
+
+
+render(){
+	const {new_product} = this.state
 	return(
 				<div className="container-fluid">
 					<div className="row">
@@ -40,10 +86,10 @@ export default class Methodology extends React.Component{
 									<h1>Methodology</h1>
 								</div>
 							</div>
-							{newProduct ?
+							{new_product ?
 								<div className="row justify-content-center">
 									<div className="col-12 col-md-6">
-										<h1>New Product/Service</h1>
+										<h1>New Product/Service: YANG</h1>
 									</div>
 								</div>
 								:
@@ -52,9 +98,9 @@ export default class Methodology extends React.Component{
 										<Card raised={true}>
 											<CardHeader disableTypography={true} style={{"fontSize":"36px","textAlign":"center"}} title="Knwon Product"/>
 												<CardContent style={{"height":"302px"}}>
-													<RadioGroup>
-														<FormControlLabel control={<Radio color="primary" value="Yang"/> } label="Yang" labelPlacement="end" style={{"fontSize":"24px",  "fontFamily":"Righteous"}}/>
-														<FormControlLabel control={<Radio color="primary" value="Tontini"/> } label="Tontini" labelPlacement="end" style={{"fontSize":"24px",  "fontFamily":"Righteous"}}/>
+													<RadioGroup onChange= {this.onMethodologyChange}>
+														<FormControlLabel control={<Radio color="primary" value="0"/> } label="Yang" labelPlacement="end" style={{"fontSize":"24px",  "fontFamily":"Righteous"}}/>
+														<FormControlLabel control={<Radio color="primary" value="1"/> } label="Tontini" labelPlacement="end" style={{"fontSize":"24px",  "fontFamily":"Righteous"}}/>
 													</RadioGroup>
 												</CardContent>
 										</Card>
@@ -75,7 +121,8 @@ export default class Methodology extends React.Component{
 							</div>
 							<div className="row justify-content-center" style={{"marginTop":"100px"}}>
 								<div className="col-12 col-md-3">
-									<Button variant="contained"
+									<Button variant="contained"methodology_type
+									onClick={this.postDataMethodology}
 									fullWidth={true}
 									style={{"backgroundColor":"black", "color":"white", "fontSize":"24px", "fontFamily":"Righteous"}}>Send</Button>
 								</div>
@@ -86,3 +133,12 @@ export default class Methodology extends React.Component{
 			)
 	}
 }
+
+
+function mapStateToProps(state, ownProps){
+	return {
+		user: state.user,
+		product:state.products
+	}
+}
+export default connect(mapStateToProps)(Methodology);

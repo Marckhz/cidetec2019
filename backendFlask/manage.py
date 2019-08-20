@@ -11,11 +11,14 @@ import datetime
 
 
 config_class = config['development']
-
-
-#AGREGAR JOB
-
 app = create_app(config_class)
+
+
+def send_emails():
+	with app.app_context():
+		email_survey_notification()
+
+
 
 if __name__ == '__main__':
 	manager = Manager(app)

@@ -46,6 +46,9 @@ class Define extends React.Component{
 		this.props.history.push("/define/generate-survey/"+this.props.product.product)
 	}
 
+
+
+
 	render(){
 		const {list} = this.state
 		return(

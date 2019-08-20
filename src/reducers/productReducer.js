@@ -5,7 +5,7 @@ export default function productReducer(state ={name:'Marco'}, action){
 		case 'IN_LOG_OUT':
 			return {};
 		case 'DERIVATION':
-			return Object.assign({}, state, { derivation_attributes: action.derivation})
+			return Object.assign({}, state, { loaded_attributes: action.derivation})
 		case 'CLASSIFICATION':
 			return Object.assign({}, state, { class_attributes: action.classification });
 		case 'FINAL_COMPLETED':

@@ -18,9 +18,10 @@ import { connect }  from 'react-redux';
 
 import RadioForm from './surveyRadio';
 
-import { email, getFinal } from '../requests/requestsProducts';
+import { Email, getFinal } from '../requests/requestsProducts';
 
-import { getEmail } from '../requests/auth';
+import { getEmail,  } from '../requests/auth';
+
 import List from '@material-ui/core/List';
 
 class DefineSurvey extends React.Component{
@@ -91,8 +92,8 @@ class DefineSurvey extends React.Component{
 		const url = {
 			"url":"survey/"+this.props.user.username+"/"+this.props.product.product,
 			"email":this.state.emailField
-				}
-		email(url,this.props.user.jwt).then(response=>{
+		}
+		Email(url,this.props.user.jwt).then(response=>{
 			console.log(url)
 			if(response == 200){
 				alert("El Correo ha sido enviado")

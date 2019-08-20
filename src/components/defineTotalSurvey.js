@@ -24,6 +24,7 @@ class DefineTotalSurvey extends React.Component{
 		}
 		this.getTotalSurveys();
 		this.getSurveysSofar();
+		this.toMethodology = this.toMethodology.bind(this);
 	}
 
 	getTotalSurveys(){
@@ -42,6 +43,10 @@ class DefineTotalSurvey extends React.Component{
 		}).catch(error=>{console.log(error)})
 	}
 
+
+	toMethodology(){
+		this.props.history.push("/define/methodology/"+this.props.product.product)
+	}
 
 	render(){
 		const {total_survey, counter_survey} = this.state
@@ -87,7 +92,8 @@ class DefineTotalSurvey extends React.Component{
 						</div>
 						<div className="row justify-content-center" style={{"marginTop":"25px"}}>
 							<div className="col-12 col-md-4">
-								<Button 
+								<Button
+								onClick ={this.toMethodology} 
 								style={{"backgroundColor":"black","color":"white","fontSize":"24px", "fontFamily":"Righteous"}}
 								>Generate Analysis</Button>
 							</div>

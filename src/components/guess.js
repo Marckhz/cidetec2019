@@ -231,8 +231,8 @@ Reciclar logica del prototipo
 									<div className="row justify-content-end guess-rows">
 										<div className="col-12 col-md-4">	
 											<RadioGroup onChange={this.handleChangeGender}>
-												<FormControlLabel	control={<Radio value="0" color="primary" /> }label="Male" />
-												<FormControlLabel control ={<Radio value="1"color="primary" />} label="Female"/>
+												<FormControlLabel	control={<Radio value="M" color="primary" /> }label="Male" />
+												<FormControlLabel control ={<Radio value="F"color="primary" />} label="Female"/>
 											</RadioGroup>
 										</div>
 									</div>

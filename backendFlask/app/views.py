@@ -199,7 +199,7 @@ def update_classification(product):
   document = mongo.db.product.find_one_and_update({
     "username":get_jwt_identity(),
     "product.product_name":product},
-    {"$set":{"product.1.emphatize":{"classification":{
+    {"$addToSet":{"product.1.emphatize":{"classification":{
       "final_attributes":request.json.get("final_attributes")
           }
         }
@@ -412,6 +412,12 @@ def total_survey_counter(product):
 ###########################
 ###########################
 
+#informacion en cada parte del scrum
+#modificar imagen, tamanio mas grande
+#resaltar el proceso de scrum con nada etapa
+
+
+
 @page.route('/survey/<username>/<product>', methods=['POST'])
 def survey(username, product):
 
@@ -433,8 +439,22 @@ def survey(username, product):
             }
           }
     )
+
+  insert_into_clients_docs = mongo.db.clients.insert_one({
+    "first_name":request.json.get("first_name"),
+    "last_name":request.json.get("last_name"),
+    "address":request.json.get("address"),
+    "email":request.json.get("email"),
+    "gender":request.json.get("gender"),
+    "age":request.json.get("age"),
+    "occupation":request.json.get("occupation"),
+    "workplace":request.json.get("workplace")
+    })
+
   print(document)
   return dumps({"docs":document}),200
+
+
 
 
 
@@ -457,8 +477,6 @@ def get_me_email():
 
   return dumps({"docs":document['email']})
 
-
-
 @page.route('/email/', methods=['POST'])
 @jwt_required
 def email():
@@ -475,6 +493,69 @@ def email():
   mail.send(msg)
 
   return "200"
+
+#boton sombreado
+#bug de classificacion
+
+
+@page.route('/clients/professions/', methods=['GET', 'POST'])
+@jwt_required
+def get_professions():
+
+  docs = {}
+  for element in mongo.db.clients.find({}):
+    if element['occupation']:
+      docs['profession'] = element['occupation']
+
+  return dumps({"docs":docs})
+
+
+
+@page.route('/clients/query/users/', methods=['POST'])
+@jwt_required
+def query_clients():
+
+ 
+  age = request.json.get("age_range_start")
+  age_end = request.json.get("age_range_end")
+  male = request.json.get("male",None)
+  female = request.json.get("female",None)
+  parse_age = int(age)
+  parse_end_age = int(age_end)
+  occupation = request.json.get("occupation")
+  url = request.json.get("url")
+
+  docs={}
+  emails = []
+  ip ='192.168.1.79:3000/'+url
+
+  while parse_age <= parse_end_age:
+    for element in mongo.db.clients.find({
+      "occupation":occupation,
+      "age": str(parse_age)}):
+      if(male is not None and male =='M'):
+        if(male in element['gender']):  
+          if(element['email']):
+            emails.append(element['email'])
+      if (female is not None and female == 'F'):     
+        if(female in element['gender']): 
+          if(element['email']):
+            emails.append(element['email'])
+    parse_age+=1 
+    print(parse_age)
+
+  try:
+    msg = Message("Hola te invito a contestar una Encuesta",
+      sender = current_app.config['MAIL_USERNAME'],
+      recipients=emails,
+      body=("Hola te invito a contestar la siguiente encuesta link -> {0}").format(ip) )
+    mail.send(msg)
+  except:
+    return "no emails error"
+
+  
+
+  return dumps({"docs":emails}),200
 
 
 @page.route('/email/notification/', methods=['GET'])
@@ -505,14 +586,60 @@ def check_surveys():
       for k,v in element['product'][0].items():
         if(k == 'number_surveys'):
           survey_by_user[username] = v
-      for key, value in element['product'][2].items():
-        clients_dict[key] = value
-        for i, j in clients_dict['survey'].items():
-          for x in range(len(j)+1):
-            counter[username] = x
-
+      try:
+        for key, value in element['product'][2].items():
+          clients_dict[key] = value
+          for i, j in clients_dict['survey'].items():
+            for x in range(len(j)+1):
+              counter[username] = x
+      except:
+        pass
   for user, client in counter.items():
     for username, survey in survey_by_user.items():
       if client == int(survey):
         return username
 
+#########################
+#########################
+##                     ##
+##                     ##
+##    Metodologia      ##
+##                     ##
+#########################
+#########################
+
+@page.route('/metholody/<product>', methods=['GET'])
+@jwt_required
+def get_methodology(product):
+
+
+  docs = {}
+  document = mongo.db.product.find_one({
+    "username":get_jwt_identity(),
+    "product.product_name":product
+    })
+
+  for k,v in document['product'][0].items():
+    if(k=='product_type'):
+      docs[k]=v
+
+
+  return dumps({"docs":docs}), 200
+
+@page.route('/metholody/type/<product>', methods=['POST'])
+@jwt_required
+def post_methodology(product):
+
+
+  document= mongo.db.product.find_one_and_update({
+    "username":get_jwt_identity(),
+    "product.product_name":product_name},
+    {"$push":{"product.3.methodology":{
+      "methodology_type":request.json.get("methodology_type")
+        }
+      }
+    }
+  )
+
+
+  return dumps({"docs":document}),200

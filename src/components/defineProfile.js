@@ -21,16 +21,27 @@ import InputLabel from '@material-ui/core/InputLabel';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import Select from '@material-ui/core/Select';
 
-export default class DefineProfile extends React.Component{
+
+import { getProfessions,postDefineProfile } from '../requests/clientsRequests';
+
+import { connect }  from 'react-redux';
+/*
+
+Deberia guardar la informacion del
+esta definicion de perfil?
+*/
+
+class DefineProfile extends React.Component{
 	constructor(props){
 		super(props);
-
+		console.log(props.user.jwt)
 		this.state = {
 			profession:'',
-			male:'',
+			male:null,
 			female:'',
 			age_range_start:'',
 			age_range_end:'',
+			select_professions:[]
 		}
 
 		this.onProfessionChange = this.onProfessionChange.bind(this);
@@ -38,7 +49,8 @@ export default class DefineProfile extends React.Component{
 		this.onGenderFemaleChange = this.onGenderFemaleChange.bind(this);
 		this.onAgeStartChange = this.onAgeStartChange.bind(this);
 		this.onAgeEndChange = this.onAgeEndChange.bind(this);
-
+		this.getData();
+		this.postBulkEmailData = this.postBulkEmailData.bind(this);
 	}
 
 	onProfessionChange(event){
@@ -69,63 +81,44 @@ export default class DefineProfile extends React.Component{
 			age_range_end:event.target.value
 		})
 	}
-/*
-	postInterviewData(){
 
-		if(this.state.market ==='' || this.state.age_range_start ==='' || this.state.age_range_end ===''){
-			alert("Revisar informacion por favor")
+	getData(){
+		getProfessions(this.props.user.jwt).then(response=>{
+			console.log(response.docs)
+			this.setState({
+				select_professions:[response.docs.profession]
+			})
+		}).catch(error=>{console.log(error)})
+	}
+
+	postBulkEmailData(){
+		if(this.state.profession === '' && this.state.age_range_start ==='' && this.state.age_range_end ==='' && this.state.male===null && this.state.female ===null){
+			alert("campos vacios")
 		}else{
-			if(this.state.male ==='0' && this.state.female ===''){
-				const data = {
-					"profession":this.state.profession,
-					"gender":this.state.male,
-					"age_range_start":this.state.age_range_start,
-					"age_range_end":this.state.age_range_end,
-					"product_name":this.slug,
-				}
-				registerInterview(this.props.match.params.slug, data, this.props.user.jwt).then(response=>{
-					console.log(response)
-					if(response.status === 200){
-						this.props.dispatch(push(`/emphatize/derivation/${this.props.match.params.slug}`))
-					}
-				})
+			const data = {
+				"occupation":this.state.profession,
+				"age_range_start":this.state.age_range_start,
+				"age_range_end":this.state.age_range_end,
+				"male":this.state.male,
+				"female":this.state.female,
+				"url":"survey/"+this.props.user.username+"/"+this.props.product.product
 			}
-			
-			if(this.state.female ==='1' && this.state.male===''){
-				const data = {
-					"profession":this.state.market,
-					"gender":this.state.female,
-					"age_range_start":this.state.age_range_start,
-					"age_range_end":this.state.age_range_end,
-					"product_name":this.slug,
+			postDefineProfile(data, this.props.user.jwt).then(response=>{
+				console.log(response)
+				if(response.status === 200){
+					alert("invitacion enviada!!!")
+					this.props.history.push("/define/define-total-survey/"+this.props.product.product)
+				}else{
+					alert("no has enviado nada?")
 				}
-				registerInterview(this.slug, data, this.props.user.jwt).then(response=>{
-					if(response.status === 200){
-						this.props.dispatch(push(`/emphatize/derivation/${this.props.match.params.slug}`))
-					}				
-				})
-			}
-			if(this.state.female ==='1' && this.state.male ==='0'){
-				const data = { 
-					"profession":this.state.market,
-					"gender":[this.state.male, this.state.female],
-					"age_range_start":this.state.age_range_start,
-					"age_range_end":this.state.age_range_end,
-					"product_name":this.slug,
-				}
-				registerInterview(this.props.match.params.slug, data, this.props.user.jwt).then(response=>{
-					if(response.status === 200){
-						this.props.dispatch(push(`/emphatize/derivation/${data["product_name"]}`))
-					}
-				})
-			}
+			}).catch(error=>{console.log(error)})
+			console.log(data)
 		}
 	}
-	*/
 
 	render(){
+		const {select_professions} = this.state
 		return(
-
 				<div className="container-fluid">
 					<div className="row">
 						<div className="col-12 col-md-6">
@@ -141,13 +134,21 @@ export default class DefineProfile extends React.Component{
 							</div>
 							<div className="row">
 								<div className="col-12 col-md-6" >
-									<TextField
+									<NativeSelect
 									onChange={this.onProfessionChange}
 									style={{"marginLeft":"80px"}} 
-									variant="outlined"
+									variant="filled"
 									placeholder="Profession"
-									fullWidth={true}
-									/>
+									fullWidth={true}>
+									<option value=""/>
+								{
+									select_professions.map((key,index)=>{
+										return(
+												<option value={key}>{key} </option>
+											)
+									})
+								}
+									</NativeSelect>
 								</div>
 							</div>
 							<div className="row">
@@ -157,10 +158,10 @@ export default class DefineProfile extends React.Component{
 							</div>
 							<div className="row justify-content-start" style={{"width":"80%", "marginLeft":"80px"}}>
 								<div className="col-12 col-md-4">
-									<h3>Male <Checkbox color="default" onChange={this.onGenderMaleChange} value="0"/> </h3>
+									<h3>Male <Checkbox color="default" onChange={this.onGenderMaleChange} value="M"/> </h3>
 								</div>
 								<div className="col-12 col-md-4">
-									<h3>Female <Checkbox color="default" onChange={this.onGenderFemaleChange} value="1" /> </h3>
+									<h3>Female <Checkbox color="default" onChange={this.onGenderFemaleChange} value="F" /> </h3>
 								</div>
 							</div>
 							<div className="row" style={{"marginLeft":"60px"}}>
@@ -218,6 +219,7 @@ export default class DefineProfile extends React.Component{
 							<div className="row justify-content-center" style={{"marginTop":"25px"}}>
 								<div className="col-md-3">
 									<Button variant="contained"
+									onClick={this.postBulkEmailData}
 									fullWidth={true}
 									style={{"backgroundColor":"black","color":"white","fontSize":"24px", "fontFamily":"Righteous"}}>Send</Button>
 								</div>
@@ -226,5 +228,14 @@ export default class DefineProfile extends React.Component{
 					</div>
 				</div>
 			)
+		}
+	}
+
+
+function mapStateToProps(state, ownProps){
+	return {
+		user: state.user,
+		product:state.products
 	}
 }
+export default connect(mapStateToProps)(DefineProfile);

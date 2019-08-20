@@ -1,6 +1,6 @@
 
 function login(credentials){
-	return fetch(`http://192.168.1.79:5000/login`,{
+	return fetch(`http://192.168.15.7:5000/login`,{
 		method:'POST',
 		body: JSON.stringify(credentials),
 		headers:{
@@ -13,7 +13,7 @@ function login(credentials){
 }
 
 function register(data){
-	return fetch(`http://192.168.1.79:5000/register`,{
+	return fetch(`http://192.168.15.7:5000/register`,{
 		method:'POST',
 		body: JSON.stringify(data),
 		headers:{
@@ -27,7 +27,7 @@ function register(data){
 
 
 function getEmail(jwt){
-	return fetch(`http://192.168.1.79:5000/me/email/`,{
+	return fetch(`http://192.168.15.7:5000/me/email/`,{
 		method:'GET',
 		headers:{
 			'Content-Type':'application/json',
@@ -40,7 +40,7 @@ function getEmail(jwt){
 }
 
 function getNotification(){
-	return fetch(`http://192.168.1.79:5000//email/notification/`,{
+	return fetch(`http://192.168.15.7:5000/email/notification/`,{
 		method:'GET',
 		headers:{
 			'Content-Type':'application/json',
