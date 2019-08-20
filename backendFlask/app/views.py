@@ -1,4 +1,4 @@
-
+import csv
 from flask import Blueprint
 from flask import render_template, request, flash, session, redirect,url_for
 from flask import request, jsonify
@@ -59,7 +59,6 @@ Improve login
 """
 @page.route('/login', methods=['GET', 'POST'])
 def login():
-
 
   auth_user = {}
 
@@ -608,7 +607,7 @@ def check_surveys():
 #########################
 #########################
 
-@page.route('/metholody/<product>', methods=['GET'])
+@page.route('/methodology/<product>', methods=['GET'])
 @jwt_required
 def get_methodology(product):
 
@@ -626,20 +625,73 @@ def get_methodology(product):
 
   return dumps({"docs":docs}), 200
 
-@page.route('/metholody/type/<product>', methods=['POST'])
+@page.route('/methodology/type/<product>', methods=['POST'])
 @jwt_required
 def post_methodology(product):
 
 
   document= mongo.db.product.find_one_and_update({
     "username":get_jwt_identity(),
-    "product.product_name":product_name},
+    "product.product_name":product},
     {"$push":{"product.3.methodology":{
       "methodology_type":request.json.get("methodology_type")
         }
       }
     }
   )
+  return dumps({"docs":document.inserted_id}),200
 
 
-  return dumps({"docs":document}),200
+
+###################################################################
+###################################################################
+##                                                               ##
+##                                                               ##
+##                                                               ##
+##            Data Manipulation Kano/Yang                        ##
+##                                                               ##
+##                                                               ##
+###################################################################
+###################################################################
+
+@page.route('/data/answers/', methods=['GET'])
+def get_survey_data():
+
+  docs= {}
+  results = defaultdict(list)
+
+  document = mongo.db.product.find_one({
+    "username":"marck",
+    "product.product_name":"taza"
+    })
+  id=1
+  for k,v in document['product'][2]['survey'].items():
+    docs[k] = v
+    for i,j in docs.items():
+      docs = j
+      for client in range(len(j)):
+        if("results" in j[client]):
+          results[id].append(j[client]["results"])
+          id+=1
+
+  positive =  defaultdict(list)
+  negative = defaultdict(list)
+
+  for element in results:
+    for key, value in results[element][0].items():
+      if(key == "positive"):
+        for i, j in value.items():
+          positive[i].append(j)
+      if(key == "negative"):
+        for i, j in value.items():
+          negative[i].append(j) 
+     
+
+  print(positive, "\n")
+  print(negative, "\n")
+
+
+  
+
+      
+  return dumps({"docs":positive}),200
